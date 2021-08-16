@@ -5,5 +5,5 @@
         <Item>I:\Users\welfj\Documents\Programming\Cortex-Command-Mods\utils.rte</Item>
     </Directories>
     <Delay>1</Delay>
-    <Commandline>"C:\Program Files\FreeFileSync\FreeFileSync.exe" "I:\Users\welfj\Documents\Programming\Cortex-Command-Mods\RealTimeSync Batch Files\utils.ffs_batch"</Commandline>
+    <Commandline>"C:\Program Files\FreeFileSync\FreeFileSync.exe" "I:\Users\welfj\Documents\Programming\Cortex-Command-Mods\RealTimeSync Batch Files\Utils\utils.ffs_batch"</Commandline>
 </FreeFileSync>
