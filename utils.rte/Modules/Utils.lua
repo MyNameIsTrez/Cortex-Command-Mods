@@ -1,29 +1,56 @@
--- require("Modules/KeyConstants")
+-- REQUIREMENTS ----------------------------------------------------------------
 
 
-function PrintMOs()
-	for mo in MOIterator() do
+-- require("Data/Keys");
+
+
+-- MODULE START ----------------------------------------------------------------
+
+
+local M = {};
+_G[...] = M;
+
+
+-- CONFIGURABLE VARIABLES ------------------------------------------------------
+
+
+
+
+
+-- INTERNAL VARIABLES ----------------------------------------------------------
+
+
+
+
+
+-- PUBLIC FUNCTIONS ------------------------------------------------------------
+
+
+
+function M.PrintMOs()
+	for mo in M.MOIterator() do
 		print(mo);
 	end
 end
 
 
-function MOIterator()
+function M.MOIterator()
 	local mos = {};
 	for i = 1, MovableMan:GetMOIDCount() - 1 do
 		local mo = MovableMan:GetMOFromID(i);
 		mos[i] = mo;
 	end
 
+	-- Returns an anonymous function, see https://stackoverflow.com/a/46008125/13279557
 	local j = 0;
-	return function() -- Returns an anonymous function, see https://stackoverflow.com/a/46008125/13279557
+	return function()
 		j = j + 1;
 		return mos[j];
 	end;
 end
 
 
-function RecursivelyPrint(tab, recursive, depth)
+function M.RecursivelyPrint(tab, recursive, depth)
 	local recursive = not (recursive == false); -- True by default.
 	local depth = depth or 0; -- The depth starts at 0.
 	
@@ -49,27 +76,18 @@ function RecursivelyPrint(tab, recursive, depth)
 			string.rep(" ", spacingCount) ..
 			tostring(key) ..
 			" | " ..
-			_GetValueString(value)
+			M._GetValueString(value)
 		);
 		
 		local isTable = type(value) == "table";
 		local valueIsTable = (value == tab);
 		if recursive and isTable and not valueIsTable then
-			RecursivelyPrint(value, recursive, depth + 1); -- Go into the table.
+			M.RecursivelyPrint(value, recursive, depth + 1); -- Go into the table.
 		end
 	end
 	
 	if depth == 0 then
 		print("");
-	end
-end
-
-
-function _GetValueString(value)
-	if type(value) == "userdata" then
-		return "userdata";
-	else
-		return tostring(value);
 	end
 end
 
@@ -87,9 +105,13 @@ end
 ---@param outputStart number
 ---@param outputEnd number
 ---@return number mapped
-function Map(input, inputStart, inputEnd, outputStart, outputEnd)
+function M.Map(input, inputStart, inputEnd, outputStart, outputEnd)
 	local slope = (outputEnd - outputStart) / (inputEnd - inputStart);
 	return outputStart + slope * (input - inputStart);
+end
+
+function M.MapCompact(input, inputStart, inputEnd, outputStart, outputEnd)
+	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
 end
 
 
@@ -101,7 +123,7 @@ end
 ---@param outputStart number
 ---@param inputStart number
 ---@return number mapped
-function MapUsingSlope(input, slope, outputStart, inputStart)
+function M.MapUsingSlope(input, slope, outputStart, inputStart)
 	return outputStart + slope * (input - inputStart);
 end
 
@@ -114,11 +136,36 @@ end
 ---@param outputStart number
 ---@param outputEnd number
 ---@return number slope
-function GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
+function M.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
 	return (outputEnd - outputStart) / (inputEnd - inputStart);
 end
 
 
-function Printf(s, ...)
+function M.Printf(s, ...)
 	print(string.format(s, ...))
 end
+
+
+-- Credit: http://richard.warburton.it | http://lua-users.org/wiki/FormattingNumbers
+function M.AddThousandsSeparator(n)
+	local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+	return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+end
+
+
+-- PRIVATE FUNCTIONS  ----------------------------------------------------------
+
+
+function M._GetValueString(value)
+	if type(value) == "userdata" then
+		return "userdata";
+	else
+		return tostring(value);
+	end
+end
+
+
+-- MODULE END ------------------------------------------------------------------
+
+
+return M;

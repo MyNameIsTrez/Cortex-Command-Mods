@@ -78,17 +78,17 @@
 -- end
 
 
-local Colors = require("Modules/Colors");
+local colors = require("Data/Colors");
 
 
 function Visualizer:UpdateScript(self)
 	local radius = 10;
 
 	for actor in MovableMan.Actors do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, Colors.Red);
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.red);
 	end
 
 	for actor in MovableMan.Particles do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, Colors.Yellow);
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.yellow);
 	end
 end

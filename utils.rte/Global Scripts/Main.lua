@@ -1,13 +1,17 @@
 local InputHandler = require("Modules/InputHandler");
 
+local benchmarker = require("Modules/Benchmarker");
+
+local utils = require("Modules/Utils");
+
 
 function Main:StartScript()
-	print("Utils.rte's Main.lua Global Script is active!");
+	print("Main:StartScript() of Utils.rte");
 end
 
 
 function Main:UpdateScript()
-	-- print("Start of Utils.rte's Main.lua update");
+	-- print("Main:UpdateScript() of Utils.rte");
 
-	InputHandler.Update();
+	-- InputHandler.Update();
 end

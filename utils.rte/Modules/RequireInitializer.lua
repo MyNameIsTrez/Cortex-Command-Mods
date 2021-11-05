@@ -3,4 +3,4 @@ function RequireInit(modName)
 end
 
 
-RequireInit("Utils")
+RequireInit("Utils");

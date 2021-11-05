@@ -1,31 +1,32 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local KeyConstants = require("Modules/KeyConstants");
-local Keys = KeyConstants;
+local keys = require("Data/Keys");
+-- local keysFromIDs = require("Data/KeysFromIDs");
+
+local benchmarker = require("Modules/Benchmarker");
 
 
 -- MODULE START ----------------------------------------------------------------
 
 
-local P = {};
-_G[...] = P;
+local M = {};
+_G[...] = M;
 
 
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
 
 
 local toggledFunctions = {
-	[Keys.A] = function() print("Pressed A"); end,
-	[Keys.B] = function() print("Pressed B"); end,
+	[keys.A] = function() print("Pressed A"); end,
+	[keys.B] = function() benchmarker.RunAll(); end,
 };
 
 
-local continuousFunctions = {
-	[Keys.C] = function() print("Pressed C"); end,
-	[Keys.D] = function() print("Pressed D"); end,
+local heldFunctions = {
+	[keys.C] = function() print("Held C"); end,
+	[keys.D] = function() print("Held D"); end,
 };
-
 
 
 -- INTERNAL VARIABLES ----------------------------------------------------------
@@ -37,32 +38,42 @@ local pressedKeys = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function P.Update()
-	P.Toggled();
-	-- P.Held();
+function M.Update()
+	M._Toggled();
+	M._Held();
 end
+
+
+-- function M.GetKeyNameHeld()
+-- 	return keysFromIDs[UInputMan:WhichKeyHeld()];
+-- end
 
 
 -- PRIVATE FUNCTIONS  ----------------------------------------------------------
 
 
-function P.Toggled()
+function M._Toggled()
 	for inputKey, functionToRun in pairs(toggledFunctions) do
 		if (UInputMan:KeyPressed(inputKey)) then
-			P.ToggleKey(inputKey);
+			M._ToggleKey(inputKey);
 			functionToRun();
 		end
 	end
 end
 
 
-function P.ToggleKey(inputKey)
+function M._ToggleKey(inputKey)
 	pressedKeys[inputKey] = not pressedKeys[inputKey];
 	print(pressedKeys[inputKey]);
+end
+
+
+function M._Held()
+
 end
 
 
 -- MODULE END ------------------------------------------------------------------
 
 
-return P;
+return M;
