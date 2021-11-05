@@ -35,8 +35,8 @@
     </Filter>
     <FolderPairs>
         <Pair>
-            <Left>I:\Users\welfj\Documents\Programming\Cortex-Command-Mods\utils.rte</Left>
-            <Right>I:\Users\welfj\Documents\Programming\Cortex-Command-Community-Project-Data\utils.rte</Right>
+            <Left>I:\Programming\Cortex-Command-Mods\utils.rte</Left>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\utils.rte</Right>
         </Pair>
     </FolderPairs>
     <Errors Ignore="false" Retry="0" Delay="5"/>

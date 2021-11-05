@@ -1,4 +1,4 @@
---Converts a table to its string representation, use loadstring() to convert it back to a table later
+--Converts a table to its string representation. Use loadstring() to convert it back to a table later
 --StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
 function SerializeTable(value, name, skipNewlines, depth)
 	skipNewlines = skipNewlines or false;

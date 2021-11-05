@@ -1,4 +1,4 @@
--- function VisualizerScript:StartScript()
+-- function Visualizer:StartScript()
 -- 	-- self.continuousFns = {
 -- 	-- 	E = function()
 -- 	-- 		print("E stands for Epic!")
@@ -22,7 +22,7 @@
 -- end
 
 
--- function VisualizerScript:UpdateScript()
+-- function Visualizer:UpdateScript()
 -- 	local startX = 100; local startY = 100;
 -- 	local w = 16; local h = 16;
 -- 	for yIndex = 1, 16 do
@@ -57,32 +57,31 @@
 -- 	C = 3,
 -- };
 
--- function VisualizerScript:StartScript(self)
+-- function Visualizer:StartScript(self)
 --     self.anyInputFunctions = {
 --         A = function() print("hi"); end,
 --         C = function() self:ReloadScripts(); end
 --     };
 -- end
 
--- function VisualizerScript:UpdateScript(self)
+-- function Visualizer:UpdateScript(self)
 --     HandleAnyInput(self.anyInputFunctions);
 -- end
 
--- -- This is the global function
 -- function HandleAnyInput(inputFunctions)
 --     for keyName, functionToRun in pairs(inputFunctions) do
 -- 		local keyID = KeyInput[keyName]
---         if (UInputMan:KeyPressed(keyID)) then
+--         if UInputMan:KeyPressed(keyID) then
 --             functionToRun();
 --         end
 --     end
 -- end
 
 
-require("Scripts/Colors")
+local Colors = require("Modules/Colors");
 
 
-function VisualizerScript:UpdateScript(self)
+function Visualizer:UpdateScript(self)
 	local radius = 10;
 
 	for actor in MovableMan.Actors do
