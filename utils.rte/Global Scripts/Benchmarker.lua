@@ -19,6 +19,7 @@ function Benchmarker:StartScript()
 	self.timer = Timer();
 	self.frame = 0;
 	self.finished = false;
+	self.ranTest = false;
 
 	Benchmarker:AddTests();
 end
@@ -28,6 +29,24 @@ end
 
 
 function Benchmarker:UpdateScript()
+	-- self.frame = self.frame + 1;
+
+	-- local a = 0;
+
+	-- if self.frame <= 6 then
+	-- 	for _ = 1, 1e8 do a = a + 1 end
+	-- 	print(self.timer.ElapsedRealTimeMS);
+	-- 	self.timer:Reset();
+	-- elseif self.frame <= 12 then
+	-- 	print(self.timer.ElapsedRealTimeMS);
+	-- 	self.timer:Reset();
+	-- end
+
+	-- if self.frame <= 6 then
+	-- 	print(self.timer.ElapsedRealTimeMS);
+	-- 	self.timer:Reset();
+	-- end
+
 	if not self.finished then
 		Benchmarker:AdvanceFrame();
 	end
@@ -38,36 +57,39 @@ end
 
 
 function Benchmarker:AdvanceFrame()
-	if self.frame == 0 then
+	self.frame = self.frame + 1;
+
+	if self.frame == 1 then
 		utils.Printf("Waiting for %d frames before starting the benchmark...", self.frameDelayBeforeBenchmarking);
 	end
 
 	-- If no tests have been added, abort benchmarking.
-	if self.frame == 0 and #self.tests == 0 then
+	if self.frame == 1 and #self.tests == 0 then
 		Benchmarker:Finish();
 		return;
 	end
 
 	if self.frame >= self.frameDelayBeforeBenchmarking then
 		-- Benchmark every other frame so the game gets enough time to update self.timer.ElapsedRealTimeMS
-		if self.frame % 2 == 0 then
+		if not self.ranTest then
 			self.timer:Reset();
-			Benchmarker:RunTest();
+			Benchmarker:RunNextTest();
+			self.ranTest = true;
 		else
 			local iterations, funName = unpack(table.remove(self.tests));
 
 			local formattediterations = utils.AddThousandsSeparator(iterations);
 			local formattedMilliseconds = utils.AddThousandsSeparator(self.timer.ElapsedRealTimeMS);
 			utils.Printf("iterations: %s, function name: %s, elapsed time: %s milliseconds", formattediterations, funName, formattedMilliseconds);
-			
+
+			self.ranTest = false;
+
 			if #self.tests == 0 then
 				Benchmarker:Finish();
 				return;
 			end
 		end
 	end
-
-	self.frame = self.frame + 1;
 end
 
 
@@ -78,7 +100,7 @@ function Benchmarker:Finish()
 end
 
 
--- Website with other interesting tests to write: https://springrts.com/wiki/Lua_Performance
+-- Website with interesting tests to try: https://springrts.com/wiki/Lua_Performance
 
 function Benchmarker:AddTests(timer)
 	local input = 0.5;
@@ -101,7 +123,7 @@ function Benchmarker:AddTest(iterations, funName, fun, args)
 end
 
 
-function Benchmarker:RunTest()
+function Benchmarker:RunNextTest()
 	local iterations, _, fun, args = unpack(self.tests[#self.tests]);
 
 	for _ = 1, iterations do
