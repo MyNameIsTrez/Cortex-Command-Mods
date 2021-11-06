@@ -7,6 +7,8 @@
 		"Benchmarker",
 		"PrimitiveMan",
 		"Vector",
-		"GameOfLife"
+		"GameOfLife",
+		"LuaMan",
+		"DrawOptimizer"
 	]
 }
