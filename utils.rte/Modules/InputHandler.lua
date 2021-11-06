@@ -1,10 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local keys = require("Data/Keys");
-local keyCodes = require("Data/KeyCodes");
-
-local colors = require("Data/Colors");
+local keys = require("Data.Keys");
+local keyCodes = require("Data.KeyCodes");
+local colors = require("Data.Colors");
 
 
 -- MODULE START ----------------------------------------------------------------

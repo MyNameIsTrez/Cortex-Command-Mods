@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local colors = require("Data/Colors");
+local colors = require("Data.Colors");
 
 
 -- MODULE START ----------------------------------------------------------------

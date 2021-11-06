@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules/Utils");
+local utils = require("Modules.Utils");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
