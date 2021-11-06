@@ -2,9 +2,9 @@
 
 
 local keys = require("Data/Keys");
--- local keysFromIDs = require("Data/KeysFromIDs");
+local keyCodes = require("Data/KeyCodes");
 
-local benchmarker = require("Modules/Benchmarker");
+local colors = require("Data/Colors");
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -19,7 +19,7 @@ _G[...] = M;
 
 local toggledFunctions = {
 	[keys.A] = function() print("Pressed A"); end,
-	[keys.B] = function() benchmarker.RunAll(); end,
+	[keys.B] = function() print("Pressed B"); end,
 };
 
 
@@ -32,44 +32,53 @@ local heldFunctions = {
 -- INTERNAL VARIABLES ----------------------------------------------------------
 
 
-local pressedKeys = {};
+local toggledKeys = {};
 
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
 function M.Update()
-	M._Toggled();
+	-- M._Toggled();
 	M._Held();
 end
 
 
 -- function M.GetKeyNameHeld()
--- 	return keysFromIDs[UInputMan:WhichKeyHeld()];
+-- 	return keyCodes[UInputMan:WhichKeyHeld()];
 -- end
 
 
--- PRIVATE FUNCTIONS  ----------------------------------------------------------
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
 function M._Toggled()
-	for inputKey, functionToRun in pairs(toggledFunctions) do
-		if (UInputMan:KeyPressed(inputKey)) then
-			M._ToggleKey(inputKey);
+	for keyCode, functionToRun in pairs(toggledFunctions) do
+		if (UInputMan:KeyPressed(keyCode)) then
+			M._ToggleKey(keyCode);
 			functionToRun();
 		end
 	end
 end
 
 
-function M._ToggleKey(inputKey)
-	pressedKeys[inputKey] = not pressedKeys[inputKey];
-	print(pressedKeys[inputKey]);
+function M._ToggleKey(keyCode)
+	toggledKeys[keyCode] = not toggledKeys[keyCode];
+	print(toggledKeys[keyCode]);
 end
 
 
 function M._Held()
+	for keyCode, functionToRun in pairs(heldFunctions) do
+		if (UInputMan:KeyHeld(keyCode)) then
+			-- functionToRun();
 
+			local topLeft = Vector(1000, 1000);
+			local bottomRight = topLeft + Vector(math.random(10), math.random(10));
+			-- PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, colors[math.random(3)])
+			PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, 13)
+		end
+	end
 end
 
 

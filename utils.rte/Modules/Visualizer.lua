@@ -1,3 +1,31 @@
+-- REQUIREMENTS ----------------------------------------------------------------
+
+
+local colors = require("Data/Colors");
+
+
+-- MODULE START ----------------------------------------------------------------
+
+
+local M = {};
+_G[...] = M;
+
+
+-- CONFIGURABLE VARIABLES ------------------------------------------------------
+
+
+
+
+
+-- INTERNAL VARIABLES ----------------------------------------------------------
+
+
+
+
+
+-- PUBLIC FUNCTIONS ------------------------------------------------------------
+
+
 -- function Visualizer:StartScript()
 -- 	-- self.continuousFns = {
 -- 	-- 	E = function()
@@ -27,8 +55,10 @@
 -- 	local w = 16; local h = 16;
 -- 	for yIndex = 1, 16 do
 -- 		for xIndex = 1, 16 do
--- 			local x1 = startX + xIndex * w; local y1 = startY + yIndex * h;
--- 			local x2 = x1 + w; local y2 = y1 + h;
+-- 			local x1 = startX + xIndex * w;
+-- 			local y1 = startY + yIndex * h;
+-- 			local x2 = x1 + w;
+-- 			local y2 = y1 + h;
 -- 			local colorIndex = xIndex + yIndex * 16 - 16;
 -- 			PrimitiveMan:DrawBoxFillPrimitive(Vector(x1, y1), Vector(x2, y2), colorIndex - 1);
 -- 		end
@@ -78,9 +108,6 @@
 -- end
 
 
-local colors = require("Data/Colors");
-
-
 function Visualizer:UpdateScript(self)
 	local radius = 10;
 
@@ -92,3 +119,15 @@ function Visualizer:UpdateScript(self)
 		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.yellow);
 	end
 end
+
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+
+
+
+-- MODULE END ------------------------------------------------------------------
+
+
+return M;

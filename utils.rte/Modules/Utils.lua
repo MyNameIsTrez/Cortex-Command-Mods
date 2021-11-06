@@ -110,10 +110,6 @@ function M.Map(input, inputStart, inputEnd, outputStart, outputEnd)
 	return outputStart + slope * (input - inputStart);
 end
 
-function M.MapCompact(input, inputStart, inputEnd, outputStart, outputEnd)
-	return outputStart + ((outputEnd - outputStart) / (inputEnd - inputStart)) * (input - inputStart);
-end
-
 
 ---If you are mapping a lot with the same slope you should use this function to save performance, otherwise use Map().
 ---
@@ -153,7 +149,7 @@ function M.AddThousandsSeparator(n)
 end
 
 
--- PRIVATE FUNCTIONS  ----------------------------------------------------------
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
 function M._GetValueString(value)

@@ -4,6 +4,9 @@
 		"UInputMan",
 		"MovableMan",
 		"Timer",
-		"Benchmarker"
+		"Benchmarker",
+		"PrimitiveMan",
+		"Vector",
+		"GameOfLife"
 	]
 }
