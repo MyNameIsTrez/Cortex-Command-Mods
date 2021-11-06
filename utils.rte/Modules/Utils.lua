@@ -153,10 +153,10 @@ end
 
 
 function M._GetValueString(value)
-	if type(value) == "userdata" then
-		return "userdata";
-	else
+	if pcall(tostring, value) then
 		return tostring(value);
+	else
+		return type(value);
 	end
 end
 
