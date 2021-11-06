@@ -53,7 +53,7 @@ function Benchmarker:UpdateScript()
 end
 
 
--- FUNCTIONS  ------------------------------------------------------------------
+-- METHODS ---------------------------------------------------------------------
 
 
 function Benchmarker:AdvanceFrame()
@@ -100,8 +100,6 @@ function Benchmarker:Finish()
 end
 
 
--- Website with interesting tests to try: https://springrts.com/wiki/Lua_Performance
-
 function Benchmarker:AddTests(timer)
 	local input = 0.5;
 	local inputStart = -1;
@@ -109,12 +107,77 @@ function Benchmarker:AddTests(timer)
 	local outputStart = 2;
 	local outputEnd = 3;
 
+
 	local slope = utils.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd);
 
-	-- Comment out any benchmarks you don't want to do!
-	Benchmarker:AddTest(1e8, "utils.Map", utils.Map, { input, inputStart, inputEnd, outputStart, outputEnd });
-	Benchmarker:AddTest(1e8, "utils.MapCompact", utils.MapCompact, { input, inputStart, inputEnd, outputStart, outputEnd });
-	Benchmarker:AddTest(1e8, "utils.MapUsingSlope", utils.MapUsingSlope, { input, slope, outputStart, outputEnd });
+	-- Comment out any benchmarks you don't want to run!
+
+	-- Benchmarker:AddTest(1e8, "utils.Map", utils.Map, { input, inputStart, inputEnd, outputStart, outputEnd });
+	-- Benchmarker:AddTest(1e8, "utils.MapUsingSlope", utils.MapUsingSlope, { input, slope, outputStart, outputEnd });
+
+
+	-- Website with interesting tests to try: https://springrts.com/wiki/Lua_Performance
+
+	local a = {};
+	for i = 1, 100 do
+		a[i] = i;
+	end
+
+	Benchmarker:AddTest(1e7, "pairs",
+		function(a)
+			local x;
+			for _, v in pairs(a) do
+				x = v;
+			end
+		end,
+		{ a }
+	);
+	Benchmarker:AddTest(1e7, "ipairs",
+		function(a)
+			local x;
+			for _, v in ipairs(a) do
+				x = v;
+			end
+		end,
+		{ a }
+	);
+	Benchmarker:AddTest(1e7, "for i = 1, x do",
+		function(a)
+			local x;
+			for i = 1, 100 do
+				x = a[i];
+			end
+		end,
+		{ a }
+	);
+	Benchmarker:AddTest(1e7, "for i = 1, #a do",
+		function(a)
+			local x;
+			for i = 1, #a do
+				x = a[i];
+			end
+		end,
+		{ a }
+	);
+	Benchmarker:AddTest(1e7, "for i = 1, length do (length not precalculated)",
+		function(a)
+			local x;
+			local length = #a;
+			for i = 1, length do
+				x = a[i];
+			end
+		end,
+		{ a }
+	);
+	Benchmarker:AddTest(1e7, "for i = 1, length do (length precalculated)",
+		function(a, length)
+			local x;
+			for i = 1, length do
+				x = a[i];
+			end
+		end,
+		{ a, #a }
+	);
 end
 
 
