@@ -11,13 +11,13 @@ function GameOfLife:StartScript()
 	-- CONFIGURABLE VARIABLES
 	self.framesBetweenUpdates = 10;
 
-	self.topLeftX = 1700; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
-	self.topLeftY = 400; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	self.topLeftX = 1800; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	self.topLeftY = 500; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
 
 	self.columns = 30;
 	self.rows = 30;
 
-	self.cellSize = 20;
+	self.cellSize = 15;
 
 	self.deadColor = 4;
 	self.aliveColor = 20;
@@ -29,7 +29,11 @@ function GameOfLife:StartScript()
 	self.nextState = nil;
 	
 
-	-- CONFIGURABLE STARTING STATE
+	-- SETUP
+	GameOfLife:KillAllCells();
+
+
+	-- CONFIGURABLE STARTING STATES
 
 	-- R-pentomino for 30x30
 	self.state[14][15] = true;
@@ -50,10 +54,21 @@ end
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
 
 
-function GameOfLife:UpdateScript()
+function GameOfLife:UpdateScript()	
+	-- for i = 1, 1000 do
+	-- 	local xOffset = (math.random(self.columns) - 1) * self.cellSize;
+	-- 	local yOffset = (math.random(self.rows) - 1) * self.cellSize;
+
+	-- 	local topLeft = Vector(self.topLeftX + xOffset, self.topLeftY + yOffset);
+	-- 	local bottomRight = topLeft + Vector(self.cellSize, self.cellSize);
+
+	-- 	PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, math.random(255));
+	-- end
+
 	self.frame = self.frame + 1;
 
-	if self.frame % self.framesBetweenUpdates == 0 then
+	-- + 1 so a self.framesBetweenUpdates of 0 works.
+	if self.frame % (self.framesBetweenUpdates + 1) == 0 then
 		GameOfLife:Update();
 	end
 
@@ -67,15 +82,20 @@ end
 function GameOfLife:GetEmptyState()
 	local state = {};
 
-	-- Initialize all cells as being dead.
 	for row = 1, self.rows do
 		state[row] = {};
-		for column = 1, self.columns do
-			state[row][column] = false;
-		end
 	end
 
 	return state;
+end
+
+
+function GameOfLife:KillAllCells()
+	for row = 1, self.rows do
+		for column = 1, self.columns do
+			self.state[row][column] = false;
+		end
+	end
 end
 
 
@@ -87,7 +107,6 @@ function GameOfLife:Update()
 	for row = 1, self.rows do
 		for column = 1, self.columns do
 			neighbors = GameOfLife:CountCellNeighbors(row, column);
-			utils.Printf("x: %d, y: %d, neighbors: %d", column, row, neighbors);
 
 			GameOfLife:UpdateCellState(row, column, neighbors);
 		end
