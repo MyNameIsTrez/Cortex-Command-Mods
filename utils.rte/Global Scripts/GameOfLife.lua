@@ -1,7 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules.Utils");
+-- local Utils = require("Modules.Utils");
+
+local DrawOptimizer = require("Modules.DrawOptimizer");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
@@ -9,15 +11,20 @@ local utils = require("Modules.Utils");
 
 function GameOfLife:StartScript()
 	-- CONFIGURABLE VARIABLES
-	self.framesBetweenUpdates = 10;
+	self.framesBetweenUpdates = 1;
 
 	self.topLeftX = 1800; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
 	self.topLeftY = 500; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	-- self.topLeftX = 1; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	-- self.topLeftY = 1; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
 
-	self.columns = 30;
-	self.rows = 30;
+	self.columns = 50;
+	self.rows = 50;
+	-- self.columns = 5;
+	-- self.rows = 5;
 
-	self.cellSize = 15;
+	self.cellSize = 3;
+	-- self.cellSize = 1;
 
 	self.deadColor = 4;
 	self.aliveColor = 20;
@@ -31,7 +38,6 @@ function GameOfLife:StartScript()
 
 	-- SETUP
 	GameOfLife:KillAllCells();
-
 
 	-- CONFIGURABLE STARTING STATES
 
@@ -68,11 +74,13 @@ function GameOfLife:UpdateScript()
 	self.frame = self.frame + 1;
 
 	-- + 1 so a self.framesBetweenUpdates of 0 works.
-	if self.frame % (self.framesBetweenUpdates + 1) == 0 then
+	if self.frame == 1 or self.frame % (self.framesBetweenUpdates + 1) == 0 then
 		GameOfLife:Update();
+		GameOfLife:Draw(); -- TODO: Rename.
+		DrawOptimizer.Update();
 	end
 
-	GameOfLife:Draw();
+	DrawOptimizer.Draw();
 end
 
 
@@ -162,10 +170,12 @@ function GameOfLife:DrawCell(row, column)
 	local xOffset = (column - 1) * self.cellSize;
 	local yOffset = (row - 1) * self.cellSize;
 
+	-- TODO: Make self.topLeftX and self.topLeftY a self.topLeft Vector
 	local topLeft = Vector(self.topLeftX + xOffset, self.topLeftY + yOffset);
-	local bottomRight = topLeft + Vector(self.cellSize, self.cellSize);
+	local bottomRight = topLeft + Vector(self.cellSize - 1, self.cellSize - 1);
 
 	local color = self.state[row][column] and self.aliveColor or self.deadColor;
 
-	PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, color);
+	-- PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, color);
+	DrawOptimizer.Add(topLeft, bottomRight, color);
 end

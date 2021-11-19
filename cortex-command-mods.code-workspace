@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "utils.rte"
+		}
+	],
+	"settings": {
+		"Lua.diagnostics.globals": [
+			"Benchmarker"
+		]
+	}
+}

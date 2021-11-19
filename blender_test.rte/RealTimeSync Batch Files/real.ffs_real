@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FreeFileSync XmlType="REAL" XmlFormat="2">
+    <Directories>
+        <Item>I:\Programming\Cortex-Command-Community-Project-Data\blender_test.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Mods\blender_test.rte</Item>
+    </Directories>
+    <Delay>1</Delay>
+    <Commandline>"C:\Program Files\FreeFileSync\FreeFileSync.exe" "I:\Programming\Cortex-Command-Mods\blender_test.rte\RealTimeSync Batch Files\batch.ffs_batch"</Commandline>
+</FreeFileSync>

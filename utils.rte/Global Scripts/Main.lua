@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local inputHandler = require("Modules.inputHandler");
+local inputHandler = require("Modules.InputHandler");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------

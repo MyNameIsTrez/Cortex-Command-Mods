@@ -149,6 +149,28 @@ function M.AddThousandsSeparator(n)
 end
 
 
+function M.ShallowlyCopy(t)
+	local t2 = {};
+	for k, v in pairs(t) do
+		t2[k] = v;
+	end
+	return t2;
+end
+
+
+-- function M.GetEmptyTableNDim(dimensionsTable, _depth)
+-- 	local _depth = _depth or 1;
+-- 	if _depth > #dimensionsTable then
+-- 		return {};
+-- 	end
+-- 	local t = {};
+-- 	for i, _ in dimensionsTable[_depth] do
+-- 		t[i] = M.GetEmptyTableNDim(dimensionsTable, _depth + 1);
+-- 	end
+-- 	return t;
+-- end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 

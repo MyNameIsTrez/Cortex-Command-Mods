@@ -42,8 +42,8 @@ Enum = M;
 function M.Enum(...)
 	local enumTable = {};
 
-	for _, name in ipairs({...}) do
-		enumTable[name] = name;
+	for index, name in ipairs({...}) do
+		enumTable[name] = index;
 	end
 
 	return enumTable;
