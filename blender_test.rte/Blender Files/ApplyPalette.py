@@ -1,3 +1,21 @@
+"""
+1. "Render Properties" > Set "Render Engine" to "Cycles"
+2. "Render Properties" > "Sampling" > Set "Render" and "Viewport" to desired values
+3. "Render Properties" > "Film" > Turn on "Transparent"
+
+4. "Output Properties" > "Dimensions" > Set "Resolution X" and "Y" to desired values
+4. "Output Properties" > "Dimensions" > Set "End" to a desired value
+4. "Output Properties" > "Dimensions" > Set "Frame Rate" to a desired value
+
+5. "Output Properties" > "Output" > Set the path that's at the top of the window, ending with ###.png
+6. "Output Properties" > "Output" > Set "File Format" to "PNG"
+7. "Output Properties" > "Output" > Set "Color" to "RGBA"
+8. "Output Properties" > "Output" > Set "Compression" to "100"
+
+9. "World Properties" > "Surface" > Click the colored bar > "Hex" > Set "65A5E6"
+"""
+
+
 import bpy
 import os, sys
 from PIL import Image, ImageDraw
@@ -36,6 +54,8 @@ def get_img_paths():
 def process_img(old_path, new_path, palette):
 	old_img = Image.open(old_path)
 
+	# thresh=3 is the bare minimum value needed to replace the black-blue background pixels
+	# Setting thresh too high will cause blackish pixels on the edge of the object to also be replaced with pink pixels 
 	ImageDraw.floodfill(old_img, xy=(0, 0), value=(255, 0, 255, 255), thresh=3)
 	
 	# putpalette() always expects 256 * 3 ints, so this pads with the first RGB color in the palette
@@ -46,7 +66,7 @@ def process_img(old_path, new_path, palette):
 	palette_img = Image.new("P", (1, 1))
 	palette_img.putpalette(palette)
 
-	old_img.quantize(palette=palette_img, dither=DITHERING).save(new_path)
+	old_img.convert("RGB").quantize(palette=palette_img, dither=DITHERING).save(new_path)
 
 
 if __name__ == "__main__":
