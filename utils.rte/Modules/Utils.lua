@@ -26,7 +26,7 @@ _G[...] = M;
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-
+---Prints all MOs.
 function M.PrintMOs()
 	for mo in M.MOIterator() do
 		print(mo);
@@ -34,6 +34,10 @@ function M.PrintMOs()
 end
 
 
+---Use like "for mo in utils.MOIterator() do".
+---This is a replacement of this code which is found in almost every mod:
+---"for i = 1, MovableMan:GetMOIDCount() - 1 do local mo = MovableMan:GetMOFromID(i); <code that uses mo> end"
+---@return function
 function M.MOIterator()
 	local mos = {};
 	for i = 1, MovableMan:GetMOIDCount() - 1 do
@@ -50,10 +54,14 @@ function M.MOIterator()
 end
 
 
+---Prints the content of a table recursively so it can easily be inspected in a console.
+---@param tab table
+---@param recursive boolean
+---@param depth number
 function M.RecursivelyPrint(tab, recursive, depth)
 	local recursive = not (recursive == false); -- True by default.
 	local depth = depth or 0; -- The depth starts at 0.
-	
+
 	-- Getting the longest key of this (sub)table, so all printed values will line up.
 	local longestKey = 1;
 	for key, _ in pairs(tab) do
@@ -62,15 +70,15 @@ function M.RecursivelyPrint(tab, recursive, depth)
 			longestKey = keyLength;
 		end
 	end
-	
+
 	if depth == 0 then
 		print("");
 	end
-	
+
 	-- Print the keys and values, with extra spaces so the values line up.
 	for key, value in pairs(tab) do
 		local spacingCount = longestKey - #tostring(key); -- How many spaces are added between the key and value.
-		
+
 		print(
 			string.rep(string.rep(" ", 4), depth) .. -- Tabulate tables that are deep inside the original table.
 			string.rep(" ", spacingCount) ..
@@ -78,14 +86,14 @@ function M.RecursivelyPrint(tab, recursive, depth)
 			" | " ..
 			M._GetValueString(value)
 		);
-		
+
 		local isTable = type(value) == "table";
 		local valueIsTable = (value == tab);
 		if recursive and isTable and not valueIsTable then
 			M.RecursivelyPrint(value, recursive, depth + 1); -- Go into the table.
 		end
 	end
-	
+
 	if depth == 0 then
 		print("");
 	end
@@ -137,18 +145,28 @@ function M.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
 end
 
 
+---Prints a formatted string.
+---@param s string
+---@param ... any
 function M.Printf(s, ...)
 	print(string.format(s, ...))
 end
 
 
+---Returns n as a string with thousands separators.
+---@param n number
+---@return string
 -- Credit: http://richard.warburton.it | http://lua-users.org/wiki/FormattingNumbers
 function M.AddThousandsSeparator(n)
-	local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
-	return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+	local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)$')
+	return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
 
 
+---Makes a shallow copy of a table, which means that tables inside of it won't be copied but referenced.
+---See http://lua-users.org/wiki/CopyTable for more information on shallow vs deep copies.
+---@param t table
+---@return table
 function M.ShallowlyCopy(t)
 	local t2 = {};
 	for k, v in pairs(t) do
@@ -174,6 +192,9 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
+---Used by M.RecursivelyPrint() to turn any type of value into a string.
+---@param value any
+---@return string
 function M._GetValueString(value)
 	if pcall(tostring, value) then
 		return tostring(value);
