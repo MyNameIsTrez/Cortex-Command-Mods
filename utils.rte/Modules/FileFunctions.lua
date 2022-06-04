@@ -12,7 +12,7 @@ function SerializeTable(value, name, skipNewlines, depth)
 		serializedTableString = serializedTableString .. "{" .. (not skipNewlines and "\n" or "");
 
 		for k, v in pairs(value) do
-			serializedTableString =  serializedTableString .. SerializeTable(v, k, skipNewlines, depth + 1) .. "," .. (not skipNewlines and "\n" or "");
+			serializedTableString = serializedTableString .. SerializeTable(v, k, skipNewlines, depth + 1) .. "," .. (not skipNewlines and "\n" or "");
 		end
 
 		serializedTableString = serializedTableString .. string.rep(" ", depth) .. "}";
@@ -29,20 +29,18 @@ function SerializeTable(value, name, skipNewlines, depth)
 	return serializedTableString;
 end
 
-
 function FileExists(filepath)
 	local fileID = LuaMan:FileOpen(filepath, "r");
 	LuaMan:FileClose(fileID);
 	return fileID ~= -1;
 end
 
-
 --Returns the contents of a file as a string
 function ReadFile(filepath)
 	if not FileExists(filepath) then return false; end
 	local fileID = LuaMan:FileOpen(filepath, "r");
-	local strTab = {}; --Storing the strings in a table and concatenating them at the end is faster than concatenating for every newly added line
-	local i = 1; --Manually tracking the index is faster than calling table.insert()
+	local strTab = {};  --Storing the strings in a table and concatenating them at the end is faster than concatenating for every newly added line
+	local i = 1;  --Manually tracking the index is faster than calling table.insert()
 	while not LuaMan:FileEOF(fileID) do
 		strTab[i] = LuaMan:FileReadLine(fileID);
 		i = i + 1;
@@ -51,16 +49,14 @@ function ReadFile(filepath)
 	return table.concat(strTab);
 end
 
-
 --Reads the contents of a file like it's a table and returns it
 function ReadFileAsTable(filepath)
 	local fileStr = ReadFile(filepath);
 	if fileStr == false then return false; end --If the file doesn't exist
-	local func = loadstring("return " .. fileStr); --loadstring converts a string to a function, that's why there's a "return "
+	local func = loadstring("return " .. fileStr);  --loadstring converts a string to a function, that's why there's a "return "
 	if func == nil then return false; end --In case the file didn't contain a properly constructed table
 	return func(); --Execute the function to return the fileStr table
 end
-
 
 --Beware, this overwrites whatever was already in the file!
 function WriteToFile(filepath, str)
@@ -68,7 +64,6 @@ function WriteToFile(filepath, str)
 	LuaMan:FileWriteLine(fileID, str); --If you want to write across multiple lines, use the newline character \n in str
 	LuaMan:FileClose(fileID);
 end
-
 
 --Beware, this overwrites whatever was already in the file!
 function WriteTableToFile(filepath, tab)
