@@ -51,7 +51,7 @@ function M.SerializeTable(value, name, skipNewlines, depth)
 		serializedTableString = serializedTableString .. "{" .. (not skipNewlines and "\n" or "");
 
 		for k, v in pairs(value) do
-			serializedTableString = serializedTableString .. SerializeTable(v, k, skipNewlines, depth + 1) .. "," .. (not skipNewlines and "\n" or "");
+			serializedTableString = serializedTableString .. M.SerializeTable(v, k, skipNewlines, depth + 1) .. "," .. (not skipNewlines and "\n" or "");
 		end
 
 		serializedTableString = serializedTableString .. string.rep(" ", depth) .. "}";
@@ -76,7 +76,7 @@ end
 
 --Returns the contents of a file as a string
 function M.ReadFile(filepath)
-	if not FileExists(filepath) then return false; end
+	if not M.FileExists(filepath) then return false; end
 
 	local fileID = LuaMan:FileOpen(filepath, "r");
 	local strTab = {};  --Storing the strings in a table and concatenating them at the end is faster than concatenating for every newly added line
@@ -94,7 +94,7 @@ end
 
 --Reads the contents of a file like it's a table and returns it
 function M.ReadFileAsTable(filepath)
-	local fileStr = ReadFile(filepath);
+	local fileStr = M.ReadFile(filepath);
 	if fileStr == false then return false; end --If the file doesn't exist
 
 	local func = loadstring("return " .. fileStr);  --loadstring converts a string to a function, that's why there's a "return "
@@ -112,8 +112,8 @@ end
 
 --Beware, this overwrites whatever was already in the file!
 function M.WriteTableToFile(filepath, tab)
-	local tabStr = SerializeTable(tab)
-	WriteToFile(filepath, tabStr)
+	local tabStr = M.SerializeTable(tab)
+	M.WriteToFile(filepath, tabStr)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
