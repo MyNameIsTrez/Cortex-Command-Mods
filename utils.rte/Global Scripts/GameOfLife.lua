@@ -1,8 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
--- local Utils = require("Modules.Utils");
-
 local DrawOptimizer = require("Modules.DrawOptimizer");
 
 
@@ -13,10 +11,8 @@ function GameOfLife:StartScript()
 	-- CONFIGURABLE VARIABLES
 	self.framesBetweenUpdates = 1;
 
-	self.topLeftX = 1800; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
-	self.topLeftY = 500; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
-	-- self.topLeftX = 1; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
-	-- self.topLeftY = 1; -- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	-- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
+	self.topLeft = Vector(1800, 500);
 
 	self.columns = 50;
 	self.rows = 50;
@@ -31,10 +27,11 @@ function GameOfLife:StartScript()
 
 
 	-- INTERNAL VARIABLES
+	self.cellSizeVector = Vector(self.cellSize - 1, self.cellSize - 1)
 	self.frame = 0;
 	self.state = GameOfLife:GetEmptyState();
 	self.nextState = nil;
-	
+
 
 	-- SETUP
 	GameOfLife:KillAllCells();
@@ -56,33 +53,21 @@ function GameOfLife:StartScript()
 	-- self.state[4][3] = true;
 end
 
-
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
 
 
-function GameOfLife:UpdateScript()	
-	-- for i = 1, 1000 do
-	-- 	local xOffset = (math.random(self.columns) - 1) * self.cellSize;
-	-- 	local yOffset = (math.random(self.rows) - 1) * self.cellSize;
-
-	-- 	local topLeft = Vector(self.topLeftX + xOffset, self.topLeftY + yOffset);
-	-- 	local bottomRight = topLeft + Vector(self.cellSize, self.cellSize);
-
-	-- 	PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, math.random(255));
-	-- end
-
+function GameOfLife:UpdateScript()
 	self.frame = self.frame + 1;
 
 	-- + 1 so a self.framesBetweenUpdates of 0 works.
 	if self.frame == 1 or self.frame % (self.framesBetweenUpdates + 1) == 0 then
 		GameOfLife:Update();
-		GameOfLife:Draw(); -- TODO: Rename.
+		GameOfLife:QueueDraw();
 		DrawOptimizer.Update();
 	end
 
 	DrawOptimizer.Draw();
 end
-
 
 -- METHODS ---------------------------------------------------------------------
 
@@ -97,7 +82,6 @@ function GameOfLife:GetEmptyState()
 	return state;
 end
 
-
 function GameOfLife:KillAllCells()
 	for row = 1, self.rows do
 		for column = 1, self.columns do
@@ -105,7 +89,6 @@ function GameOfLife:KillAllCells()
 		end
 	end
 end
-
 
 function GameOfLife:Update()
 	local neighbors;
@@ -123,28 +106,26 @@ function GameOfLife:Update()
 	self.state = self.nextState;
 end
 
-
 function GameOfLife:CountCellNeighbors(row, column)
 	local neighbors = 0;
 
 	if row > 1 then
-		if column > 1 and            self.state[row-1][column-1] then neighbors = neighbors + 1; end
-		if                           self.state[row-1][column-0] then neighbors = neighbors + 1; end
-		if column < self.columns and self.state[row-1][column+1] then neighbors = neighbors + 1; end
+		if column > 1 and self.state[row - 1][column - 1] then neighbors = neighbors + 1; end
+		if self.state[row - 1][column - 0] then neighbors = neighbors + 1; end
+		if column < self.columns and self.state[row - 1][column + 1] then neighbors = neighbors + 1; end
 	end
 
-    if column > 1 and                self.state[row-0][column-1] then neighbors = neighbors + 1; end
-	if column < self.columns and     self.state[row-0][column+1] then neighbors = neighbors + 1; end
+	if column > 1 and self.state[row - 0][column - 1] then neighbors = neighbors + 1; end
+	if column < self.columns and self.state[row - 0][column + 1] then neighbors = neighbors + 1; end
 
 	if row < self.rows then
-		if column > 1 and            self.state[row+1][column-1] then neighbors = neighbors + 1; end
-		if                           self.state[row+1][column-0] then neighbors = neighbors + 1; end
-		if column < self.columns and self.state[row+1][column+1] then neighbors = neighbors + 1; end
+		if column > 1 and self.state[row + 1][column - 1] then neighbors = neighbors + 1; end
+		if self.state[row + 1][column - 0] then neighbors = neighbors + 1; end
+		if column < self.columns and self.state[row + 1][column + 1] then neighbors = neighbors + 1; end
 	end
 
 	return neighbors;
 end
-
 
 function GameOfLife:UpdateCellState(row, column, neighbors)
 	if neighbors < 2 or neighbors > 3 then
@@ -156,26 +137,24 @@ function GameOfLife:UpdateCellState(row, column, neighbors)
 	end
 end
 
-
-function GameOfLife:Draw()
+function GameOfLife:QueueDraw()
 	for row = 1, self.rows do
 		for column = 1, self.columns do
-			GameOfLife:DrawCell(row, column);
+			GameOfLife:QueueDrawCell(row, column);
 		end
 	end
 end
 
+function GameOfLife:QueueDrawCell(row, column)
+	local offset = Vector(
+		(column - 1) * self.cellSize,
+		(row - 1) * self.cellSize
+	)
 
-function GameOfLife:DrawCell(row, column)
-	local xOffset = (column - 1) * self.cellSize;
-	local yOffset = (row - 1) * self.cellSize;
-
-	-- TODO: Make self.topLeftX and self.topLeftY a self.topLeft Vector
-	local topLeft = Vector(self.topLeftX + xOffset, self.topLeftY + yOffset);
-	local bottomRight = topLeft + Vector(self.cellSize - 1, self.cellSize - 1);
+	local cellTopLeft = self.topLeft + offset;
+	local cellBottomRight = cellTopLeft + self.cellSizeVector
 
 	local color = self.state[row][column] and self.aliveColor or self.deadColor;
 
-	-- PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, color);
-	DrawOptimizer.Add(topLeft, bottomRight, color);
+	DrawOptimizer.Add(cellTopLeft, cellBottomRight, color);
 end
