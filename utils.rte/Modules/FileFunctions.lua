@@ -104,7 +104,7 @@ function M.ReadFileAsTable(filepath)
 end
 
 --Beware, this overwrites whatever was already in the file!
-function M.WriteToFile(filepath, str)
+function M.WriteFile(filepath, str)
 	local fileID = LuaMan:FileOpen(filepath, "w");
 	LuaMan:FileWriteLine(fileID, str); --If you want to write across multiple lines, use the newline character \n in str
 	LuaMan:FileClose(fileID);
@@ -113,7 +113,7 @@ end
 --Beware, this overwrites whatever was already in the file!
 function M.WriteTableToFile(filepath, tab)
 	local tabStr = M.SerializeTable(tab)
-	M.WriteToFile(filepath, tabStr)
+	M.WriteFile(filepath, tabStr)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
