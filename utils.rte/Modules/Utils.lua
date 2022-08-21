@@ -33,7 +33,6 @@ function M.PrintMOs()
 	end
 end
 
-
 ---Use like "for mo in utils.MOIterator() do".
 ---This is a replacement of this code which is found in almost every mod:
 ---"for i = 1, MovableMan:GetMOIDCount() - 1 do local mo = MovableMan:GetMOFromID(i); <code that uses mo> end"
@@ -53,14 +52,13 @@ function M.MOIterator()
 	end;
 end
 
-
 ---Prints the content of a table recursively so it can easily be inspected in a console.
 ---@param tab table
 ---@param recursive boolean
 ---@param depth number
 function M.RecursivelyPrint(tab, recursive, depth)
-	local recursive = not (recursive == false); -- True by default.
-	local depth = depth or 0; -- The depth starts at 0.
+	local recursive = not (recursive == false);  -- True by default.
+	local depth = depth or 0;  -- The depth starts at 0.
 
 	-- Getting the longest key of this (sub)table, so all printed values will line up.
 	local longestKey = 1;
@@ -77,7 +75,7 @@ function M.RecursivelyPrint(tab, recursive, depth)
 
 	-- Print the keys and values, with extra spaces so the values line up.
 	for key, value in pairs(tab) do
-		local spacingCount = longestKey - #tostring(key); -- How many spaces are added between the key and value.
+		local spacingCount = longestKey - #tostring(key);  -- How many spaces are added between the key and value.
 
 		print(
 			string.rep(string.rep(" ", 4), depth) .. -- Tabulate tables that are deep inside the original table.
@@ -99,7 +97,6 @@ function M.RecursivelyPrint(tab, recursive, depth)
 	end
 end
 
-
 ---Re-maps a number from one range to another.
 ---
 ---If you are mapping a lot with the same slope you should use MapUsingSlope() with GetMapSlope() instead to save performance.
@@ -118,7 +115,6 @@ function M.Map(input, inputStart, inputEnd, outputStart, outputEnd)
 	return outputStart + slope * (input - inputStart);
 end
 
-
 ---If you are mapping a lot with the same slope you should use this function to save performance, otherwise use Map().
 ---
 ---The slope should be calculated only once using GetMapSlope().
@@ -130,7 +126,6 @@ end
 function M.MapUsingSlope(input, slope, outputStart, inputStart)
 	return outputStart + slope * (input - inputStart);
 end
-
 
 ---Gets the slope for MapUsingSlope().
 ---
@@ -144,14 +139,12 @@ function M.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
 	return (outputEnd - outputStart) / (inputEnd - inputStart);
 end
 
-
 ---Prints a formatted string.
 ---@param s string
 ---@param ... any
 function M.Printf(s, ...)
 	print(string.format(s, ...))
 end
-
 
 ---Returns n as a string with thousands separators.
 ---@param n number
@@ -161,7 +154,6 @@ function M.AddThousandsSeparator(n)
 	local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)$')
 	return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
-
 
 ---Makes a shallow copy of a table, which means that tables inside of it won't be copied but referenced.
 ---See http://lua-users.org/wiki/CopyTable for more information on shallow vs deep copies.
@@ -175,6 +167,17 @@ function M.ShallowlyCopy(t)
 	return t2;
 end
 
+---Counts the number of keys in a table.
+---This isn't the same as using the # operator, since that doesn't count the keys, only the indices.
+---@param t table
+---@return number count
+function M.GetKeyCount(t)
+	local count = 0;
+	for _, _ in pairs(t) do
+		count = count + 1;
+	end
+	return count;
+end
 
 -- function M.GetEmptyTableNDim(dimensionsTable, _depth)
 -- 	local _depth = _depth or 1;
@@ -202,7 +205,6 @@ function M._GetValueString(value)
 		return type(value);
 	end
 end
-
 
 -- MODULE END ------------------------------------------------------------------
 
