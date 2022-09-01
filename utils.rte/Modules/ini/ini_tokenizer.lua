@@ -38,6 +38,8 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
+space = l.S(" \t\n")^0
+
 number = l.C(
 		l.P("-")^-1 *
 		l.R("09")^0 *
@@ -47,36 +49,6 @@ number = l.C(
 		)^-1
 	) /
 	tonumber
-
-space = l.S(" \t\n")^0
-
-expr = l.P{
-	"EXPR";
-	EXPR = ( l.V("TERM") * l.C( l.S("+-") ) * l.V("EXPR") +
-			 l.V("TERM") ) / eval,
-	TERM = ( l.V("FACT") * l.C( l.S("/*") ) * l.V("TERM") +
-			 l.V("FACT") ) / eval,
-	FACT = ( space * "(" * l.V("EXPR") * ")" * space +
-			 space * number * space ) / eval
-}
-
--- Use this to test this function:
--- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
-function M.foo()
-	-- pattern = ((l.P"A"^0) + (l.P"B"^0))
-	-- print(pattern:match"ABA") -- Why is this 4 and not 3?
-
-	-- pr(expr:match("2 * 3"))
-	repl()
-end
-
--- function pr(...)
--- 	-- print(table.concat(args, ","))
-
--- 	for i, v in ipairs({...}) do
--- 		print(v)
--- 	end
--- end
 
 function eval(num1, operator, num2)
 	if operator == "+" then
@@ -92,7 +64,19 @@ function eval(num1, operator, num2)
 	end
 end
 
-function repl()
+expr = l.P{
+	"EXPR";
+	EXPR = ( l.V("TERM") * l.C( l.S("+-") ) * l.V("EXPR") +
+			 l.V("TERM") ) / eval,
+	TERM = ( l.V("FACT") * l.C( l.S("/*") ) * l.V("TERM") +
+			 l.V("FACT") ) / eval,
+	FACT = ( space * "(" * l.V("EXPR") * ")" * space +
+			 space * number * space ) / eval
+}
+
+-- Use this to test this function:
+-- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
+function M.foo()
 	print(expr:match(" ( 2.5 *3) + 5"))
 end
 
