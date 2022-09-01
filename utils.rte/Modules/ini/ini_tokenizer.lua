@@ -38,37 +38,64 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
+number = l.C(
+		l.P("-")^-1 *
+		l.R("09")^0 *
+		(
+			l.P(".") *
+			l.R("09")^0
+		)^-1
+	) /
+	tonumber
+
+space = l.S(" \t\n")^0
+
+expr = l.P{
+	"EXPR";
+	EXPR = ( l.V("TERM") * l.C( l.S("+-") ) * l.V("EXPR") +
+			 l.V("TERM") ) / eval,
+	TERM = ( l.V("FACT") * l.C( l.S("/*") ) * l.V("TERM") +
+			 l.V("FACT") ) / eval,
+	FACT = ( space * "(" * l.V("EXPR") * ")" * space +
+			 space * number * space ) / eval
+}
+
 -- Use this to test this function:
 -- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
 function M.foo()
-	n = l.C(
-			l.P("-")^-1 *
-			l.R("09")^0 *
-			(
-				l.P(".") *
-				l.R("09")^0
-			)^-1
-		) /
-		tonumber
+	-- pattern = ((l.P"A"^0) + (l.P"B"^0))
+	-- print(pattern:match"ABA") -- Why is this 4 and not 3?
 
-	print(n:match("53"))
-	print(n:match("-17"))
-	print(n:match("5.02"))
-	print(n:match(".3"))
-	print(n:match("7."))
-	print(n:match("a"))
+	-- pr(expr:match("2 * 3"))
+	repl()
 end
 
-function pr(args)
-	-- print(args)
-	-- if (args[1] == nil) then return end
-	-- print(table.concat(args, ","))
+-- function pr(...)
+-- 	-- print(table.concat(args, ","))
 
-	-- if (args == nil) then return end
-	-- print(args["negative"])
-	-- print(args["ipart"])
-	-- print(args["fpart"])
+-- 	for i, v in ipairs({...}) do
+-- 		print(v)
+-- 	end
+-- end
+
+function eval(num1, operator, num2)
+	if operator == "+" then
+		return num1 + num2
+	elseif operator == "-" then
+		return num1 - num2
+	elseif operator == "*" then
+		return num1 * num2
+	elseif operator == "/" then
+		return num1 / num2
+	else
+		return num1
+	end
 end
+
+function repl()
+	print(expr:match(" ( 2.5 *3) + 5"))
+end
+
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
