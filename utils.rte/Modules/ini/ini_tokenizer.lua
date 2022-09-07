@@ -63,35 +63,39 @@ term_op = C( S('*/') ) * space
 
 expr = space * P{
 	"EXPR";
-	EXPR =
-		V("TERM") * expr_op * V("EXPR") / eval +
-		V("TERM") / eval,
-	TERM =
-		V("FACT") * term_op * V("TERM") / eval +
-		V("FACT") / eval,
+	EXPR = V("TERM") * ( expr_op * V("TERM") )^0 / eval,
+	TERM = V("FACT") * ( term_op * V("FACT") )^0 / eval,
 	FACT =
 		lparen * V("EXPR") * rparen / eval +
 		number / eval
 }
 
-function eval(num1, operator, num2)
-	if operator == "+" then
-		return num1 + num2
-	elseif operator == "-" then
-		return num1 - num2
-	elseif operator == "*" then
-		return num1 * num2
-	elseif operator == "/" then
-		return num1 / num2
-	else
-		return num1
+function eval(...)
+	local args = {...}
+	local accum = args[1]
+
+	for i = 2, #args, 2 do
+		local operator = args[i]
+		local num2 = args[i + 1]
+
+		if operator == "+" then
+			accum = accum + num2
+		elseif operator == "-" then
+			accum = accum - num2
+		elseif operator == "*" then
+			accum = accum * num2
+		elseif operator == "/" then
+			accum = accum / num2
+		end
 	end
+
+	return accum
 end
 
 -- Use this to test this function:
 -- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
 function M.foo()
-	-- print(expr:match(" ( 2.5 *3) + -5"))
+	-- print(expr:match("0 + 2 * 3 * 4"))
 
 	assert(expr:match(" 1 + 2 ") == 3)
     assert(expr:match("1+2+3+4+5") == 15)
