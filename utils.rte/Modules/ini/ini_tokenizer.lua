@@ -44,15 +44,35 @@ local V = l.V
 
 space = S(" \t\n")^0
 
+digit = R("09")
 number = C(
 		P("-")^-1 *
-		R("09")^0 *
+		digit^0 *
 		(
 			P(".") *
-			R("09")^0
+			digit^0
 		)^-1
 	) /
 	tonumber
+	* space
+
+lparen = "(" * space
+rparen = ")" * space
+expr_op = C( S('+-') ) * space
+term_op = C( S('*/') ) * space
+
+expr = space * P{
+	"EXPR";
+	EXPR =
+		V("TERM") * expr_op * V("EXPR") / eval +
+		V("TERM") / eval,
+	TERM =
+		V("FACT") * term_op * V("TERM") / eval +
+		V("FACT") / eval,
+	FACT =
+		lparen * V("EXPR") * rparen / eval +
+		number / eval
+}
 
 function eval(num1, operator, num2)
 	if operator == "+" then
@@ -68,20 +88,16 @@ function eval(num1, operator, num2)
 	end
 end
 
-expr = P{
-	"EXPR";
-	EXPR = ( V("TERM") * C( S("+-") ) * V("EXPR") +
-			 V("TERM") ) / eval,
-	TERM = ( V("FACT") * C( S("/*") ) * V("TERM") +
-			 V("FACT") ) / eval,
-	FACT = ( space * "(" * V("EXPR") * ")" * space +
-			 space * number * space ) / eval
-}
-
 -- Use this to test this function:
 -- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
 function M.foo()
-	print(expr:match(" ( 2.5 *3) + -5"))
+	-- print(expr:match(" ( 2.5 *3) + -5"))
+
+	assert(expr:match(" 1 + 2 ") == 3)
+    assert(expr:match("1+2+3+4+5") == 15)
+    assert(expr:match("2*3*4 + 5*6*7") == 234)
+    assert(expr:match(" 1 * 2 + 3") == 5)
+    assert(expr:match("( 2 +2) *6") == 24)
 end
 
 
