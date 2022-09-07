@@ -32,20 +32,24 @@ local M = {};
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
 
-
+local S = l.S
+local C = l.C
+local P = l.P
+local R = l.R
+local V = l.V
 
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-space = l.S(" \t\n")^0
+space = S(" \t\n")^0
 
-number = l.C(
-		l.P("-")^-1 *
-		l.R("09")^0 *
+number = C(
+		P("-")^-1 *
+		R("09")^0 *
 		(
-			l.P(".") *
-			l.R("09")^0
+			P(".") *
+			R("09")^0
 		)^-1
 	) /
 	tonumber
@@ -64,20 +68,20 @@ function eval(num1, operator, num2)
 	end
 end
 
-expr = l.P{
+expr = P{
 	"EXPR";
-	EXPR = ( l.V("TERM") * l.C( l.S("+-") ) * l.V("EXPR") +
-			 l.V("TERM") ) / eval,
-	TERM = ( l.V("FACT") * l.C( l.S("/*") ) * l.V("TERM") +
-			 l.V("FACT") ) / eval,
-	FACT = ( space * "(" * l.V("EXPR") * ")" * space +
+	EXPR = ( V("TERM") * C( S("+-") ) * V("EXPR") +
+			 V("TERM") ) / eval,
+	TERM = ( V("FACT") * C( S("/*") ) * V("TERM") +
+			 V("FACT") ) / eval,
+	FACT = ( space * "(" * V("EXPR") * ")" * space +
 			 space * number * space ) / eval
 }
 
 -- Use this to test this function:
 -- f, err = loadfile("utils.rte/Modules/ini/ini_tokenizer.lua") f().foo()
 function M.foo()
-	print(expr:match(" ( 2.5 *3) + 5"))
+	print(expr:match(" ( 2.5 *3) + -5"))
 end
 
 
