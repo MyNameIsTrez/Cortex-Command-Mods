@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local colors = require("Data.Colors");
+local colors = dofile("utils.rte/Data/Colors.lua");
 
 
 -- MODULE START ----------------------------------------------------------------

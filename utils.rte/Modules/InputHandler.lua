@@ -1,9 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local keys = require("Data.Keys");
-local keyCodes = require("Data.KeyCodes");
-local colors = require("Data.Colors");
+local keys = dofile("utils.rte/Data/Keys.lua");
+local keyCodes = dofile("utils.rte/Data/KeyCodes.lua");
+local colors = dofile("utils.rte/Data/Colors.lua");
 
 
 -- MODULE START ----------------------------------------------------------------

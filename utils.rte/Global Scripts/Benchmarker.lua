@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules.Utils");
+local utils = dofile("utils.rte/Modules/Utils.lua");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
@@ -9,13 +9,13 @@ local utils = require("Modules.Utils");
 
 function Benchmarker:StartScript()
 	-- CONFIGURABLE VARIABLES
-	
+
 
 	-- Wait for at least 2 frames, because the first frame includes the time it took to load the scene.
 	-- It also allows the user to go back to the main menu to disable the benchmarker, before the game slows down to a crawl.
 	self.frameDelayBeforeBenchmarking = 100;
 
-	
+
 	-- INTERNAL VARIABLES
 	self.tests = {};
 	self.timer = Timer();

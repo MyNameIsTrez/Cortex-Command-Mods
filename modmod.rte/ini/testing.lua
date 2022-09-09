@@ -1,4 +1,4 @@
--- local fileFunctions = require("FileFunctions")
+-- local fileFunctions = dofile("utils.rte/Modules/FileFunctions.lua")
 
 -- Use this to test this function:
 -- f, err = loadfile("utils.rte/Modules/ini/ini_parser.lua") f().foo()

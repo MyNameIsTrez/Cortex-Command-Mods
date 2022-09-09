@@ -1,13 +1,13 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local tokenizer = require("ini.tokenizer")
-local cster = require("ini.cster")
-local aster = require("ini.aster")
+local tokenizer = dofile("modmod.rte/ini/tokenizer.lua")
+local cster = dofile("modmod.rte/ini/cster.lua")
+local aster = dofile("modmod.rte/ini/aster.lua")
 
-local test_files = require("ini.test_files")
+local test_files = dofile("modmod.rte/ini/test_files.lua")
 
-local tests = require("Modules.Tests")
+local tests = dofile("utils.rte/Modules/Tests.lua")
 
 
 -- MODULE START ----------------------------------------------------------------

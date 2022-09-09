@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local inputHandler = require("Modules.InputHandler");
+local inputHandler = dofile("utils.rte/Modules/InputHandler.lua");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------

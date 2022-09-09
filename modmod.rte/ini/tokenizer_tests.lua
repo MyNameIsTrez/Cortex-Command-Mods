@@ -1,11 +1,11 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local tokenizer = require("ini.tokenizer")
+local tokenizer = dofile("modmod.rte/ini/tokenizer.lua")
 
-local test_files = require("ini.test_files")
+local test_files = dofile("modmod.rte/ini/test_files.lua")
 
-local tests = require("Modules.Tests")
+local tests = dofile("utils.rte/Modules/Tests.lua")
 
 
 -- MODULE START ----------------------------------------------------------------

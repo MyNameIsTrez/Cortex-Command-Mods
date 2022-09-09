@@ -1,9 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules.Utils");
+local utils = dofile("utils.rte/Modules/Utils.lua");
 
-local Colors = require("Data.Colors");
+local Colors = dofile("utils.rte/Data/Colors.lua");
 
 
 -- MODULE START ----------------------------------------------------------------

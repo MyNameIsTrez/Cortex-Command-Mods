@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local DrawOptimizer = require("Modules.DrawOptimizer");
+local DrawOptimizer = dofile("utils.rte/Modules/DrawOptimizer.lua");
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------

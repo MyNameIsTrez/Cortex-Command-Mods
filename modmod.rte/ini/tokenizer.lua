@@ -1,8 +1,8 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local file_functions = require("Modules.FileFunctions")
-local utils = require("Modules.Utils")
+local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
 -- MODULE START ----------------------------------------------------------------

@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules.Utils")
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
