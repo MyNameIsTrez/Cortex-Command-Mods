@@ -41,8 +41,7 @@ function M.get_ast(cst)
 	local ast = {}
 
 	for _, a in ipairs(cst) do
-		table.insert(ast, {})
-		local b = ast[#ast]
+		local b = {}
 
 		for _, c in ipairs(a) do
 			if c.type == "property" then
@@ -61,6 +60,10 @@ function M.get_ast(cst)
 				b.children = M.get_ast(c.content)
 				break
 			end
+		end
+
+		if b.property ~= nil then
+			table.insert(ast, b)
 		end
 	end
 

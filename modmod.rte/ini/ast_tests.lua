@@ -51,7 +51,6 @@ function M.ast_tests()
 		{ property = "AddEffect", value = "MOPixel" }
 	})
 	ast_test("comments", {
-		{}
 	})
 	ast_test("nested", {
 		{ property = "Foo", value = "Bar", children = {
