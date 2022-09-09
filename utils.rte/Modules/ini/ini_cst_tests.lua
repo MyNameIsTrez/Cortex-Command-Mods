@@ -2,7 +2,7 @@
 
 
 local ini_tokenizer = require("Modules.ini.ini_tokenizer")
-local ini_parser = require("Modules.ini.ini_parser")
+local ini_cst = require("Modules.ini.ini_cst")
 local tests = require("Modules.Tests")
 
 
@@ -39,28 +39,26 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
--- Use this to test this function:
--- ini_parser_tests, err = loadfile("utils.rte/Modules/ini/ini_parser_tests.lua") ini_parser_tests().parser_tests()
-function M.parser_tests()
+function M.cst_tests()
 	-- test("invalid_tabbing", {}) -- This is expected to raise a "Too many tabs found" error.
 
-	parser_test("lstripped_tab", {
+	cst_test("lstripped_tab", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar" },
 		}
 	})
-	parser_test("simple", {
+	cst_test("simple", {
 		{
 			{ type = "property", content = "AddEffect" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "MOPixel" },
 		}
 	})
-	parser_test("comments", {
+	cst_test("comments", {
 		{
 			{ type = "extra", content = "// foo"}, { type = "extra", content = "\n" },
 			{ type = "extra", content = "/*a\nb\nc*/" }, { type = "extra", content = "\n" },
 		},
 	})
-	parser_test("nested", {
+	cst_test("nested", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -70,7 +68,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("multiple", {
+	cst_test("multiple", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -88,7 +86,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("complex", {
+	cst_test("complex", {
 		{
 			{ type = "extra", content = "// foo"}, { type = "extra", content = "\n" },
 			{ type = "extra", content = "/*a\nb\nc*/" }, { type = "extra", content = "\n" },
@@ -108,7 +106,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("deindentation_1", {
+	cst_test("deindentation_1", {
 		{
 			{ type = "property", content = "PresetName" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Foo" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -135,7 +133,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("deindentation_2", {
+	cst_test("deindentation_2", {
 		{
 			{ type = "property", content = "AddEffect" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "MOPixel" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -167,7 +165,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("deindentation_3", {
+	cst_test("deindentation_3", {
 		{
 			{ type = "property", content = "AddEffect" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "MOPixel" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -200,12 +198,12 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("spaces", {
+	cst_test("spaces", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar Baz" },
 		}
 	})
-	parser_test("comment_before_tabs", {
+	cst_test("comment_before_tabs", {
 		{
 			{ type = "property", content = "A1" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "A2" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -228,7 +226,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("comment_in_tabs", {
+	cst_test("comment_in_tabs", {
 		{
 			{ type = "property", content = "A1" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "A2" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -251,7 +249,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("spaces_at_start_of_line", {
+	cst_test("spaces_at_start_of_line", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar" }, { type = "extra", content = "\n" }, { type = "extra", content = "    " },
 		},
@@ -259,7 +257,7 @@ function M.parser_tests()
 			{ type = "property", content = "Baz" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bee" },
 		}
 	})
-	parser_test("datamodule", {
+	cst_test("datamodule", {
 		{
 			{ type = "property", content = "DataModule" }, { type = "extra", content = "\n" },
 			{ type = "children", content = {
@@ -277,7 +275,7 @@ function M.parser_tests()
 			}}
 		}
 	})
-	parser_test("value_on_next_line", {
+	cst_test("value_on_next_line", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = "\n" },
 			{ type = "value", content = "Bar" },
@@ -289,13 +287,13 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function parser_test(filename, expected)
+function cst_test(filename, expected)
 	filepath = tests.get_test_path_from_filename(filename)
 
 	tokens = ini_tokenizer.get_tokens(filepath)
-	ini_cst = ini_parser.get_parsed_tokens(tokens)
+	cst = ini_cst.get_cst(tokens)
 
-	tests.test(filename, ini_cst, expected)
+	tests.test(filename, cst, expected)
 end
 
 

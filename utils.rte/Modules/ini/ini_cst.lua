@@ -37,7 +37,7 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_parsed_tokens(tokens, parsed, token_idx, depth)
+function M.get_cst(tokens, parsed, token_idx, depth)
 	--[[
 	newline -> start -> property -> equals -> value
 	^                                         v
@@ -61,7 +61,7 @@ function M.get_parsed_tokens(tokens, parsed, token_idx, depth)
 		if     state == "newline" and is_deeper(depth, token, tokens, token_idx[1] + 1) then
 			local children = { type = "children", content = {} }
 			append(children, parsed)
-			M.get_parsed_tokens(tokens, children.content, token_idx, depth + 1)
+			M.get_cst(tokens, children.content, token_idx, depth + 1)
 			-- "state" is deliberately not being changed here.
 		elseif state == "newline" and is_same_depth(depth, token, tokens, token_idx[1] + 1) then
 			table.insert(parsed, {})

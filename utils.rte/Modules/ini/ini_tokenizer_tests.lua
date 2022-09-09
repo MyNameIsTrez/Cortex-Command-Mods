@@ -38,8 +38,6 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
--- Use this to test this function:
--- ini_tokenizer_tests, err = loadfile("utils.rte/Modules/ini/ini_tokenizer_tests.lua") ini_tokenizer_tests().tokenizer_tests()
 function M.tokenizer_tests()
 	-- It's fine that the tokenizer doesn't realize that this is an invalid file, because complex checking is the parser's responsibility.
 	tokenizer_test("invalid_tabbing", {
