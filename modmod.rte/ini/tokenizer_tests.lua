@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local tokenizer = dofile("modmod.rte/ini/tokenizer.lua")
+local tokens_generator = dofile("modmod.rte/ini/tokens_generator.lua")
 
 local test_files = dofile("modmod.rte/ini/test_files.lua")
 
@@ -156,7 +156,7 @@ end
 function tokenizer_test(filename, expected)
 	local filepath = test_files.get_test_path_from_filename(filename)
 
-	local tokens = tokenizer.get_tokens(filepath)
+	local tokens = tokens_generator.get_tokens(filepath)
 
 	local tokens_without_metadata = {}
 	for _, token in ipairs(tokens) do
