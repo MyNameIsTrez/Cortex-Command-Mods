@@ -1,7 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local ini_tokenizer = require("Modules.ini.ini_tokenizer")
+local tokenizer = require("ini.tokenizer")
+
+local test_files = require("ini.test_files")
 
 local tests = require("Modules.Tests")
 
@@ -152,11 +154,11 @@ end
 
 
 function tokenizer_test(filename, expected)
-	filepath = tests.get_test_path_from_filename(filename)
+	local filepath = test_files.get_test_path_from_filename(filename)
 
-	tokens = ini_tokenizer.get_tokens(filepath)
+	local tokens = tokenizer.get_tokens(filepath)
 
-	tokens_without_metadata = {}
+	local tokens_without_metadata = {}
 	for _, token in ipairs(tokens) do
 		table.insert(tokens_without_metadata, { type = token.type, content = token.content })
 	end

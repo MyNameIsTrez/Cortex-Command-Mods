@@ -1,9 +1,11 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local ini_tokenizer = require("Modules.ini.ini_tokenizer")
-local ini_cst = require("Modules.ini.ini_cst")
-local ini_ast = require("Modules.ini.ini_ast")
+local tokenizer = require("ini.tokenizer")
+local cster = require("ini.cster")
+local aster = require("ini.aster")
+
+local test_files = require("ini.test_files")
 
 local tests = require("Modules.Tests")
 
@@ -151,11 +153,11 @@ end
 
 
 function ast_test(filename, expected)
-	filepath = tests.get_test_path_from_filename(filename)
+	local filepath = test_files.get_test_path_from_filename(filename)
 
-	tokens = ini_tokenizer.get_tokens(filepath)
-	cst = ini_cst.get_cst(tokens)
-	ast = ini_ast.get_ast(cst)
+	local tokens = tokenizer.get_tokens(filepath)
+	local cst = cster.get_cst(tokens)
+	local ast = aster.get_ast(cst)
 
 	tests.test(filename, ast, expected)
 end

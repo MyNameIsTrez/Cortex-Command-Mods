@@ -16,7 +16,7 @@ end
 
 
 function Main:UpdateScript()
-	-- print("Main:UpdateScript() of utils.rte");
+	print("Main:UpdateScript() of utils.rte");
 
 	-- inputHandler.Update();
 	-- AnyInput() -- Only triggers when a key is initially pressed.
@@ -27,5 +27,3 @@ end
 
 
 -- METHODS ---------------------------------------------------------------------
-
-

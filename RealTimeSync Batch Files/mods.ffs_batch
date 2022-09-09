@@ -6,15 +6,7 @@
         <IgnoreTimeShift/>
     </Compare>
     <Synchronize>
-        <Variant>Custom</Variant>
-        <CustomDirections>
-            <LeftOnly>right</LeftOnly>
-            <RightOnly>none</RightOnly>
-            <LeftNewer>right</LeftNewer>
-            <RightNewer>right</RightNewer>
-            <Different>right</Different>
-            <Conflict>right</Conflict>
-        </CustomDirections>
+        <Variant>TwoWay</Variant>
         <DetectMovedFiles>false</DetectMovedFiles>
         <DeletionPolicy>RecycleBin</DeletionPolicy>
         <VersioningFolder Style="Replace"/>
@@ -37,6 +29,10 @@
         <Pair>
             <Left>I:\Programming\Cortex-Command-Mods\utils.rte</Left>
             <Right>I:\Programming\Cortex-Command-Community-Project-Data\utils.rte</Right>
+        </Pair>
+        <Pair>
+            <Left>I:\Programming\Cortex-Command-Mods\modmod.rte</Left>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\modmod.rte</Right>
         </Pair>
     </FolderPairs>
     <Errors Ignore="false" Retry="0" Delay="5"/>

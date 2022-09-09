@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FreeFileSync XmlType="REAL" XmlFormat="2">
-    <Directories>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\utils.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Mods\utils.rte</Item>
-    </Directories>
-    <Delay>1</Delay>
-    <Commandline>"C:\Program Files\FreeFileSync\FreeFileSync.exe" "I:\Programming\Cortex-Command-Mods\RealTimeSync Batch Files\Utils\utils.ffs_batch"</Commandline>
-</FreeFileSync>

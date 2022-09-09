@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local utils = require("Modules.Utils")
+
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -37,14 +37,8 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.test(test_name, result, expected)
-	if not utils.deepequals(result, expected) then
-		print("Result:")
-		utils.RecursivelyPrint(result)
-		print("Expected:")
-		utils.RecursivelyPrint(expected)
-		error(string.format("The test '%s' failed, report it to MyNameIsTrez#1585!", test_name))
-	end
+function M.get_test_path_from_filename(filename)
+	return string.format("modmod.rte/ini/ini_test_files/%s.ini", filename)
 end
 
 
