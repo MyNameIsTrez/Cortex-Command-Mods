@@ -7,7 +7,6 @@
 
 
 local M = {};
-M = M;
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------

@@ -8,8 +8,6 @@
 
 
 local M = {};
-Enum = M;
-
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------

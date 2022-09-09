@@ -10,7 +10,6 @@ local colors = require("Data.Colors");
 
 
 local M = {};
-_G[...] = M;
 
 
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
