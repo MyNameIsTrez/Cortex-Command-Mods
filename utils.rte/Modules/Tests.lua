@@ -37,13 +37,13 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.test(test_name, result, expected)
+function M.test(test_type, test_name, result, expected)
 	if not utils.deepequals(result, expected) then
 		print("Result:")
 		utils.RecursivelyPrint(result)
 		print("Expected:")
 		utils.RecursivelyPrint(expected)
-		error(string.format("The test '%s' failed, report it to MyNameIsTrez#1585!", test_name))
+		error(string.format("The '%s' test '%s' failed, report it to MyNameIsTrez#1585!", test_type, test_name))
 	end
 end
 

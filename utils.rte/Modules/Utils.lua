@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-
+local l = dofile("utils.rte/Modules/lulpeg.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -32,6 +32,7 @@ function M.PrintMOs()
 	end
 end
 
+
 ---Use like "for mo in utils.MOIterator() do".
 ---This is a replacement of this code which is found in almost every mod:
 ---"for i = 1, MovableMan:GetMOIDCount() - 1 do local mo = MovableMan:GetMOFromID(i); <code that uses mo> end"
@@ -50,6 +51,7 @@ function M.MOIterator()
 		return mos[j];
 	end;
 end
+
 
 ---Prints the content of a table recursively so it can easily be inspected in a console.
 ---@param tab table
@@ -96,6 +98,7 @@ function M.RecursivelyPrint(tab, recursive, depth)
 	end
 end
 
+
 ---Re-maps a number from one range to another.
 ---
 ---If you are mapping a lot with the same slope you should use MapUsingSlope() with GetMapSlope() instead to save performance.
@@ -114,6 +117,7 @@ function M.Map(input, inputStart, inputEnd, outputStart, outputEnd)
 	return outputStart + slope * (input - inputStart);
 end
 
+
 ---If you are mapping a lot with the same slope you should use this function to save performance, otherwise use Map().
 ---
 ---The slope should be calculated only once using GetMapSlope().
@@ -125,6 +129,7 @@ end
 function M.MapUsingSlope(input, slope, outputStart, inputStart)
 	return outputStart + slope * (input - inputStart);
 end
+
 
 ---Gets the slope for MapUsingSlope().
 ---
@@ -138,12 +143,14 @@ function M.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
 	return (outputEnd - outputStart) / (inputEnd - inputStart);
 end
 
+
 ---Prints a formatted string.
 ---@param s string
 ---@param ... any
 function M.Printf(s, ...)
 	print(string.format(s, ...))
 end
+
 
 ---Returns n as a string with thousands separators.
 ---@param n number
@@ -153,6 +160,7 @@ function M.AddThousandsSeparator(n)
 	local left, num, right = string.match(n, '^([^%d]*%d)(%d*)(.-)$')
 	return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
+
 
 ---Makes a shallow copy of a table, which means that tables inside of it won't be copied but referenced.
 ---See http://lua-users.org/wiki/CopyTable for more information on shallow vs deep copies.
@@ -166,6 +174,7 @@ function M.ShallowlyCopy(t)
 	return t2;
 end
 
+
 ---Counts the number of keys in a table.
 ---This isn't the same as using the # operator, since that doesn't count the keys, only the indices.
 ---@param t table
@@ -177,6 +186,7 @@ function M.GetKeyCount(t)
 	end
 	return count;
 end
+
 
 -- function M.GetEmptyTableNDim(dimensionsTable, _depth)
 -- 	local _depth = _depth or 1;
@@ -190,13 +200,16 @@ end
 -- 	return t;
 -- end
 
+
 function M.lstrip(str)
 	return str:match("%s*(.*)")
 end
 
+
 -- function M.rstrip(str)
 -- 	return str:match("(.-)%s*$")
 -- end
+
 
 -- Source: https://web.archive.org/web/20131225070434/http://snippets.luacode.org/snippets/Deep_Comparison_of_Two_Values_3
 function M.deepequals(t1, t2, ignore_mt)
@@ -220,6 +233,15 @@ function M.deepequals(t1, t2, ignore_mt)
 end
 
 
+-- Source: https://staff.fnwi.uva.nl/h.vandermeer/docs/lua/lualpeg/lpeg.html
+-- function M.split(s, sep)
+--   sep = lpeg.P(sep)
+--   local elem = lpeg.C((1 - sep)^0)
+--   local p = lpeg.Ct(elem * (sep * elem)^0)
+--   return lpeg.match(p, s)
+-- end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
@@ -233,6 +255,7 @@ function GetValueString(value)
 		return type(value);
 	end
 end
+
 
 -- MODULE END ------------------------------------------------------------------
 
