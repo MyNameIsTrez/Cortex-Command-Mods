@@ -44,6 +44,10 @@ local M = {};
 
 
 function M.ast_tests()
+	ast_test("path", {
+		{ property = "FilePath", value = "A/B" },
+		{ property = "AirResistance", value = "0.05" }
+	})
 	ast_test("lstripped_tab", {
 		{ property = "Foo", value = "Bar" }
 	})
@@ -158,7 +162,7 @@ function ast_test(filename, expected)
 	local cst = cst_generator.get_cst(tokens)
 	local ast = ast_generator.get_ast(cst)
 
-	tests.test(filename, ast, expected)
+	tests.test("ast", filename, ast, expected)
 end
 
 

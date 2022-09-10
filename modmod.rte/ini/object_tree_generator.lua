@@ -41,16 +41,18 @@ function M.get_object_tree(ast)
 	local object_tree = {}
 
 	for _, a in ipairs(ast) do
-		local b = {
-			property = a.property,
-			value = a.value
-		}
-
 		if a.children ~= nil then
 			local children = M.get_object_tree(a.children)
+
+			local b = {
+				property = a.property,
+				value = a.value
+			}
+
 			if #children > 0 then
 				b.children = children
 			end
+
 			table.insert(object_tree, b)
 		end
 	end

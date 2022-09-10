@@ -43,8 +43,16 @@ local M = {};
 
 
 function M.cst_tests()
-	-- test("invalid_tabbing", {}) -- This is expected to raise a "Too many tabs found" error.
+	-- cst_test("invalid_tabbing", {}) -- This is expected to raise a "Too many tabs found" error.
 
+	cst_test("path", {
+		{
+			{ type = "property", content = "FilePath" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "A/B" }, { type = "extra", content = "\n" }
+		},
+		{
+			{ type = "property", content = "AirResistance" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "0.05" }, { type = "extra", content = "\n" }
+		}
+	})
 	cst_test("lstripped_tab", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar" },
@@ -296,7 +304,7 @@ function cst_test(filename, expected)
 	local tokens = tokens_generator.get_tokens(filepath)
 	local cst = cst_generator.get_cst(tokens)
 
-	tests.test(filename, cst, expected)
+	tests.test("cst", filename, cst, expected)
 end
 
 

@@ -45,6 +45,8 @@ local M = {};
 
 
 function M.object_tree_tests()
+	object_tree_test("path", {
+	})
 	object_tree_test("lstripped_tab", {
 	})
 	object_tree_test("simple", {
@@ -115,7 +117,7 @@ function object_tree_test(filename, expected)
 	local ast = ast_generator.get_ast(cst)
 	local object_tree = object_tree_generator.get_object_tree(ast)
 
-	tests.test(filename, object_tree, expected)
+	tests.test("object tree", filename, object_tree, expected)
 end
 
 

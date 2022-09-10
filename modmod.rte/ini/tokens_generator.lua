@@ -4,6 +4,8 @@
 local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
+local l = dofile("utils.rte/Modules/lulpeg.lua")
+
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -32,7 +34,17 @@ local M = {};
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
 
+local P = l.P
+local C = l.C
 
+local space = l.S(" \t")^0
+local delimiter =
+	P(space^-1 * "=" ) +
+	P(space^-1 * "//") +
+	P(space^-1 * "/*") +
+	P(space^-1 * "\n")
+
+local word = C((1 - delimiter)^1)
 
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
@@ -174,11 +186,9 @@ end
 
 
 function tokenize_word(i, text_len, text, tokens, filepath)
-	local token = ""
+	local subtext = text:sub(i)
 
-	subtext = text:sub(i)
-
-	token = (subtext .. "\n"):match("(.-)%s*[=%/\n]")
+	local token = word:match(subtext)
 
 	i = i + #token
 

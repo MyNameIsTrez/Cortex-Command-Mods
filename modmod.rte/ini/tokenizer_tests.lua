@@ -48,6 +48,9 @@ function M.tokenizer_tests()
 		{ type = "TABS", content = "\t\t" }, { type = "WORD", content = "Foo" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "EXTRA", content = " " }, { type = "WORD", content = "Bar" },
 	})
 
+	tokenizer_test("path", {
+		{ type = "WORD", content = "FilePath" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "EXTRA", content = " " }, { type = "WORD", content = "A/B" }, { type = "NEWLINES", content = "\n" }, { type = "WORD", content = "AirResistance" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "EXTRA", content = " " }, { type = "WORD", content = "0.05" }, { type = "NEWLINES", content = "\n" }
+	})
 	tokenizer_test("lstripped_tab", {
 		{ type = "WORD", content = "Foo" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "EXTRA", content = " " }, { type = "WORD", content = "Bar" }
 	})
@@ -163,7 +166,7 @@ function tokenizer_test(filename, expected)
 		table.insert(tokens_without_metadata, { type = token.type, content = token.content })
 	end
 
-	tests.test(filename, tokens_without_metadata, expected)
+	tests.test("tokenizer", filename, tokens_without_metadata, expected)
 end
 
 
