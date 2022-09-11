@@ -47,26 +47,60 @@ function M:init()
 	local cst = cst_generator.get_cst(tokens)
 	local ast = ast_generator.get_ast(cst)
 
+	self.pixels_of_indentation_per_depth = 20
+	self.uses_small_font = false
+
+	self.font_height = FrameMan:CalculateTextHeight("foo", 0, self.uses_small_font)
+	self.vertical_padding = 5
+	self.vertical_stride = self.font_height + self.vertical_padding
+
 	self.object_tree = object_tree_generator.get_object_tree(ast)
+
+	self.object_tree[1].collapsed = false
+
+	self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
+
+	self:_update_object_tree_width_and_height(self.object_tree_strings)
 
 	return self
 end
 
 
 function M:update()
-	self.object_tree[1].collapsed = false
-
-	local object_tree_strings = get_object_tree_strings(self.object_tree)
-
 	-- utils.RecursivelyPrint(object_tree_strings)
-	draw_object_tree_strings(object_tree_strings, {-1})
+	self:_draw_object_tree_background(self.object_tree_strings, {-1})
+	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function get_object_tree_strings(object_tree, depth)
+function M:_update_object_tree_width_and_height(object_tree_strings)
+	self.tree_width = 0
+	self.tree_height = 0
+	self:_update_object_tree_width_and_height_recursively(object_tree_strings, {-1})
+end
+
+
+function M:_update_object_tree_width_and_height_recursively(object_tree_strings, height)
+	local x = object_tree_strings.depth * self.pixels_of_indentation_per_depth
+
+	for i, v in ipairs(object_tree_strings) do
+		if type(v) == "table" then
+			self:_update_object_tree_width_and_height_recursively(v, height)
+		else
+			height[1] = height[1] + 1
+			local y = height[1] * self.vertical_stride
+
+			self.tree_width = math.max(self.tree_width, x + FrameMan:CalculateTextWidth(v, self.uses_small_font))
+			self.tree_height = math.max(self.tree_height, y + self.vertical_stride)
+		end
+	end
+end
+
+
+function M:_get_object_tree_strings(object_tree, depth)
 	depth = depth or 0
 
 	local object_tree_strings = {}
@@ -95,23 +129,30 @@ function get_object_tree_strings(object_tree, depth)
 		table.insert(object_tree_strings, str)
 
 		if v.children ~= nil and not v.collapsed then
-			table.insert(object_tree_strings, get_object_tree_strings(v.children, depth + 1))
+			table.insert(object_tree_strings, self:_get_object_tree_strings(v.children, depth + 1))
 		end
 	end
 
 	return object_tree_strings
 end
 
-function draw_object_tree_strings(object_tree_strings, height)
-	local x = object_tree_strings.depth * 20
+
+function M:_draw_object_tree_background(object_tree_strings, height)
+	PrimitiveMan:DrawRoundedBoxFillPrimitive(Vector(0, 0), Vector(self.tree_width, self.tree_height), 0, 1)
+end
+
+
+function M:_draw_object_tree_strings(object_tree_strings, height)
+	local x = object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
-			draw_object_tree_strings(v, height)
+			self:_draw_object_tree_strings(v, height)
 		else
 			height[1] = height[1] + 1
-			local y = height[1] * 13
-			PrimitiveMan:DrawTextPrimitive(Vector(x, y), v, false, 0);
+
+			local y = height[1] * self.vertical_stride
+			PrimitiveMan:DrawTextPrimitive(Vector(x, y), v, self.uses_small_font, 0);
 		end
 	end
 end
