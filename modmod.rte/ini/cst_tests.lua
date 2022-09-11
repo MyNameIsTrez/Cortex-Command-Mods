@@ -105,14 +105,12 @@ function M.cst_tests()
 			{ type = "children", content = {
 				{
 					{ type = "extra", content = "\t" }, { type = "property", content = "PresetName" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = "  " }, { type = "value", content = "red_dot_tiny" }, { type = "extra", content = "\n" },
-					{ type = "children", content = {
-						{
-							{ type = "extra", content = "\t\t" }, { type = "property", content = "Mass" }, { type = "extra", content = "  " }, { type = "extra", content = "=" }, { type = "extra", content = "  " }, { type = "value", content = "0.0" }, { type = "extra", content = "\n" },
-						},
-						{
-							{ type = "extra", content = "\t\t" }, { type = "property", content = "Xd" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "42" },
-						}
-					}}
+				},
+				{
+					{ type = "extra", content = "\t" }, { type = "property", content = "Mass" }, { type = "extra", content = "  " }, { type = "extra", content = "=" }, { type = "extra", content = "  " }, { type = "value", content = "0.0" }, { type = "extra", content = "\n" },
+				},
+				{
+					{ type = "extra", content = "\t" }, { type = "property", content = "Xd" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "42" }, { type = "extra", content = "\n" },
 				}
 			}}
 		}

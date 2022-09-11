@@ -71,10 +71,9 @@ function M.ast_tests()
 	})
 	ast_test("complex", {
 		{ property = "AddEffect", value = "MOPixel", children = {
-			{ property = "PresetName", value = "red_dot_tiny", children = {
-				{ property = "Mass", value = "0.0" },
-				{ property = "Xd", value = "42" }
-			}}
+			{ property = "PresetName", value = "red_dot_tiny" },
+			{ property = "Mass", value = "0.0" },
+			{ property = "Xd", value = "42" }
 		}}
 	})
 	ast_test("deindentation_1", {

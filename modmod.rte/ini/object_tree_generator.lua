@@ -42,15 +42,23 @@ function M.get_object_tree(ast)
 
 	for _, a in ipairs(ast) do
 		if a.children ~= nil then
-			local children = M.get_object_tree(a.children)
+			local b = {}
 
-			local b = {
-				property = a.property,
-				value = a.value
-			}
+			local children = M.get_object_tree(a.children)
 
 			if #children > 0 then
 				b.children = children
+				b.collapsed = true
+			end
+
+			b.property = a.property
+			b.value = a.value
+
+			for _, child in ipairs(a.children) do
+				if child.property == "PresetName" then
+					b.preset_name = child.value
+					break
+				end
 			end
 
 			table.insert(object_tree, b)

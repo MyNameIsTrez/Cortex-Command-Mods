@@ -54,42 +54,40 @@ function M.object_tree_tests()
 	object_tree_test("comments", {
 	})
 	object_tree_test("nested", {
-		{ property = "Foo", value = "Bar"}
+		{ property = "Foo", value = "Bar" }
 	})
 	object_tree_test("multiple", {
 		{ property = "Foo", value = "Bar"},
 		{ property = "A", value = "B"}
 	})
 	object_tree_test("complex", {
-		{ property = "AddEffect", value = "MOPixel", children = {
-			{ property = "PresetName", value = "red_dot_tiny"}
-		}}
+		{ property = "AddEffect", value = "MOPixel", preset_name = "red_dot_tiny"}
 	})
 	object_tree_test("deindentation_1", {
 		{ property = "PresetName", value = "Foo"}
 	})
 	object_tree_test("deindentation_2", {
-		{ property = "AddEffect", value = "MOPixel", children = {
+		{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
 			{ property = "PresetName", value = "Foo"}
 		}}
 	})
 	object_tree_test("deindentation_3", {
-		{ property = "AddEffect", value = "MOPixel", children = {
+		{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
 			{ property = "PresetName", value = "Foo"}
 		}}
 	})
 	object_tree_test("spaces", {
 	})
 	object_tree_test("comment_before_tabs", {
-		{ property = "A1", value = "A2", children = {
-			{ property = "B1", value = "B2", children = {
+		{ property = "A1", value = "A2", collapsed = true, children = {
+			{ property = "B1", value = "B2", collapsed = true, children = {
 				{ property = "C1", value = "C2"}
 			}}
 		}}
 	})
 	object_tree_test("comment_in_tabs", {
-		{ property = "A1", value = "A2", children = {
-			{ property = "B1", value = "B2", children = {
+		{ property = "A1", value = "A2", collapsed = true, children = {
+			{ property = "B1", value = "B2", collapsed = true, children = {
 				{ property = "C1", value = "C2"}
 			}}
 		}}
@@ -97,7 +95,7 @@ function M.object_tree_tests()
 	object_tree_test("spaces_at_start_of_line", {
 	})
 	object_tree_test("datamodule", {
-		{ property = "DataModule", children = {
+		{ property = "DataModule", collapsed = true, children = {
 			{ property = "IconFile", value = "ContentFile"},
 		}}
 	})
