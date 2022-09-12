@@ -242,6 +242,21 @@ end
 -- end
 
 
+function M.get_first_human_player_id()
+	local activity = ActivityMan:GetActivity();
+	for player_id=0, activity.PlayerCount do
+		if activity:PlayerActive(player_id) and activity:PlayerHuman(player_id) then
+			return player_id
+		end
+	end
+end
+
+
+-- function M.round(n)
+-- 	return math.floor(n + 0.5)
+-- end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
