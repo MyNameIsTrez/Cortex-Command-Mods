@@ -68,93 +68,104 @@ function M.ast_tests()
 			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
 		}}
 	})
-	-- ast_test("multiple", {
-	-- 	{ property = "Foo", value = "Bar", children = {
-	-- 		{ property = "Baz", value = "Bee" }
-	-- 	}},
-	-- 	{ property = "A", value = "B", children = {
-	-- 		{ property = "C", value = "D" }
-	-- 	}}
-	-- })
-	-- ast_test("complex", {
-	-- 	{ property = "AddEffect", value = "MOPixel", children = {
-	-- 		{ property = "PresetName", value = "red_dot_tiny" },
-	-- 		{ property = "Mass", value = "0.0" },
-	-- 		{ property = "Xd", value = "42" }
-	-- 	}}
-	-- })
-	-- ast_test("deindentation_1", {
-	-- 	{ property = "PresetName", value = "Foo", children = {
-	-- 		{ property = "A1", value = "X" },
-	-- 		{ property = "A2", value = "X" },
-	-- 		{ property = "B1", value = "X" },
-	-- 		{ property = "B2", value = "X" },
-	-- 		{ property = "C1", value = "X" },
-	-- 		{ property = "C2", value = "X" }
-	-- 	}}
-	-- })
-	-- ast_test("deindentation_2", {
-	-- 	{ property = "AddEffect", value = "MOPixel", children = {
-	-- 		{ property = "PresetName", value = "Foo", children = {
-	-- 			{ property = "A1", value = "X" },
-	-- 			{ property = "A2", value = "X" },
-	-- 			{ property = "B1", value = "X" },
-	-- 			{ property = "B2", value = "X" },
-	-- 			{ property = "C1", value = "X" },
-	-- 			{ property = "C2", value = "X" }
-	-- 		}}
-	-- 	}}
-	-- })
-	-- ast_test("deindentation_3", {
-	-- 	{ property = "AddEffect", value = "MOPixel", children = {
-	-- 		{ property = "PresetName", value = "Foo", children = {
-	-- 			{ property = "A1", value = "X" },
-	-- 			{ property = "A2", value = "X" },
-	-- 			{ property = "B1", value = "X" },
-	-- 			{ property = "B2", value = "X" },
-	-- 			{ property = "C1", value = "X" },
-	-- 			{ property = "C2", value = "X" }
-	-- 		}}
-	-- 	}}
-	-- })
-	-- ast_test("spaces", {
-	-- 	{ property = "Foo", value = "Bar Baz" }
-	-- })
-	-- ast_test("comment_before_tabs", {
-	-- 	{ property = "A1", value = "A2", children = {
-	-- 		{ property = "B1", value = "B2", children = {
-	-- 			{ property = "C1", value = "C2", children = {
-	-- 				{ property = "D1", value = "D2" },
-	-- 				{ property = "E1", value = "E2" }
-	-- 			}}
-	-- 		}}
-	-- 	}}
-	-- })
-	-- ast_test("comment_in_tabs", {
-	-- 	{ property = "A1", value = "A2", children = {
-	-- 		{ property = "B1", value = "B2", children = {
-	-- 			{ property = "C1", value = "C2", children = {
-	-- 				{ property = "D1", value = "D2" },
-	-- 				{ property = "E1", value = "E2" }
-	-- 			}}
-	-- 		}}
-	-- 	}}
-	-- })
-	-- ast_test("spaces_at_start_of_line", {
-	-- 	{ property = "Foo", value = "Bar" },
-	-- 	{ property = "Baz", value = "Bee" }
-	-- })
-	-- ast_test("datamodule", {
-	-- 	{ property = "DataModule", children = {
-	-- 		{ property = "IconFile", value = "ContentFile", children = {
-	-- 			{ property = "FilePath", value = "Foo" }
-	-- 		}},
-	-- 		{ property = "ModuleName", value = "Bar" }
-	-- 	}}
-	-- })
-	-- ast_test("value_on_next_line", {
-	-- 	{ property = "Foo", value = "Bar" }
-	-- })
+	cst = get_cst("multiple")
+	ast_test("multiple", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
+		}},
+		{ parent = cst[2], property_index = 1, value_index = 5, children = {
+			{ parent = cst[2][7].content[1], property_index = 2, value_index = 6 }
+		}}
+	})
+	cst = get_cst("complex")
+	ast_test("complex", {
+		{ parent = cst[1], property_index = 5, value_index = 9, children = {
+			{ parent = cst[1][12].content[1], property_index = 2, value_index = 6 },
+			{ parent = cst[1][12].content[2], property_index = 2, value_index = 6 },
+			{ parent = cst[1][12].content[3], property_index = 2, value_index = 6 }
+		}}
+	})
+	cst = get_cst("deindentation_1")
+	ast_test("deindentation_1", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 },
+			{ parent = cst[1][7].content[2], property_index = 2, value_index = 6 },
+			{ parent = cst[1][7].content[3], property_index = 2, value_index = 6 },
+			{ parent = cst[1][7].content[4], property_index = 2, value_index = 6 },
+			{ parent = cst[1][7].content[5], property_index = 2, value_index = 6 },
+			{ parent = cst[1][7].content[6], property_index = 2, value_index = 6 }
+		}}
+	})
+	cst = get_cst("deindentation_2")
+	ast_test("deindentation_2", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
+				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[2], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[3], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[4], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[5], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[6], property_index = 2, value_index = 6 }
+			}}
+		}}
+	})
+	cst = get_cst("deindentation_3")
+	ast_test("deindentation_3", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
+				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[2], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[3], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[4], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[5], property_index = 2, value_index = 6 },
+				{ parent = cst[1][7].content[1][8].content[6], property_index = 2, value_index = 6 }
+			}}
+		}}
+	})
+	cst = get_cst("spaces")
+	ast_test("spaces", {
+		{ parent = cst[1], property_index = 1, value_index = 5 }
+	})
+	cst = get_cst("comment_before_tabs")
+	ast_test("comment_before_tabs", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
+				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6, children = {
+					{ parent = cst[1][7].content[1][8].content[1][8].content[1], property_index = 3, value_index = 7 },
+					{ parent = cst[1][7].content[1][8].content[1][8].content[2], property_index = 2, value_index = 6 }
+				}}
+			}}
+		}}
+	})
+	cst = get_cst("comment_in_tabs")
+	ast_test("comment_in_tabs", {
+		{ parent = cst[1], property_index = 1, value_index = 5, children = {
+			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
+				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6, children = {
+					{ parent = cst[1][7].content[1][8].content[1][8].content[1], property_index = 4, value_index = 8 },
+					{ parent = cst[1][7].content[1][8].content[1][8].content[2], property_index = 2, value_index = 6 }
+				}}
+			}}
+		}}
+	})
+	cst = get_cst("spaces_at_start_of_line")
+	ast_test("spaces_at_start_of_line", {
+		{ parent = cst[1], property_index = 1, value_index = 5 },
+		{ parent = cst[2], property_index = 1, value_index = 5 }
+	})
+	cst = get_cst("datamodule")
+	ast_test("datamodule", {
+		{ parent = cst[1], property_index = 1, children = {
+			{ parent = cst[1][3].content[1], property_index = 2, value_index = 6, children = {
+				{ parent = cst[1][3].content[1][8].content[1], property_index = 2, value_index = 6 }
+			}},
+			{ parent = cst[1][3].content[2], property_index = 2, value_index = 6 },
+		}}
+	})
+	cst = get_cst("value_on_next_line")
+	ast_test("value_on_next_line", {
+		{ parent = cst[1], property_index = 1, value_index = 5 },
+	})
 end
 
 
