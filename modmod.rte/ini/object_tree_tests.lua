@@ -45,62 +45,69 @@ local M = {};
 
 
 function M.object_tree_tests()
+	local cst
+
+	cst = get_cst("path")
 	object_tree_test("path", {
 	})
+	cst = get_cst("lstripped_tab")
 	object_tree_test("lstripped_tab", {
 	})
+	cst = get_cst("simple")
 	object_tree_test("simple", {
 	})
+	cst = get_cst("comments")
 	object_tree_test("comments", {
 	})
+	cst = get_cst("nested")
 	object_tree_test("nested", {
-		{ property = "Foo", value = "Bar" }
+		{ parent = cst[1], property_index = 1, value_index = 5 }
 	})
-	object_tree_test("multiple", {
-		{ property = "Foo", value = "Bar"},
-		{ property = "A", value = "B"}
-	})
-	object_tree_test("complex", {
-		{ property = "AddEffect", value = "MOPixel", preset_name = "red_dot_tiny"}
-	})
-	object_tree_test("deindentation_1", {
-		{ property = "PresetName", value = "Foo"}
-	})
-	object_tree_test("deindentation_2", {
-		{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
-			{ property = "PresetName", value = "Foo"}
-		}}
-	})
-	object_tree_test("deindentation_3", {
-		{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
-			{ property = "PresetName", value = "Foo"}
-		}}
-	})
-	object_tree_test("spaces", {
-	})
-	object_tree_test("comment_before_tabs", {
-		{ property = "A1", value = "A2", collapsed = true, children = {
-			{ property = "B1", value = "B2", collapsed = true, children = {
-				{ property = "C1", value = "C2"}
-			}}
-		}}
-	})
-	object_tree_test("comment_in_tabs", {
-		{ property = "A1", value = "A2", collapsed = true, children = {
-			{ property = "B1", value = "B2", collapsed = true, children = {
-				{ property = "C1", value = "C2"}
-			}}
-		}}
-	})
-	object_tree_test("spaces_at_start_of_line", {
-	})
-	object_tree_test("datamodule", {
-		{ property = "DataModule", collapsed = true, children = {
-			{ property = "IconFile", value = "ContentFile"},
-		}}
-	})
-	object_tree_test("value_on_next_line", {
-	})
+	-- object_tree_test("multiple", {
+	-- 	{ property = "Foo", value = "Bar"},
+	-- 	{ property = "A", value = "B"}
+	-- })
+	-- object_tree_test("complex", {
+	-- 	{ property = "AddEffect", value = "MOPixel", preset_name = "red_dot_tiny"}
+	-- })
+	-- object_tree_test("deindentation_1", {
+	-- 	{ property = "PresetName", value = "Foo"}
+	-- })
+	-- object_tree_test("deindentation_2", {
+	-- 	{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
+	-- 		{ property = "PresetName", value = "Foo"}
+	-- 	}}
+	-- })
+	-- object_tree_test("deindentation_3", {
+	-- 	{ property = "AddEffect", value = "MOPixel", preset_name = "Foo", collapsed = true, children = {
+	-- 		{ property = "PresetName", value = "Foo"}
+	-- 	}}
+	-- })
+	-- object_tree_test("spaces", {
+	-- })
+	-- object_tree_test("comment_before_tabs", {
+	-- 	{ property = "A1", value = "A2", collapsed = true, children = {
+	-- 		{ property = "B1", value = "B2", collapsed = true, children = {
+	-- 			{ property = "C1", value = "C2"}
+	-- 		}}
+	-- 	}}
+	-- })
+	-- object_tree_test("comment_in_tabs", {
+	-- 	{ property = "A1", value = "A2", collapsed = true, children = {
+	-- 		{ property = "B1", value = "B2", collapsed = true, children = {
+	-- 			{ property = "C1", value = "C2"}
+	-- 		}}
+	-- 	}}
+	-- })
+	-- object_tree_test("spaces_at_start_of_line", {
+	-- })
+	-- object_tree_test("datamodule", {
+	-- 	{ property = "DataModule", collapsed = true, children = {
+	-- 		{ property = "IconFile", value = "ContentFile"},
+	-- 	}}
+	-- })
+	-- object_tree_test("value_on_next_line", {
+	-- })
 end
 
 

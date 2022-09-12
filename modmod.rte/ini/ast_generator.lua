@@ -43,15 +43,17 @@ function M.get_ast(cst)
 	for _, a in ipairs(cst) do
 		local b = {}
 
-		for _, c in ipairs(a) do
+		b.parent = a
+
+		for i, c in ipairs(a) do
 			if c.type == "property" then
-				b.property = c.content
+				b.property_index = i
 				break
 			end
 		end
-		for _, c in ipairs(a) do
+		for i, c in ipairs(a) do
 			if c.type == "value" then
-				b.value = c.content
+				b.value_index = i
 				break
 			end
 		end
@@ -62,7 +64,7 @@ function M.get_ast(cst)
 			end
 		end
 
-		if b.property ~= nil then
+		if b.property_index ~= nil then
 			table.insert(ast, b)
 		end
 	end
