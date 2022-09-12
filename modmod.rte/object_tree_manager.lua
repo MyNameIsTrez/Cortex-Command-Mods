@@ -178,7 +178,7 @@ function M:_update_screen_offset()
 	if (SceneMan.SceneWrapsX and math.abs(scroll_target.X - self.previous_scroll_target.X) > self.half_scene_width) or
 	   (SceneMan.SceneWrapsY and math.abs(scroll_target.X - self.previous_scroll_target.Y) > self.half_scene_height) then
 		self.target_wrapped = true
-		print("x")
+		-- print("x")
 	end
 
 	-- TODO: Why doesn't copying the X and Y work?
@@ -190,33 +190,25 @@ function M:_update_screen_offset()
 		if self.target_wrapped then
 			if SceneMan.SceneWrapsX then
 				if scroll_target.X < self.half_scene_width then
-					print("a")
-					print(self.screen_offset.X)
-					print(self.scene_width)
+					-- print("a")
+					-- print(self.screen_offset.X)
+					-- print(self.scene_width)
 					self.screen_offset.X = self.screen_offset.X - self.scene_width
-					print(self.screen_offset.X)
+					-- print(self.screen_offset.X)
 				else
-					print("b")
-					print(self.screen_offset.X)
-					print(self.scene_width)
+					-- print("b")
+					-- print(self.screen_offset.X)
+					-- print(self.scene_width)
 					self.screen_offset.X = self.screen_offset.X + self.scene_width
-					print(self.screen_offset.X)
+					-- print(self.screen_offset.X)
 				end
 			end
 
 			if SceneMan.SceneWrapsY then
 				if scroll_target.Y < self.half_scene_height then
-					print("c")
-					print(self.screen_offset.Y)
-					print(self.scene_height)
 					self.screen_offset.Y = self.screen_offset.Y - self.scene_height
-					print(self.screen_offset.Y)
 				else
-					print("d")
-					print(self.screen_offset.Y)
-					print(self.scene_height)
 					self.screen_offset.Y = self.screen_offset.Y + self.scene_height
-					print(self.screen_offset.Y)
 				end
 			end
 		end
@@ -247,6 +239,8 @@ function M:_update_screen_offset()
 	-- TODO: Replace this with calling the clamp checking function that SetOffset() calls
 	SceneMan:SetOffset(new_screen_offset, self.player_id)
 	self.screen_offset = SceneMan:GetOffset(self.player_id)
+
+	-- self.screen_offset = new_screen_offset.Floored
 
 	SceneMan:SetOffset(old_screen_offset, self.player_id)
 
