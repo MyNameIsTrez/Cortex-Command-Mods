@@ -47,22 +47,25 @@ function M:init()
 	local cst = cst_generator.get_cst(tokens)
 	local ast = ast_generator.get_ast(cst)
 
-	self.screen_width = FrameMan.PlayerScreenWidth
-	self.screen_height = FrameMan.PlayerScreenHeight
-	self.half_screen_size = Vector(self.screen_width, self.screen_height) / 2
+	local screen_width = FrameMan.PlayerScreenWidth
+	local screen_height = FrameMan.PlayerScreenHeight
+	self.half_screen_size = Vector(screen_width, screen_height) / 2
 
 	self.player_id = utils.get_first_human_player_id()
 	self.screen_of_player = ActivityMan:GetActivity():ScreenOfPlayer(self.player_id)
 	self.scroll_speed = 0.3 -- TODO: This needs to be dynamic
 	self.scroll_timer = Timer()
 
-	SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?
-	self.screen_offset = SceneMan:GetOffset(self.player_id)
+	-- SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?
+	-- SceneMan:SetOffset(Vector(10, 10), self.player_id)
+	-- self.screen_offset = SceneMan:GetOffset(self.player_id)
+	self.screen_offset = Vector(0, 0)
 
 	self.pixels_of_indentation_per_depth = 20
 	self.uses_small_font = false
 
-	self.font_height = FrameMan:CalculateTextHeight("foo", 0, self.uses_small_font)
+	local no_maximum_width = 0
+	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.uses_small_font)
 	self.vertical_padding = 5
 	self.vertical_stride = self.font_height + self.vertical_padding
 
@@ -157,35 +160,20 @@ end
 
 
 function M:_update_screen_offset()
-	-- self.screen_offset = SceneMan:GetScrollTarget(self.screen_of_player) - self.half_screen_size
-
-	-- SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?
-
-	print("------")
-	print(self.screen_offset)
-	-- self.screen_offset = SceneMan:GetOffset(ActivityMan:GetActivity():ScreenOfPlayer(utils.get_first_human_player_id()))
 	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
-	-- print(scroll_target)
-	-- print(scroll_target)
 	local offset_target = scroll_target - self.half_screen_size
-	print(offset_target)
 
 	local scroll_difference = offset_target - self.screen_offset
-	-- print(scroll_difference)
 	local scroll_progress = self.scroll_speed * self.scroll_timer.ElapsedRealTimeMS * 0.05
 	scroll_progress = math.min(1, scroll_progress)
-	print(scroll_progress)
 	local scroll_result = (scroll_difference * scroll_progress):Round()
-	-- print(scroll_result)
-	local foo = self.screen_offset + scroll_result
+	local new_screen_offset = self.screen_offset + scroll_result
 
-	local old_scene_offset = SceneMan:GetOffset(self.player_id)
-	SceneMan:SetOffset(foo, self.player_id)
+	local old_screen_offset = SceneMan:GetOffset(self.player_id)
+	SceneMan:SetOffset(new_screen_offset, self.player_id)
 	self.screen_offset = SceneMan:GetOffset(self.player_id)
-	SceneMan:SetOffset(old_scene_offset, self.player_id)
+	SceneMan:SetOffset(old_screen_offset, self.player_id)
 
-	print(self.screen_offset)
-	print("------")
 	self.scroll_timer:Reset()
 end
 
