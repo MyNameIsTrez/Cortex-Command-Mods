@@ -6,6 +6,8 @@ local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 
+local csts = dofile("modmod.rte/ini/csts.lua")
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
@@ -150,9 +152,9 @@ function M:_get_object_tree_strings(object_tree, depth)
 		str = str .. " "
 
 		if v.preset_name ~= nil then
-			str = string.format("%s%s (%s)", str, v.preset_name, v.value)
+			str = string.format("%s%s (%s)", str, v.preset_name, csts.property(v))
 		else
-			str = str .. v.value
+			str = str .. csts.property(v)
 		end
 
 		table.insert(object_tree_strings, str)

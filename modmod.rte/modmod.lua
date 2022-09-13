@@ -8,7 +8,7 @@ local object_tree_manager = dofile("modmod.rte/object_tree_manager.lua")
 
 
 function ModMod:StartScript()
-	-- self.object_tree_manager = object_tree_manager:init()
+	self.object_tree_manager = object_tree_manager:init()
 end
 
 
@@ -16,7 +16,7 @@ end
 
 
 function ModMod:UpdateScript()
-	-- self.object_tree_manager:update()
+	self.object_tree_manager:update()
 end
 
 
