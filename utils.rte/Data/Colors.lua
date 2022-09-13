@@ -1,5 +1,7 @@
 return {
 	red = 13,
-	yellow = 122,
 	orange = 47,
+	yellow = 122,
+	green = 128,
+	blue = 208
 };

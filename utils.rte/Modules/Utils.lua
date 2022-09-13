@@ -257,6 +257,29 @@ end
 -- end
 
 
+-- Source: https://stackoverflow.com/a/8695525/13279557
+function M.reduce(tab, fn, init)
+	local acc = init
+
+	for i, v in ipairs(tab) do
+        if i == 1 and not init then
+            acc = v
+        else
+            acc = fn(acc, v)
+        end
+	end
+
+	return acc
+end
+
+
+function M.sum(tab)
+	return M.reduce(tab, function(a, b)
+		return a + b
+	end)
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
