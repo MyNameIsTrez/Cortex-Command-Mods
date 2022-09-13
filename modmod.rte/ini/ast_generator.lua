@@ -52,17 +52,15 @@ function M._generate_ast(cst)
 	for _, a in ipairs(cst) do
 		local b = {}
 
-		b.parent = a
-
 		for i, c in ipairs(a) do
 			if c.type == "property" then
-				b.property_index = i
+				b.property_pointer = a[i]
 				break
 			end
 		end
 		for i, c in ipairs(a) do
 			if c.type == "value" then
-				b.value_index = i
+				b.value_pointer = a[i]
 				break
 			end
 		end
@@ -73,7 +71,7 @@ function M._generate_ast(cst)
 			end
 		end
 
-		if b.property_index ~= nil then
+		if b.property_pointer ~= nil then
 			table.insert(ast, b)
 		end
 	end

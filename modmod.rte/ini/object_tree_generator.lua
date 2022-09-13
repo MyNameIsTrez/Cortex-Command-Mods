@@ -62,13 +62,12 @@ function M._generate_object_tree(ast)
 				b.collapsed = true
 			end
 
-			b.parent = a.parent
-			b.property_index = a.property_index
-			b.value_index = a.value_index
+			b.property_pointer = a.property_pointer
+			b.value_pointer = a.value_pointer
 
 			for _, child in ipairs(a.children) do
 				if csts.property(child) == "PresetName" then
-					b.preset_name_pointer = child.parent[child.value_index]
+					b.preset_name_pointer = child.value_pointer
 					break
 				end
 			end

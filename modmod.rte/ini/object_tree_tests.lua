@@ -59,31 +59,31 @@ function M.object_tree_tests()
 	})
 	cst = get_cst("nested")
 	object_tree_test("nested", {
-		{ parent = cst[1], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
 	cst = get_cst("multiple")
 	object_tree_test("multiple", {
-		{ parent = cst[1], property_index = 1, value_index = 5 },
-		{ parent = cst[2], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
 	})
 	cst = get_cst("complex")
 	object_tree_test("complex", {
-		{ parent = cst[1], property_index = 5, value_index = 9, preset_name_pointer = cst[1][12].content[1][6] }
+		{ property_pointer = cst[1][5], value_pointer = cst[1][9], preset_name_pointer = cst[1][12].content[1][6] }
 	})
 	cst = get_cst("deindentation_1")
 	object_tree_test("deindentation_1", {
-		{ parent = cst[1], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
 	cst = get_cst("deindentation_2")
 	object_tree_test("deindentation_2", {
-		{ parent = cst[1], property_index = 1, value_index = 5, preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] }
 		}}
 	})
 	cst = get_cst("deindentation_3")
 	object_tree_test("deindentation_3", {
-		{ parent = cst[1], property_index = 1, value_index = 5, preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] }
 		}}
 	})
 	cst = get_cst("spaces")
@@ -91,17 +91,17 @@ function M.object_tree_tests()
 	})
 	cst = get_cst("comment_before_tabs")
 	object_tree_test("comment_before_tabs", {
-		{ parent = cst[1], property_index = 1, value_index = 5, collapsed = true, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, collapsed = true, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], collapsed = true, children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], collapsed = true, children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6] }
 			}}
 		}}
 	})
 	cst = get_cst("comment_in_tabs")
 	object_tree_test("comment_in_tabs", {
-		{ parent = cst[1], property_index = 1, value_index = 5, collapsed = true, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, collapsed = true, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], collapsed = true, children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], collapsed = true, children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6] }
 			}}
 		}}
 	})
@@ -110,8 +110,8 @@ function M.object_tree_tests()
 	})
 	cst = get_cst("datamodule")
 	object_tree_test("datamodule", {
-		{ parent = cst[1], property_index = 1, collapsed = true, children = {
-			{ parent = cst[1][3].content[1], property_index = 2, value_index = 6 },
+		{ property_pointer = cst[1][1], collapsed = true, children = {
+			{ property_pointer = cst[1][3].content[1][2], value_pointer = cst[1][3].content[1][6] },
 		}}
 	})
 	cst = get_cst("value_on_next_line")

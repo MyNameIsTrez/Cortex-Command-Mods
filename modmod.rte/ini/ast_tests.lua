@@ -46,123 +46,123 @@ function M.ast_tests()
 
 	cst = get_cst("path")
 	ast_test("path", {
-		{ parent = cst[1], property_index = 1, value_index = 5 },
-		{ parent = cst[2], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
 	})
 	cst = get_cst("lstripped_tab")
 	ast_test("lstripped_tab", {
-		{ parent = cst[1], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
 	cst = get_cst("simple")
 	ast_test("simple", {
-		{ parent = cst[1], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
 	cst = get_cst("comments")
 	ast_test("comments", {
 	})
 	cst = get_cst("nested")
 	ast_test("nested", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] }
 		}}
 	})
 	cst = get_cst("multiple")
 	ast_test("multiple", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] }
 		}},
-		{ parent = cst[2], property_index = 1, value_index = 5, children = {
-			{ parent = cst[2][7].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5], children = {
+			{ property_pointer = cst[2][7].content[1][2], value_pointer = cst[2][7].content[1][6] }
 		}}
 	})
 	cst = get_cst("complex")
 	ast_test("complex", {
-		{ parent = cst[1], property_index = 5, value_index = 9, children = {
-			{ parent = cst[1][12].content[1], property_index = 2, value_index = 6 },
-			{ parent = cst[1][12].content[2], property_index = 2, value_index = 6 },
-			{ parent = cst[1][12].content[3], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][5], value_pointer = cst[1][9], children = {
+			{ property_pointer = cst[1][12].content[1][2], value_pointer = cst[1][12].content[1][6] },
+			{ property_pointer = cst[1][12].content[2][2], value_pointer = cst[1][12].content[2][6] },
+			{ property_pointer = cst[1][12].content[3][2], value_pointer = cst[1][12].content[3][6] }
 		}}
 	})
 	cst = get_cst("deindentation_1")
 	ast_test("deindentation_1", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 },
-			{ parent = cst[1][7].content[2], property_index = 2, value_index = 6 },
-			{ parent = cst[1][7].content[3], property_index = 2, value_index = 6 },
-			{ parent = cst[1][7].content[4], property_index = 2, value_index = 6 },
-			{ parent = cst[1][7].content[5], property_index = 2, value_index = 6 },
-			{ parent = cst[1][7].content[6], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] },
+			{ property_pointer = cst[1][7].content[2][2], value_pointer = cst[1][7].content[2][6] },
+			{ property_pointer = cst[1][7].content[3][2], value_pointer = cst[1][7].content[3][6] },
+			{ property_pointer = cst[1][7].content[4][2], value_pointer = cst[1][7].content[4][6] },
+			{ property_pointer = cst[1][7].content[5][2], value_pointer = cst[1][7].content[5][6] },
+			{ property_pointer = cst[1][7].content[6][2], value_pointer = cst[1][7].content[6][6] }
 		}}
 	})
 	cst = get_cst("deindentation_2")
 	ast_test("deindentation_2", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[2], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[3], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[4], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[5], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[6], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[2][2], value_pointer = cst[1][7].content[1][8].content[2][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[3][2], value_pointer = cst[1][7].content[1][8].content[3][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[4][2], value_pointer = cst[1][7].content[1][8].content[4][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[5][2], value_pointer = cst[1][7].content[1][8].content[5][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[6][2], value_pointer = cst[1][7].content[1][8].content[6][6] }
 			}}
 		}}
 	})
 	cst = get_cst("deindentation_3")
 	ast_test("deindentation_3", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[2], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[3], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[4], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[5], property_index = 2, value_index = 6 },
-				{ parent = cst[1][7].content[1][8].content[6], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[2][2], value_pointer = cst[1][7].content[1][8].content[2][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[3][2], value_pointer = cst[1][7].content[1][8].content[3][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[4][2], value_pointer = cst[1][7].content[1][8].content[4][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[5][2], value_pointer = cst[1][7].content[1][8].content[5][6] },
+				{ property_pointer = cst[1][7].content[1][8].content[6][2], value_pointer = cst[1][7].content[1][8].content[6][6] }
 			}}
 		}}
 	})
 	cst = get_cst("spaces")
 	ast_test("spaces", {
-		{ parent = cst[1], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
 	cst = get_cst("comment_before_tabs")
 	ast_test("comment_before_tabs", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6, children = {
-					{ parent = cst[1][7].content[1][8].content[1][8].content[1], property_index = 3, value_index = 7 },
-					{ parent = cst[1][7].content[1][8].content[1][8].content[2], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6], children = {
+					{ property_pointer = cst[1][7].content[1][8].content[1][8].content[1][3], value_pointer = cst[1][7].content[1][8].content[1][8].content[1][7] },
+					{ property_pointer = cst[1][7].content[1][8].content[1][8].content[2][2], value_pointer = cst[1][7].content[1][8].content[1][8].content[2][6] }
 				}}
 			}}
 		}}
 	})
 	cst = get_cst("comment_in_tabs")
 	ast_test("comment_in_tabs", {
-		{ parent = cst[1], property_index = 1, value_index = 5, children = {
-			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6, children = {
-				{ parent = cst[1][7].content[1][8].content[1], property_index = 2, value_index = 6, children = {
-					{ parent = cst[1][7].content[1][8].content[1][8].content[1], property_index = 4, value_index = 8 },
-					{ parent = cst[1][7].content[1][8].content[1][8].content[2], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6], children = {
+				{ property_pointer = cst[1][7].content[1][8].content[1][2], value_pointer = cst[1][7].content[1][8].content[1][6], children = {
+					{ property_pointer = cst[1][7].content[1][8].content[1][8].content[1][4], value_pointer = cst[1][7].content[1][8].content[1][8].content[1][8] },
+					{ property_pointer = cst[1][7].content[1][8].content[1][8].content[2][2], value_pointer = cst[1][7].content[1][8].content[1][8].content[2][6] }
 				}}
 			}}
 		}}
 	})
 	cst = get_cst("spaces_at_start_of_line")
 	ast_test("spaces_at_start_of_line", {
-		{ parent = cst[1], property_index = 1, value_index = 5 },
-		{ parent = cst[2], property_index = 1, value_index = 5 }
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
 	})
 	cst = get_cst("datamodule")
 	ast_test("datamodule", {
-		{ parent = cst[1], property_index = 1, children = {
-			{ parent = cst[1][3].content[1], property_index = 2, value_index = 6, children = {
-				{ parent = cst[1][3].content[1][8].content[1], property_index = 2, value_index = 6 }
+		{ property_pointer = cst[1][1], children = {
+			{ property_pointer = cst[1][3].content[1][2], value_pointer = cst[1][3].content[1][6], children = {
+				{ property_pointer = cst[1][3].content[1][8].content[1][2], value_pointer = cst[1][3].content[1][8].content[1][6] }
 			}},
-			{ parent = cst[1][3].content[2], property_index = 2, value_index = 6 },
+			{ property_pointer = cst[1][3].content[2][2], value_pointer = cst[1][3].content[2][6] },
 		}}
 	})
 	cst = get_cst("value_on_next_line")
 	ast_test("value_on_next_line", {
-		{ parent = cst[1], property_index = 1, value_index = 5 },
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
 	})
 end
 
