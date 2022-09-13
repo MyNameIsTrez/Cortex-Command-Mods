@@ -145,9 +145,12 @@ function M:_get_selected_object_parent_child_count()
 		return #object_parent
 	end
 
-	for i = 1, #self.selected_object_parent_indices - 1 do
+	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
+	object_parent = self.object_tree[self.selected_object_parent_indices[1]]
+
+	for i = 2, #self.selected_object_parent_indices - 1 do
 		local selected_object_parent_index = self.selected_object_parent_indices[i]
-		object_parent = object_parent[selected_object_parent_index]
+		object_parent = object_parent.children[selected_object_parent_index]
 	end
 
 	return #object_parent.children
@@ -216,11 +219,6 @@ end
 
 
 function M:_draw_selected_object_background()
-	print("--")
-	print(self.selected_object_parent_indices[1])
-	print(self.selected_object_parent_indices[2])
-	print(self:_get_selected_object_vertical_index())
-	print("--")
 	local y = self.top_padding + self:_get_selected_object_vertical_index() * self.vertical_stride
 	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset + Vector(0, y), self.screen_offset + Vector(0, y) + Vector(self.tree_width, self.vertical_stride), self.selected_object_color)
 end
