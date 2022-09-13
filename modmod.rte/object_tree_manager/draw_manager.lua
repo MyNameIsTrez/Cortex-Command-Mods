@@ -3,9 +3,6 @@
 
 local screen_offset_manager = dofile("modmod.rte/object_tree_manager/screen_offset_manager.lua")
 
-local tokens_generator = dofile("modmod.rte/ini/tokens_generator.lua")
-local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
-local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 
 local csts = dofile("modmod.rte/ini/csts.lua")
@@ -60,11 +57,7 @@ function M:init()
 	self.left_padding = 20
 	self.right_padding = 40
 
-	local tokens = tokens_generator.get_tokens("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
-	local cst = cst_generator.get_cst(tokens)
-	local ast = ast_generator.get_ast(cst)
-	local object_tree = object_tree_generator.get_object_tree(ast)
-
+	local object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 	self.selected_object = object_tree[1]
 	self.object_tree_strings = self:_get_object_tree_strings(object_tree)
 

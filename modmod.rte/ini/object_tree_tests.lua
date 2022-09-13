@@ -1,9 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local tokens_generator = dofile("modmod.rte/ini/tokens_generator.lua")
 local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
-local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 
 local test_files = dofile("modmod.rte/ini/test_files.lua")
@@ -125,13 +123,15 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
+function get_cst(filename)
+	local filepath = test_files.get_test_path_from_filename(filename)
+	return cst_generator.get_cst(filepath)
+end
+
+
 function object_tree_test(filename, expected)
 	local filepath = test_files.get_test_path_from_filename(filename)
-
-	local tokens = tokens_generator.get_tokens(filepath)
-	local cst = cst_generator.get_cst(tokens)
-	local ast = ast_generator.get_ast(cst)
-	local object_tree = object_tree_generator.get_object_tree(ast)
+	local object_tree = object_tree_generator.get_object_tree(filepath)
 
 	tests.test("object tree", filename, object_tree, expected)
 end

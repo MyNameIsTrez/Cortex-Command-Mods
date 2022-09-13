@@ -158,7 +158,6 @@ end
 
 function tokenizer_test(filename, expected)
 	local filepath = test_files.get_test_path_from_filename(filename)
-
 	local tokens = tokens_generator.get_tokens(filepath)
 
 	local tokens_without_metadata = {}

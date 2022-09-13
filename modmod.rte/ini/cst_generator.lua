@@ -1,7 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local tokens_generator = dofile("modmod.rte/ini/tokens_generator.lua")
 
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -37,7 +39,16 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_cst(tokens, parsed, token_idx, depth)
+function M.get_cst(filepath)
+	local tokens = tokens_generator.get_tokens(filepath)
+	return M._generate_cst(tokens)
+end
+
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M._generate_cst(tokens, parsed, token_idx, depth)
 	--[[
 	newline -> start -> property -> equals -> value
 	^                                         v
@@ -61,7 +72,7 @@ function M.get_cst(tokens, parsed, token_idx, depth)
 		if     state == "newline" and is_deeper(depth, token, tokens, token_idx[1] + 1) then
 			local children = { type = "children", content = {} }
 			append(children, parsed)
-			M.get_cst(tokens, children.content, token_idx, depth + 1)
+			M._generate_cst(tokens, children.content, token_idx, depth + 1)
 			-- "state" is deliberately not being changed here.
 		elseif state == "newline" and is_same_depth(depth, token, tokens, token_idx[1] + 1) then
 			table.insert(parsed, {})
@@ -101,9 +112,6 @@ function M.get_cst(tokens, parsed, token_idx, depth)
 
 	return parsed
 end
-
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
 function append(parsed_token, parsed)

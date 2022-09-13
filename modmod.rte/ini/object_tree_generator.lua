@@ -1,6 +1,8 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
+
 local csts = dofile("modmod.rte/ini/csts.lua")
 
 
@@ -37,14 +39,23 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_object_tree(ast)
+function M.get_object_tree(filepath)
+	local ast = ast_generator.get_ast(filepath)
+	return M._generate_object_tree(ast)
+end
+
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M._generate_object_tree(ast)
 	local object_tree = {}
 
 	for _, a in ipairs(ast) do
 		if a.children ~= nil then
 			local b = {}
 
-			local children = M.get_object_tree(a.children)
+			local children = M._generate_object_tree(a.children)
 
 			if #children > 0 then
 				b.children = children
@@ -68,12 +79,6 @@ function M.get_object_tree(ast)
 
 	return object_tree
 end
-
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-
 
 
 -- MODULE END ------------------------------------------------------------------

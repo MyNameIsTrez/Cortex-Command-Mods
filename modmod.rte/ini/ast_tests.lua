@@ -1,8 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local tokens_generator = dofile("modmod.rte/ini/tokens_generator.lua")
-local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 
 local test_files = dofile("modmod.rte/ini/test_files.lua")
@@ -174,14 +172,14 @@ end
 
 function get_cst(filename)
 	local filepath = test_files.get_test_path_from_filename(filename)
-	local tokens = tokens_generator.get_tokens(filepath)
-	return cst_generator.get_cst(tokens)
+	return cst_generator.get_cst(filepath)
 end
 
 
 function ast_test(filename, expected)
-	local cst = get_cst(filename)
-	local ast = ast_generator.get_ast(cst)
+	local filepath = test_files.get_test_path_from_filename(filename)
+	local ast = ast_generator.get_ast(filepath)
+
 	tests.test("ast", filename, ast, expected)
 end
 

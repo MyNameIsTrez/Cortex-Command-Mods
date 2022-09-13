@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-
+local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -37,7 +37,16 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_ast(cst)
+function M.get_ast(filepath)
+	local cst = cst_generator.get_cst(filepath)
+	return M._generate_ast(cst)
+end
+
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M._generate_ast(cst)
 	local ast = {}
 
 	for _, a in ipairs(cst) do
@@ -59,7 +68,7 @@ function M.get_ast(cst)
 		end
 		for _, c in ipairs(a) do
 			if c.type == "children" then
-				b.children = M.get_ast(c.content)
+				b.children = M._generate_ast(c.content)
 				break
 			end
 		end
@@ -71,12 +80,6 @@ function M.get_ast(cst)
 
 	return ast
 end
-
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-
 
 
 -- MODULE END ------------------------------------------------------------------
