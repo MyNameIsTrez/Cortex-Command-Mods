@@ -145,6 +145,11 @@ function M:update_screen_offset()
 end
 
 
+function M:get_screen_offset()
+	return self.screen_offset
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
