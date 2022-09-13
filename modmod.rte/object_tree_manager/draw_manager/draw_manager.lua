@@ -84,28 +84,30 @@ function M:draw()
 	self.screen_offset = self.screen_offset_manager:get_screen_offset()
 
 
-	if UInputMan:KeyPressed(keys.ArrowRight) and self:_get_selected_object().children ~= nil then
-		self:_get_selected_object().collapsed = false
+	if UInputMan:KeyPressed(keys.ArrowRight) then
+		if self:_get_selected_object().children ~= nil then
+			if self:_get_selected_object().collapsed == true then
+				self:_get_selected_object().collapsed = false
 
-		self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
-		self:_update_object_tree_width()
-	elseif UInputMan:KeyPressed(keys.ArrowLeft) and self:_get_selected_object().children ~= nil then
-		self:_get_selected_object().collapsed = true
-
-		self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
-		self:_update_object_tree_width()
-	elseif UInputMan:KeyPressed(keys.ArrowDown) then
+				self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
+				self:_update_object_tree_width()
+			elseif self:_get_selected_object().collapsed == false then
+				table.insert(self.selected_object_parent_indices, 1)
+			end
+		end
+	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
 		if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
-			table.insert(self.selected_object_parent_indices, 1)
-		else
-			self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] + 1 - 1) % self:_get_selected_object_parent_child_count() + 1
-		end
-	elseif UInputMan:KeyPressed(keys.ArrowUp) then
-		if self.selected_object_parent_indices[#self.selected_object_parent_indices] == 1 and #self.selected_object_parent_indices > 1 then
+			self:_get_selected_object().collapsed = true
+
+			self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
+			self:_update_object_tree_width()
+		elseif #self.selected_object_parent_indices > 1 then
 			table.remove(self.selected_object_parent_indices)
-		else
-			self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] - 1 - 1) % self:_get_selected_object_parent_child_count() + 1
 		end
+	elseif UInputMan:KeyPressed(keys.ArrowDown) then
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] + 1 - 1) % self:_get_selected_object_parent_child_count() + 1
+	elseif UInputMan:KeyPressed(keys.ArrowUp) then
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] - 1 - 1) % self:_get_selected_object_parent_child_count() + 1
 	end
 
 	self:_draw_object_tree_background()
@@ -214,13 +216,38 @@ end
 
 
 function M:_draw_selected_object_background()
+	print("--")
+	print(self.selected_object_parent_indices[1])
+	print(self.selected_object_parent_indices[2])
+	print(self:_get_selected_object_vertical_index())
+	print("--")
 	local y = self.top_padding + self:_get_selected_object_vertical_index() * self.vertical_stride
 	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset + Vector(0, y), self.screen_offset + Vector(0, y) + Vector(self.tree_width, self.vertical_stride), self.selected_object_color)
 end
 
 
 function M:_get_selected_object_vertical_index()
-	return utils.sum(self.selected_object_parent_indices) - 1
+	return self:_get_selected_object_vertical_index_recursively(self.object_tree, 1, true) - 1
+end
+
+
+function M:_get_selected_object_vertical_index_recursively(object_tree, depth, stop)
+	local count = 0
+
+	for i, v in ipairs(object_tree) do
+		count = count + 1
+
+		if i == self.selected_object_parent_indices[depth] and stop then
+			if v.children ~= nil and not v.collapsed and depth + 1 <= #self.selected_object_parent_indices then
+				count = count + self:_get_selected_object_vertical_index_recursively(v.children, depth + 1, true)
+			end
+			return count
+		elseif v.children ~= nil and not v.collapsed then
+			count = count + self:_get_selected_object_vertical_index_recursively(v.children, depth + 1, false)
+		end
+	end
+
+	return count
 end
 
 
