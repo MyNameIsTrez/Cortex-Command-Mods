@@ -68,7 +68,7 @@ function M._generate_object_tree(ast)
 
 			for _, child in ipairs(a.children) do
 				if csts.property(child) == "PresetName" then
-					b.preset_name = csts.value(child)
+					b.preset_name_pointer = child.parent[child.value_index]
 					break
 				end
 			end

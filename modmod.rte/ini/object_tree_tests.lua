@@ -68,7 +68,7 @@ function M.object_tree_tests()
 	})
 	cst = get_cst("complex")
 	object_tree_test("complex", {
-		{ parent = cst[1], property_index = 5, value_index = 9, preset_name = "red_dot_tiny"}
+		{ parent = cst[1], property_index = 5, value_index = 9, preset_name_pointer = cst[1][12].content[1][6] }
 	})
 	cst = get_cst("deindentation_1")
 	object_tree_test("deindentation_1", {
@@ -76,13 +76,13 @@ function M.object_tree_tests()
 	})
 	cst = get_cst("deindentation_2")
 	object_tree_test("deindentation_2", {
-		{ parent = cst[1], property_index = 1, value_index = 5, preset_name = "Foo", collapsed = true, children = {
+		{ parent = cst[1], property_index = 1, value_index = 5, preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
 			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
 		}}
 	})
 	cst = get_cst("deindentation_3")
 	object_tree_test("deindentation_3", {
-		{ parent = cst[1], property_index = 1, value_index = 5, preset_name = "Foo", collapsed = true, children = {
+		{ parent = cst[1], property_index = 1, value_index = 5, preset_name_pointer = cst[1][7].content[1][6], collapsed = true, children = {
 			{ parent = cst[1][7].content[1], property_index = 2, value_index = 6 }
 		}}
 	})

@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local draw_manager = dofile("modmod.rte/object_tree_manager/draw_manager.lua")
+local draw_manager = dofile("modmod.rte/object_tree_manager/draw_manager/draw_manager.lua")
 
 
 -- MODULE START ----------------------------------------------------------------

@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local object_tree_manager = dofile("modmod.rte/object_tree_manager.lua")
+local object_tree_manager = dofile("modmod.rte/object_tree_manager/object_tree_manager.lua")
 
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
