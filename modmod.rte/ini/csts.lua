@@ -38,12 +38,12 @@ local M = {};
 
 
 function M.property(ast)
-	return ast.parent[ast.property_index]
+	return ast.parent[ast.property_index].content
 end
 
 
 function M.value(ast)
-	return ast.parent[ast.value_index]
+	return ast.parent[ast.value_index].content
 end
 
 
