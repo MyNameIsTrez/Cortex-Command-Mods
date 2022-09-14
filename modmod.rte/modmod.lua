@@ -30,6 +30,7 @@ function ModMod:UpdateScript()
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
 	elseif UInputMan:KeyPressed(keys.ArrowLeft)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
+		self.properties_manager.selected_property_index = 1
 		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
 	elseif self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
 		self.properties_manager:update()

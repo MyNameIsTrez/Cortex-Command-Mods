@@ -280,6 +280,11 @@ function M.sum(tab)
 end
 
 
+function M.get_wrapped_index(i, max)
+	return (i - 1) % max + 1
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 

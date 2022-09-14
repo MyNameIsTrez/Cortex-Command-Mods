@@ -7,6 +7,8 @@ local keys = dofile("utils.rte/Data/Keys.lua");
 
 local csts = dofile("modmod.rte/ini/csts.lua")
 
+local utils = dofile("utils.rte/Modules/Utils.lua")
+
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -53,7 +55,7 @@ function M:init(window_manager)
 
 	self:_update_object_tree_strings()
 
-	self.selected_object_parent_indices = { 1 }
+	self.selected_object_indices = { 1 }
 
 	return self
 end
@@ -103,15 +105,15 @@ function M:_key_pressed_up()
 		self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
 
 		while self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false do
-			table.insert(self.selected_object_parent_indices, 1)
+			table.insert(self.selected_object_indices, 1)
 			self:_set_last_selected_object_index(self:_get_selected_object_parent_child_count())
 		end
 	else
-		if #self.selected_object_parent_indices == 1 then
-			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_parent_index(-1))
+		if #self.selected_object_indices == 1 then
+			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_index(-1))
 		else
-			if self:_get_last_selected_object_index() == 1 and #self.selected_object_parent_indices > 1 then
-				table.remove(self.selected_object_parent_indices)
+			if self:_get_last_selected_object_index() == 1 and #self.selected_object_indices > 1 then
+				table.remove(self.selected_object_indices)
 			elseif self:_get_last_selected_object_index() > 1 then
 				self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
 			end
@@ -122,13 +124,13 @@ end
 
 function M:_key_pressed_down()
 	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
-		table.insert(self.selected_object_parent_indices, 1)
+		table.insert(self.selected_object_indices, 1)
 	else
-		if #self.selected_object_parent_indices == 1 then
-			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_parent_index(1))
+		if #self.selected_object_indices == 1 then
+			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_index(1))
 		else
-			while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_parent_indices > 1 do
-				table.remove(self.selected_object_parent_indices)
+			while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_indices > 1 do
+				table.remove(self.selected_object_indices)
 			end
 			if self:_get_last_selected_object_index() < self:_get_selected_object_parent_child_count() then
 				self:_set_last_selected_object_index(self:_get_last_selected_object_index() + 1)
@@ -142,8 +144,8 @@ function M:_key_pressed_left()
 	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
 		self:_get_selected_object().collapsed = true
 		self:_update_object_tree_strings()
-	elseif #self.selected_object_parent_indices > 1 then
-		table.remove(self.selected_object_parent_indices)
+	elseif #self.selected_object_indices > 1 then
+		table.remove(self.selected_object_indices)
 	end
 end
 
@@ -157,22 +159,17 @@ end
 
 
 function M:_get_last_selected_object_index()
-	return self.selected_object_parent_indices[#self.selected_object_parent_indices]
+	return self.selected_object_indices[#self.selected_object_indices]
 end
 
 
 function M:_set_last_selected_object_index(i)
-	self.selected_object_parent_indices[#self.selected_object_parent_indices] = i
+	self.selected_object_indices[#self.selected_object_indices] = i
 end
 
 
-function M:_get_wrapped_last_selected_object_parent_index(index_change)
-	return self:_get_wrapped(self:_get_last_selected_object_index() + index_change)
-end
-
-
-function M:_get_wrapped(index_change)
-	return (index_change - 1) % self:_get_selected_object_parent_child_count() + 1
+function M:_get_wrapped_last_selected_object_index(index_change)
+	return utils.get_wrapped_index(self:_get_last_selected_object_index() + index_change, self:_get_selected_object_parent_child_count())
 end
 
 
@@ -180,11 +177,11 @@ function M:_get_selected_object()
 	local selected_object = self.object_tree
 
 	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	selected_object = selected_object[self.selected_object_parent_indices[1]]
+	selected_object = selected_object[self.selected_object_indices[1]]
 
-	for i = 2, #self.selected_object_parent_indices do
-		local selected_object_parent_index = self.selected_object_parent_indices[i]
-		selected_object = selected_object.children[selected_object_parent_index]
+	for i = 2, #self.selected_object_indices do
+		local selected_object_index = self.selected_object_indices[i]
+		selected_object = selected_object.children[selected_object_index]
 	end
 
 	return selected_object
@@ -194,16 +191,16 @@ end
 function M:_get_previous_selected_object()
 	local selected_object = self.object_tree
 
-	if #self.selected_object_parent_indices == 1 and self:_get_last_selected_object_index() > 1 then
+	if #self.selected_object_indices == 1 and self:_get_last_selected_object_index() > 1 then
 		return selected_object[self:_get_last_selected_object_index() - 1]
 	end
 
 	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	selected_object = selected_object[self.selected_object_parent_indices[1]]
+	selected_object = selected_object[self.selected_object_indices[1]]
 
-	for i = 2, #self.selected_object_parent_indices - 1 do
-		local selected_object_parent_index = self.selected_object_parent_indices[i]
-		selected_object = selected_object.children[selected_object_parent_index]
+	for i = 2, #self.selected_object_indices - 1 do
+		local selected_object_index = self.selected_object_indices[i]
+		selected_object = selected_object.children[selected_object_index]
 	end
 
 	return selected_object.children[self:_get_last_selected_object_index() - 1]
@@ -213,16 +210,16 @@ end
 function M:_get_selected_object_parent_child_count()
 	local object_parent = self.object_tree
 
-	if #self.selected_object_parent_indices == 1 then
+	if #self.selected_object_indices == 1 then
 		return #object_parent
 	end
 
 	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	object_parent = self.object_tree[self.selected_object_parent_indices[1]]
+	object_parent = self.object_tree[self.selected_object_indices[1]]
 
-	for i = 2, #self.selected_object_parent_indices - 1 do
-		local selected_object_parent_index = self.selected_object_parent_indices[i]
-		object_parent = object_parent.children[selected_object_parent_index]
+	for i = 2, #self.selected_object_indices - 1 do
+		local selected_object_index = self.selected_object_indices[i]
+		object_parent = object_parent.children[selected_object_index]
 	end
 
 	return #object_parent.children
@@ -312,8 +309,8 @@ function M:_get_selected_object_vertical_index_recursively(object_tree, depth, s
 	for i, v in ipairs(object_tree) do
 		count = count + 1
 
-		if i == self.selected_object_parent_indices[depth] and stop then
-			if v.children ~= nil and not v.collapsed and depth + 1 <= #self.selected_object_parent_indices then
+		if i == self.selected_object_indices[depth] and stop then
+			if v.children ~= nil and not v.collapsed and depth + 1 <= #self.selected_object_indices then
 				count = count + self:_get_selected_object_vertical_index_recursively(v.children, depth + 1, true)
 			end
 			return count

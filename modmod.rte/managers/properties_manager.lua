@@ -1,6 +1,8 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local keys = dofile("utils.rte/Data/Keys.lua");
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
@@ -51,6 +53,7 @@ end
 
 
 function M:update()
+	self:_key_pressed()
 end
 
 
@@ -60,12 +63,46 @@ function M:draw()
 	self:_update_properties_width()
 
 	self:_draw_properties_background()
-	self:_draw_selected_property_background()
+
+	if self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
+		self:_draw_selected_property_background()
+	end
+
 	self:_draw_property_strings()
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M:_key_pressed()
+	if UInputMan:KeyPressed(keys.ArrowUp) then
+		self:_key_pressed_up()
+	elseif UInputMan:KeyPressed(keys.ArrowDown) then
+		self:_key_pressed_down()
+	elseif UInputMan:KeyPressed(keys.Enter) then
+		self:_key_pressed_enter()
+	end
+end
+
+
+function M:_key_pressed_up()
+	self.selected_property_index = self:_get_wrapped_selected_property_index(-1)
+end
+
+
+function M:_key_pressed_down()
+	self.selected_property_index = self:_get_wrapped_selected_property_index(1)
+end
+
+
+function M:_key_pressed_enter()
+end
+
+
+function M:_get_wrapped_selected_property_index(index_change)
+	return utils.get_wrapped_index(self.selected_property_index + index_change, #self.property_strings)
+end
 
 
 function M:_update_property_strings()
