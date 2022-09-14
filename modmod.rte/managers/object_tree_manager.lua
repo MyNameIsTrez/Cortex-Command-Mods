@@ -1,8 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local screen_offset_manager = dofile("modmod.rte/object_tree_manager/draw_manager/screen_offset_manager.lua")
-
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 
 local colors = dofile("utils.rte/Data/Colors.lua");
@@ -46,8 +44,8 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M:init()
-	self.screen_offset_manager = screen_offset_manager:init()
+function M:init(window_manager)
+	self.window_manager = window_manager
 
 	self.pixels_of_indentation_per_depth = 20
 	self.uses_small_font = false
@@ -64,9 +62,9 @@ function M:init()
 	local text_bottom_padding = 5
 	self.vertical_stride = self.text_top_padding + font_height + text_bottom_padding
 
-	self.top_padding = 16
-	self.left_padding = 20
-	self.right_padding = 40
+	self.window_top_padding = 16
+	self.window_left_padding = 20
+	self.window_right_padding = 40
 
 	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
@@ -75,15 +73,22 @@ function M:init()
 
 	self.selected_object_parent_indices = { 1 }
 
+	self.in_object_tree = true
+
 	return self
 end
 
 
-function M:draw()
-	self.screen_offset_manager:update_screen_offset()
-	self.screen_offset = self.screen_offset_manager:get_screen_offset()
+function M:update()
+	self:_KeyPressed()
+	self:_draw()
+end
 
 
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M:_KeyPressed()
 	if UInputMan:KeyPressed(keys.ArrowRight) then
 		if self:_get_selected_object().children ~= nil then
 			if self:_get_selected_object().collapsed == true then
@@ -105,11 +110,19 @@ function M:draw()
 			table.remove(self.selected_object_parent_indices)
 		end
 	elseif UInputMan:KeyPressed(keys.ArrowDown) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] + 1 - 1) % self:_get_selected_object_parent_child_count() + 1
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] + 1)
 	elseif UInputMan:KeyPressed(keys.ArrowUp) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = (self.selected_object_parent_indices[#self.selected_object_parent_indices] - 1 - 1) % self:_get_selected_object_parent_child_count() + 1
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] - 1)
 	end
+end
 
+
+function M:_get_wrapped(i)
+	return (i - 1) % self:_get_selected_object_parent_child_count() + 1
+end
+
+
+function M:_draw()
 	self:_draw_object_tree_background()
 
 	self:_draw_selected_object_background()
@@ -118,9 +131,6 @@ function M:draw()
 
 	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
 end
-
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
 function M:_get_selected_object()
@@ -201,7 +211,7 @@ end
 
 
 function M:_update_object_tree_width_recursively(object_tree_strings)
-	local x = self.left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.right_padding
+	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.window_right_padding
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
@@ -214,13 +224,13 @@ end
 
 
 function M:_draw_object_tree_background()
-	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset, self.screen_offset + Vector(self.tree_width, self.screen_height), self.background_color)
+	self.window_manager:draw_box_fill(Vector(0, 0), Vector(self.tree_width, self.screen_height), self.background_color)
 end
 
 
 function M:_draw_selected_object_background()
-	local y = self.top_padding + self:_get_selected_object_vertical_index() * self.vertical_stride
-	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset + Vector(0, y), self.screen_offset + Vector(0, y) + Vector(self.tree_width, self.vertical_stride), self.selected_object_color)
+	local y = self.window_top_padding + self:_get_selected_object_vertical_index() * self.vertical_stride
+	self.window_manager:draw_box_fill(Vector(0, y), Vector(0, y) + Vector(self.tree_width, self.vertical_stride), self.selected_object_color)
 end
 
 
@@ -250,7 +260,7 @@ end
 
 
 function M:_draw_object_tree_strings(object_tree_strings, height)
-	local x = self.left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
+	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
@@ -258,8 +268,8 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 		else
 			height[1] = height[1] + 1
 
-			local y = self.top_padding + self.text_top_padding + height[1] * self.vertical_stride
-			PrimitiveMan:DrawTextPrimitive(self.screen_offset + Vector(x, y), v, self.uses_small_font, 0);
+			local y = self.window_top_padding + self.text_top_padding + height[1] * self.vertical_stride
+			self.window_manager:draw_text(Vector(x, y), v, self.uses_small_font, 0);
 		end
 	end
 end

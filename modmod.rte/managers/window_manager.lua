@@ -63,7 +63,25 @@ function M:init()
 end
 
 
-function M:update_screen_offset()
+function M:update()
+	self:_update_screen_offset()
+end
+
+
+function M:draw_box_fill(top_left_pos, bottom_right_pos, color)
+	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset + top_left_pos, self.screen_offset + bottom_right_pos, color)
+end
+
+
+function M:draw_text(top_left_pos, text, is_small, alignment)
+	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, is_small, alignment);
+end
+
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M:_update_screen_offset()
 	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
 
 	-- Can't be done in init() since GetScrollTarget() always wrongly returns Vector(0, 0)
@@ -143,17 +161,6 @@ function M:update_screen_offset()
 
 	self.scroll_timer:Reset()
 end
-
-
-function M:get_screen_offset()
-	return self.screen_offset
-end
-
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-
 
 
 -- MODULE END ------------------------------------------------------------------
