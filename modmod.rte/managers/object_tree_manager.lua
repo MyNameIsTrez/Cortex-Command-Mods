@@ -3,7 +3,6 @@
 
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 
-local colors = dofile("utils.rte/Data/Colors.lua");
 local keys = dofile("utils.rte/Data/Keys.lua");
 
 local csts = dofile("modmod.rte/ini/csts.lua")
@@ -48,23 +47,6 @@ function M:init(window_manager)
 	self.window_manager = window_manager
 
 	self.pixels_of_indentation_per_depth = 20
-	self.uses_small_font = false
-
-	self.background_color = colors.blue
-	self.selected_object_color = colors.green
-
-	self.screen_height = FrameMan.PlayerScreenHeight
-
-	local no_maximum_width = 0
-	local font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.uses_small_font)
-
-	self.text_top_padding = 5
-	local text_bottom_padding = 5
-	self.vertical_stride = self.text_top_padding + font_height + text_bottom_padding
-
-	self.window_top_padding = 16
-	self.window_left_padding = 20
-	self.window_right_padding = 40
 
 	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
@@ -72,8 +54,6 @@ function M:init(window_manager)
 	self:_update_object_tree_width(self.object_tree_strings)
 
 	self.selected_object_parent_indices = { 1 }
-
-	self.in_object_tree = true
 
 	return self
 end
@@ -211,26 +191,26 @@ end
 
 
 function M:_update_object_tree_width_recursively(object_tree_strings)
-	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.window_right_padding
+	local x = self.window_manager.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.window_manager.window_right_padding
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
 			self:_update_object_tree_width_recursively(v)
 		else
-			self.tree_width = math.max(self.tree_width, x + FrameMan:CalculateTextWidth(v, self.uses_small_font))
+			self.tree_width = math.max(self.tree_width, x + FrameMan:CalculateTextWidth(v, self.window_manager.text_is_small))
 		end
 	end
 end
 
 
 function M:_draw_object_tree_background()
-	self.window_manager:draw_box_fill(Vector(0, 0), Vector(self.tree_width, self.screen_height), self.background_color)
+	self.window_manager:draw_box_fill(Vector(0, 0), Vector(self.tree_width, self.window_manager.screen_height), self.window_manager.background_color)
 end
 
 
 function M:_draw_selected_object_background()
-	local y = self.window_top_padding + self:_get_selected_object_vertical_index() * self.vertical_stride
-	self.window_manager:draw_box_fill(Vector(0, y), Vector(0, y) + Vector(self.tree_width, self.vertical_stride), self.selected_object_color)
+	local y = self.window_manager.window_top_padding + self:_get_selected_object_vertical_index() * self.window_manager.text_vertical_stride
+	self.window_manager:draw_box_fill(Vector(0, y), Vector(0, y) + Vector(self.tree_width, self.window_manager.text_vertical_stride), self.window_manager.selected_object_color)
 end
 
 
@@ -260,16 +240,14 @@ end
 
 
 function M:_draw_object_tree_strings(object_tree_strings, height)
-	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
+	local x = self.window_manager.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
 			self:_draw_object_tree_strings(v, height)
 		else
 			height[1] = height[1] + 1
-
-			local y = self.window_top_padding + self.text_top_padding + height[1] * self.vertical_stride
-			self.window_manager:draw_text(Vector(x, y), v, self.uses_small_font, 0);
+			self.window_manager:draw_line(x, height[1], v, self.window_manager.alignment.left);
 		end
 	end
 end

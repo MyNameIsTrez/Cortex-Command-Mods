@@ -3,6 +3,8 @@
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
+local colors = dofile("utils.rte/Data/Colors.lua");
+
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -49,6 +51,22 @@ function M:init()
 	self.screen_height = FrameMan.PlayerScreenHeight
 	self.half_screen_size = Vector(self.screen_width, self.screen_height) / 2
 
+	self.text_top_padding = 5
+
+	self.window_top_padding = 16
+	self.window_left_padding = 20
+	self.window_right_padding = 40
+
+	self.text_is_small = false
+
+	local no_maximum_width = 0
+	local font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
+	local text_bottom_padding = 5
+	self.text_vertical_stride = self.text_top_padding + font_height + text_bottom_padding
+
+	self.background_color = colors.blue
+	self.selected_object_color = colors.green
+
 	self.player_id = utils.get_first_human_player_id()
 	SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?
 	-- SceneMan:SetOffset(Vector(10, 10), self.player_id)
@@ -58,6 +76,8 @@ function M:init()
 	self.screen_of_player = ActivityMan:GetActivity():ScreenOfPlayer(self.player_id)
 	self.scroll_speed = 0.3 -- TODO: This needs to be dynamic
 	self.scroll_timer = Timer()
+
+	self.alignment = { left = 0, center = 1, right = 2 }
 
 	return self
 end
@@ -73,12 +93,17 @@ function M:draw_box_fill(top_left_pos, bottom_right_pos, color)
 end
 
 
-function M:draw_text(top_left_pos, text, is_small, alignment)
-	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, is_small, alignment);
+function M:draw_line(x, height_index, text, alignment)
+	local y = self.window_top_padding + self.text_top_padding + height_index * self.text_vertical_stride
+	self:_draw_text(Vector(x, y), text, self.text_is_small, alignment);
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+function M:_draw_text(top_left_pos, text, text_is_small, alignment)
+	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, text_is_small, alignment);
+end
 
 
 function M:_update_screen_offset()
