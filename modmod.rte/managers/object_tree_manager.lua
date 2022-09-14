@@ -290,13 +290,14 @@ end
 
 
 function M:_draw_object_tree_background()
-	self.window_manager:draw_box_fill(Vector(0, 0), Vector(self.tree_width, self.window_manager.screen_height), self.window_manager.background_color)
+	self.window_manager:draw_box_fill(Vector(0, 0), self.tree_width, self.window_manager.screen_height, self.window_manager.background_color)
 end
 
 
 function M:_draw_selected_object_background()
 	local y = self.window_manager.window_top_padding + self:_get_selected_object_vertical_index() * self.window_manager.text_vertical_stride
-	self.window_manager:draw_box_fill(Vector(0, y), Vector(0, y) + Vector(self.tree_width, self.window_manager.text_vertical_stride), self.window_manager.selected_object_color)
+	local top_left = Vector(0, y)
+	self.window_manager:draw_box_fill(top_left, self.tree_width, self.window_manager.text_vertical_stride, self.window_manager.selected_object_color)
 end
 
 

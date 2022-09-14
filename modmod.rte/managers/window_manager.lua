@@ -89,8 +89,9 @@ function M:update()
 end
 
 
-function M:draw_box_fill(top_left_pos, bottom_right_pos, color)
-	PrimitiveMan:DrawBoxFillPrimitive(self.screen_offset + top_left_pos, self.screen_offset + bottom_right_pos, color)
+function M:draw_box_fill(world_top_left_pos, width, height, color)
+	local screen_top_left_pos = self.screen_offset + world_top_left_pos
+	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width, height), color)
 end
 
 

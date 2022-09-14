@@ -44,6 +44,8 @@ function M:init(window_manager, object_tree_manager)
 	self.window_left_padding = 100
 	self.window_right_padding = 200
 
+	self.selected_property_index = 1
+
 	return self
 end
 
@@ -58,6 +60,7 @@ function M:draw()
 	self:_update_properties_width()
 
 	self:_draw_properties_background()
+	self:_draw_selected_property_background()
 	self:_draw_property_strings()
 end
 
@@ -70,7 +73,6 @@ function M:_update_property_strings()
 
 	for _, property in ipairs(self.selected_properties) do
 		local str = string.format("%s | %s", property.property_pointer.content, property.value_pointer.content)
-
 		table.insert(self.property_strings, str)
 	end
 end
@@ -88,13 +90,19 @@ end
 
 
 function M:_draw_properties_background()
-	self.window_manager:draw_box_fill(Vector(self.window_manager.screen_width - self.properties_width, 0), Vector(self.window_manager.screen_width, self.window_manager.screen_height), self.window_manager.background_color)
+	self.window_manager:draw_box_fill(Vector(self.window_manager.screen_width - self.properties_width, 0), self.properties_width, self.window_manager.screen_height, self.window_manager.background_color)
+end
+
+
+function M:_draw_selected_property_background()
+	local y = self.window_manager.window_top_padding + (self.selected_property_index - 1) * self.window_manager.text_vertical_stride
+	self.window_manager:draw_box_fill(Vector(self.window_manager.screen_width - self.properties_width, y), self.properties_width, self.window_manager.text_vertical_stride, self.window_manager.selected_object_color)
 end
 
 
 function M:_draw_property_strings()
 	for height_index, str in ipairs(self.property_strings) do
-		self.window_manager:draw_line(self.window_manager.screen_width - self.window_right_padding, height_index, str, self.window_manager.alignment.right);
+		self.window_manager:draw_line(self.window_manager.screen_width - self.window_right_padding, height_index - 1, str, self.window_manager.alignment.right);
 	end
 end
 
