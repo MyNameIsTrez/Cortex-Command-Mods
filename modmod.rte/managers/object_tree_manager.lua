@@ -68,9 +68,10 @@ end
 
 function M:draw()
 	self:_draw_object_tree_background()
-	self:_draw_selected_object_background()
+	self:_draw_object_tree_list_background()
 	-- self.object_tree_strings[5] = tostring(self.screen_offset)
 	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
+	self:_draw_selected_object_background()
 end
 
 
@@ -80,7 +81,7 @@ end
 
 
 function M:get_selected_properties()
-	return self:_get_selected_object().properties
+	return self:_get_selected_object().properties or {}
 end
 
 
@@ -287,14 +288,20 @@ end
 
 
 function M:_draw_object_tree_background()
-	self.window_manager:draw_box_fill(Vector(0, 0), self.tree_width, self.window_manager.screen_height, self.window_manager.background_color)
+	self.window_manager:draw_background(Vector(0, 0), self.tree_width, self.window_manager.screen_height)
+end
+
+
+function M:_draw_object_tree_list_background()
+	local height = self.window_manager.text_top_padding + #self.object_tree_strings * self.window_manager.text_vertical_stride - 1
+
+	self.window_manager:draw_border(Vector(0, self.window_manager.window_top_padding - 1), self.tree_width, height)
 end
 
 
 function M:_draw_selected_object_background()
 	local y = self.window_manager.window_top_padding + self:_get_selected_object_vertical_index() * self.window_manager.text_vertical_stride
-	local top_left = Vector(0, y)
-	self.window_manager:draw_box_fill(top_left, self.tree_width, self.window_manager.text_vertical_stride, self.window_manager.selected_object_color)
+	self.window_manager:draw_selected_line_background(Vector(0, y), self.tree_width)
 end
 
 
@@ -324,14 +331,15 @@ end
 
 
 function M:_draw_object_tree_strings(object_tree_strings, height)
-	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
+	local x = 0
+	local x_padding = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
 			self:_draw_object_tree_strings(v, height)
 		else
 			height[1] = height[1] + 1
-			self.window_manager:draw_line(x, height[1], v, self.window_manager.alignment.left);
+			self.window_manager:draw_text_line(x, self.tree_width, x_padding, height[1], v, self.window_manager.alignment.left);
 		end
 	end
 end
