@@ -54,8 +54,6 @@ function M:init()
 	self.text_top_padding = 3
 	local text_bottom_padding = 3
 
-	self.window_top_padding = 16
-
 	self.text_is_small = true
 
 	local no_maximum_width = 0
@@ -91,35 +89,26 @@ function M:update()
 end
 
 
-function M:draw_background(world_top_left_pos, width, height)
-	self:draw_box_fill(world_top_left_pos, width, height, self.background_color)
-	self:draw_border(world_top_left_pos, width, height)
+function M:draw_border_fill(top_left_pos, width, height, color)
+	self:_draw_box_fill(top_left_pos, width, height, color)
+	self:draw_border(top_left_pos, width, height)
 end
 
 
-function M:draw_border(world_top_left_pos, width, height)
-	self:_draw_line(world_top_left_pos, width - 1, 0, self.background_border_color)
-	self:_draw_line(world_top_left_pos + Vector(0, height - 1), width - 1, 0, self.background_border_color)
-
-	self:_draw_line(world_top_left_pos, 0, height - 1, self.background_border_color)
-	self:_draw_line(world_top_left_pos + Vector(width - 1, 0), 0, height - 1, self.background_border_color)
+function M:draw_border(top_left_pos, width, height)
+	self:_draw_box(top_left_pos, width, height, self.background_border_color)
+	self:_draw_box(top_left_pos + Vector(1, 1), width - 2, height - 2, self.background_border_color)
 end
 
 
-function M:draw_selected_line_background(world_top_left_pos, width)
-	self:_draw_line(world_top_left_pos + Vector(4 - 1, 0), width - 4 * 2 + 1, 0, self.selected_color)
-	self:_draw_line(world_top_left_pos + Vector(4 - 1, self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.selected_color)
+function M:draw_selected_line_background(top_left_pos, width)
+	self:_draw_line(top_left_pos + Vector(4 - 1, 0), width - 4 * 2 + 1, 0, self.selected_color)
+	self:_draw_line(top_left_pos + Vector(4 - 1, self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.selected_color)
 end
 
 
-function M:draw_box_fill(world_top_left_pos, width, height, color)
-	local screen_top_left_pos = self.screen_offset + world_top_left_pos
-	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width - 1, height - 1), color)
-end
-
-
-function M:draw_text_line(x, width, x_padding, height_index, text, alignment)
-	local y = self.window_top_padding + self.text_top_padding + height_index * self.text_vertical_stride
+function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
+	local y = y_padding + self.text_top_padding + height_index * self.text_vertical_stride
 
 	local pos
 	if alignment == self.alignment.left then
@@ -130,16 +119,27 @@ function M:draw_text_line(x, width, x_padding, height_index, text, alignment)
 
 	self:_draw_text(pos, text, self.text_is_small, alignment);
 
-	self:_draw_line(Vector(x + 4 - 1, self.window_top_padding + height_index * self.text_vertical_stride), width - 4 * 2 + 1, 0, self.unselected_color)
-	self:_draw_line(Vector(x + 4 - 1, self.window_top_padding + (height_index + 1) * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.unselected_color)
+	self:_draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride), width - 4 * 2 + 1, 0, self.unselected_color)
+	self:_draw_line(Vector(x + 4 - 1, y_padding + (height_index + 1) * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.unselected_color)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M:_draw_line(start, offset_x, offset_y, color)
-	PrimitiveMan:DrawLinePrimitive(self.screen_offset + start, self.screen_offset + start + Vector(offset_x, offset_y), color)
+function M:_draw_box(top_left_pos, width, height, color)
+	PrimitiveMan:DrawBoxPrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(width - 1, height - 1), color)
+end
+
+
+function M:_draw_box_fill(top_left_pos, width, height, color)
+	local screen_top_left_pos = self.screen_offset + top_left_pos
+	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width - 1, height - 1), color)
+end
+
+
+function M:_draw_line(top_left_pos, offset_x, offset_y, color)
+	PrimitiveMan:DrawLinePrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(offset_x, offset_y), color)
 end
 
 
