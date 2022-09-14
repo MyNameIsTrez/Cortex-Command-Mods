@@ -1,6 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 
 local test_files = dofile("modmod.rte/ini/test_files.lua")
@@ -57,9 +58,7 @@ function M.ast_tests()
 	ast_test("simple", {
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }
 	})
-	cst = get_cst("comments")
-	ast_test("comments", {
-	})
+	ast_test("comments", {})
 	cst = get_cst("nested")
 	ast_test("nested", {
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {

@@ -62,6 +62,11 @@ function M:update()
 end
 
 
+function M:get_selected_properties()
+	return self:_get_selected_object().properties_pointer
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
@@ -83,10 +88,15 @@ function M:_key_pressed()
 			table.remove(self.selected_object_parent_indices)
 		end
 	elseif UInputMan:KeyPressed(keys.ArrowDown) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] + 1)
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped_last_selected_object_parent_index(1)
 	elseif UInputMan:KeyPressed(keys.ArrowUp) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] - 1)
+		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped_last_selected_object_parent_index(-1)
 	end
+end
+
+
+function M:_get_wrapped_last_selected_object_parent_index(i)
+	return self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] + i)
 end
 
 
