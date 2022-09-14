@@ -54,8 +54,6 @@ function M:init()
 	self.text_top_padding = 5
 
 	self.window_top_padding = 16
-	self.window_left_padding = 20
-	self.window_right_padding = 40
 
 	self.text_is_small = false
 

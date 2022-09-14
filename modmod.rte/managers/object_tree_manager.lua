@@ -46,6 +46,9 @@ function M:init(window_manager)
 
 	self.pixels_of_indentation_per_depth = 20
 
+	self.window_left_padding = 20
+	self.window_right_padding = 40
+
 	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
 	self:_update_object_tree_strings()
@@ -69,8 +72,8 @@ function M:draw()
 end
 
 
-function M:has_properties_object_selected()
-	return self:_get_selected_object().children == nil
+function M:has_not_collapsed_properties_object_selected()
+	return self:_get_selected_object().collapsed ~= true and self:_get_selected_object().properties ~= nil
 end
 
 
@@ -83,37 +86,93 @@ end
 
 
 function M:_key_pressed()
-	if UInputMan:KeyPressed(keys.ArrowRight) then
-		if self:_get_selected_object().children ~= nil then
-			if self:_get_selected_object().collapsed == true then
-				self:_get_selected_object().collapsed = false
-				self:_update_object_tree_strings()
-			elseif self:_get_selected_object().collapsed == false then
-				table.insert(self.selected_object_parent_indices, 1)
-			end
-		end
-	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
-		if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
-			self:_get_selected_object().collapsed = true
-			self:_update_object_tree_strings()
-		elseif #self.selected_object_parent_indices > 1 then
-			table.remove(self.selected_object_parent_indices)
-		end
+	if UInputMan:KeyPressed(keys.ArrowUp) then
+		self:_key_pressed_up()
 	elseif UInputMan:KeyPressed(keys.ArrowDown) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped_last_selected_object_parent_index(1)
-	elseif UInputMan:KeyPressed(keys.ArrowUp) then
-		self.selected_object_parent_indices[#self.selected_object_parent_indices] = self:_get_wrapped_last_selected_object_parent_index(-1)
+		self:_key_pressed_down()
+	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
+		self:_key_pressed_left()
+	elseif UInputMan:KeyPressed(keys.ArrowRight) then
+		self:_key_pressed_right()
 	end
 end
 
 
-function M:_get_wrapped_last_selected_object_parent_index(i)
-	return self:_get_wrapped(self.selected_object_parent_indices[#self.selected_object_parent_indices] + i)
+function M:_key_pressed_up()
+	if self:_get_last_selected_object_index() > 1 and self:_get_previous_selected_object().children ~= nil and self:_get_previous_selected_object().collapsed == false then
+		self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
+
+		while self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false do
+			table.insert(self.selected_object_parent_indices, 1)
+			self:_set_last_selected_object_index(self:_get_selected_object_parent_child_count())
+		end
+	else
+		if #self.selected_object_parent_indices == 1 then
+			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_parent_index(-1))
+		else
+			if self:_get_last_selected_object_index() == 1 and #self.selected_object_parent_indices > 1 then
+				table.remove(self.selected_object_parent_indices)
+			elseif self:_get_last_selected_object_index() > 1 then
+				self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
+			end
+		end
+	end
 end
 
 
-function M:_get_wrapped(i)
-	return (i - 1) % self:_get_selected_object_parent_child_count() + 1
+function M:_key_pressed_down()
+	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
+		table.insert(self.selected_object_parent_indices, 1)
+	else
+		if #self.selected_object_parent_indices == 1 then
+			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_parent_index(1))
+		else
+			while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_parent_indices > 1 do
+				table.remove(self.selected_object_parent_indices)
+			end
+			if self:_get_last_selected_object_index() < self:_get_selected_object_parent_child_count() then
+				self:_set_last_selected_object_index(self:_get_last_selected_object_index() + 1)
+			end
+		end
+	end
+end
+
+
+function M:_key_pressed_left()
+	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
+		self:_get_selected_object().collapsed = true
+		self:_update_object_tree_strings()
+	elseif #self.selected_object_parent_indices > 1 then
+		table.remove(self.selected_object_parent_indices)
+	end
+end
+
+
+function M:_key_pressed_right()
+	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == true then
+		self:_get_selected_object().collapsed = false
+		self:_update_object_tree_strings()
+	end
+end
+
+
+function M:_get_last_selected_object_index()
+	return self.selected_object_parent_indices[#self.selected_object_parent_indices]
+end
+
+
+function M:_set_last_selected_object_index(i)
+	self.selected_object_parent_indices[#self.selected_object_parent_indices] = i
+end
+
+
+function M:_get_wrapped_last_selected_object_parent_index(index_change)
+	return self:_get_wrapped(self:_get_last_selected_object_index() + index_change)
+end
+
+
+function M:_get_wrapped(index_change)
+	return (index_change - 1) % self:_get_selected_object_parent_child_count() + 1
 end
 
 
@@ -129,6 +188,25 @@ function M:_get_selected_object()
 	end
 
 	return selected_object
+end
+
+
+function M:_get_previous_selected_object()
+	local selected_object = self.object_tree
+
+	if #self.selected_object_parent_indices == 1 and self:_get_last_selected_object_index() > 1 then
+		return selected_object[self:_get_last_selected_object_index() - 1]
+	end
+
+	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
+	selected_object = selected_object[self.selected_object_parent_indices[1]]
+
+	for i = 2, #self.selected_object_parent_indices - 1 do
+		local selected_object_parent_index = self.selected_object_parent_indices[i]
+		selected_object = selected_object.children[selected_object_parent_index]
+	end
+
+	return selected_object.children[self:_get_last_selected_object_index() - 1]
 end
 
 
@@ -199,7 +277,7 @@ end
 
 
 function M:_update_object_tree_width_recursively(object_tree_strings)
-	local x = self.window_manager.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.window_manager.window_right_padding
+	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth + self.window_right_padding
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
@@ -248,7 +326,7 @@ end
 
 
 function M:_draw_object_tree_strings(object_tree_strings, height)
-	local x = self.window_manager.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
+	local x = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
 	for i, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then

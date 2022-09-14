@@ -26,7 +26,7 @@ function ModMod:UpdateScript()
 
 	if UInputMan:KeyPressed(keys.ArrowRight)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
-		and self.object_tree_manager:has_properties_object_selected() then
+		and self.object_tree_manager:has_not_collapsed_properties_object_selected() then
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
 	elseif UInputMan:KeyPressed(keys.ArrowLeft)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
