@@ -79,6 +79,9 @@ function M:init()
 
 	self.alignment = { left = 0, center = 1, right = 2 }
 
+	self.selectable_windows = { object_tree = 0, properties = 1 }
+	self.selected_window = self.selectable_windows.object_tree
+
 	return self
 end
 

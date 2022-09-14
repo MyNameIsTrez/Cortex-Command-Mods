@@ -58,7 +58,19 @@ end
 
 function M:update()
 	self:_key_pressed()
-	self:_draw()
+end
+
+
+function M:draw()
+	self:_draw_object_tree_background()
+	self:_draw_selected_object_background()
+	-- self.object_tree_strings[5] = tostring(self.screen_offset)
+	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
+end
+
+
+function M:has_properties_object_selected()
+	return self:_get_selected_object().children == nil
 end
 
 
@@ -102,14 +114,6 @@ end
 
 function M:_get_wrapped(i)
 	return (i - 1) % self:_get_selected_object_parent_child_count() + 1
-end
-
-
-function M:_draw()
-	self:_draw_object_tree_background()
-	self:_draw_selected_object_background()
-	-- self.object_tree_strings[5] = tostring(self.screen_offset)
-	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
 end
 
 
