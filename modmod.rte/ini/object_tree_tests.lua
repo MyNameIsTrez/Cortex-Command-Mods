@@ -51,31 +51,31 @@ function M.object_tree_tests()
 	object_tree_test("comments", {})
 	ast = get_ast("nested")
 	object_tree_test("nested", {
-		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
 	})
 	ast = get_ast("multiple")
 	object_tree_test("multiple", {
-		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer },
-		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children },
+		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer, properties = ast[2].children }
 	})
 	ast = get_ast("complex")
 	object_tree_test("complex", {
-		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer }
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, properties = ast[1].children }
 	})
 	ast = get_ast("deindentation_1")
 	object_tree_test("deindentation_1", {
-		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
 	})
 	ast = get_ast("deindentation_2")
 	object_tree_test("deindentation_2", {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
-			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer }
+			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	})
 	ast = get_ast("deindentation_3")
 	object_tree_test("deindentation_3", {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
-			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer }
+			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	})
 	ast = get_ast("spaces")
@@ -85,7 +85,7 @@ function M.object_tree_tests()
 	object_tree_test("comment_before_tabs", {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
-				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer }
+				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
 			}}
 		}}
 	})
@@ -93,7 +93,7 @@ function M.object_tree_tests()
 	object_tree_test("comment_in_tabs", {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
-				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer }
+				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
 			}}
 		}}
 	})
@@ -102,8 +102,8 @@ function M.object_tree_tests()
 	})
 	ast = get_ast("datamodule")
 	object_tree_test("datamodule", {
-		{ property_pointer = ast[1].property_pointer, collapsed = true, children = {
-			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer },
+		{ property_pointer = ast[1].property_pointer, collapsed = true, properties = { ast[1].children[2] }, children = {
+			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children },
 		}}
 	})
 	ast = get_ast("value_on_next_line")

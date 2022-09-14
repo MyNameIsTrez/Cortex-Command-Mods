@@ -63,7 +63,7 @@ end
 
 
 function M:get_selected_properties()
-	return self:_get_selected_object().properties_pointer
+	return self:_get_selected_object().properties
 end
 
 

@@ -65,11 +65,19 @@ function M._generate_object_tree(ast)
 			b.property_pointer = a.property_pointer
 			b.value_pointer = a.value_pointer
 
+			b.properties = {}
+
 			for _, child in ipairs(a.children) do
 				if csts.property(child) == "PresetName" then
 					b.preset_name_pointer = child.value_pointer
-					break
 				end
+				if child.children == nil then
+					table.insert(b.properties, child)
+				end
+			end
+
+			if #b.properties == 0 then
+				b.properties = nil
 			end
 
 			table.insert(object_tree, b)
