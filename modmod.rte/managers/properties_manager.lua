@@ -49,7 +49,21 @@ function M:init(window_manager, object_tree_manager)
 	self.window_left_padding = 20
 	self.window_right_padding = 40
 
-	self.property_names_width = 100
+	-- TODO: Load this from a file that is automatically kept up-to-date with the game instead
+	local property_names = {
+		"PresetName", "Mass", "AirResistance", "HitsMOs",
+		"GetsHitByMOs", "FrameCount", "AngularVel", "DeepCheck",
+		"DrawAfterParent", "DeepCheck", "JointStrength", "JointStiffness",
+		"GibImpulseLimit", "GibWoundLimit", "CollidesWithTerrainWhileAttached"
+	}
+
+	local max_length_property_name_index = utils.max_fn(property_names, function(str1, str2)
+		return FrameMan:CalculateTextWidth(str2, self.window_manager.text_is_small)
+			> FrameMan:CalculateTextWidth(str1, self.window_manager.text_is_small)
+	end)
+
+	self.property_names_width = FrameMan:CalculateTextWidth(property_names[max_length_property_name_index], self.window_manager.text_is_small) + 20
+
 	self.property_values_width = 200
 	self.properties_width = self.property_names_width + self.property_values_width
 
@@ -161,7 +175,7 @@ function M:_draw_property_names()
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
 		local str = csts.property(selected_property)
-		self.window_manager:draw_text_line(x, self.property_names_width - 2, -self.window_right_padding, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.center);
+		self.window_manager:draw_text_line(x, self.property_names_width - 2, 0, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.center);
 	end
 end
 
@@ -171,7 +185,7 @@ function M:_draw_property_values()
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
 		local str = csts.value(selected_property)
-		self.window_manager:draw_text_line(x, self.property_values_width, -self.window_right_padding, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.center);
+		self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.left);
 	end
 end
 

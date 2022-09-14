@@ -280,6 +280,24 @@ function M.sum(tab)
 end
 
 
+-- Source: https://stackoverflow.com/a/5180611/13279557
+function M.max_fn(tab, fn)
+	if #tab == 0 then return nil, nil end
+
+	local key = 1
+	local value = tab[1]
+
+	for i = 2, #tab do
+		if fn(value, tab[i]) then
+			key = i
+			value = tab[i]
+		end
+	end
+
+	return key, value
+end
+
+
 function M.get_wrapped_index(i, max)
 	return (i - 1) % max + 1
 end
