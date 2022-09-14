@@ -7,8 +7,6 @@ local keys = dofile("utils.rte/Data/Keys.lua");
 
 local csts = dofile("modmod.rte/ini/csts.lua")
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
-
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -50,8 +48,7 @@ function M:init(window_manager)
 
 	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
-	self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
-	self:_update_object_tree_width(self.object_tree_strings)
+	self:_update_object_tree_strings()
 
 	self.selected_object_parent_indices = { 1 }
 
@@ -60,7 +57,7 @@ end
 
 
 function M:update()
-	self:_KeyPressed()
+	self:_key_pressed()
 	self:_draw()
 end
 
@@ -68,14 +65,12 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M:_KeyPressed()
+function M:_key_pressed()
 	if UInputMan:KeyPressed(keys.ArrowRight) then
 		if self:_get_selected_object().children ~= nil then
 			if self:_get_selected_object().collapsed == true then
 				self:_get_selected_object().collapsed = false
-
-				self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
-				self:_update_object_tree_width()
+				self:_update_object_tree_strings()
 			elseif self:_get_selected_object().collapsed == false then
 				table.insert(self.selected_object_parent_indices, 1)
 			end
@@ -83,9 +78,7 @@ function M:_KeyPressed()
 	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
 		if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
 			self:_get_selected_object().collapsed = true
-
-			self.object_tree_strings = self:_get_object_tree_strings(self.object_tree)
-			self:_update_object_tree_width()
+			self:_update_object_tree_strings()
 		elseif #self.selected_object_parent_indices > 1 then
 			table.remove(self.selected_object_parent_indices)
 		end
@@ -104,11 +97,8 @@ end
 
 function M:_draw()
 	self:_draw_object_tree_background()
-
 	self:_draw_selected_object_background()
-
 	-- self.object_tree_strings[5] = tostring(self.screen_offset)
-
 	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
 end
 
@@ -147,9 +137,13 @@ function M:_get_selected_object_parent_child_count()
 end
 
 
-function M:_get_object_tree_strings(object_tree, depth)
-	depth = depth or 0
+function M:_update_object_tree_strings()
+	self.object_tree_strings = self:_get_object_tree_strings_recursively(self.object_tree, 0)
+	self:_update_object_tree_width()
+end
 
+
+function M:_get_object_tree_strings_recursively(object_tree, depth)
 	local object_tree_strings = {}
 
 	object_tree_strings.depth = depth
@@ -176,7 +170,7 @@ function M:_get_object_tree_strings(object_tree, depth)
 		table.insert(object_tree_strings, str)
 
 		if v.children ~= nil and not v.collapsed then
-			table.insert(object_tree_strings, self:_get_object_tree_strings(v.children, depth + 1))
+			table.insert(object_tree_strings, self:_get_object_tree_strings_recursively(v.children, depth + 1))
 		end
 	end
 
