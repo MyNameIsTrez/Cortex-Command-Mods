@@ -206,9 +206,9 @@ function M.lstrip(str)
 end
 
 
--- function M.rstrip(str)
--- 	return str:match("(.-)%s*$")
--- end
+function M.rstrip(str)
+	return str:match("(.-)%s*$")
+end
 
 
 -- Source: https://web.archive.org/web/20131225070434/http://snippets.luacode.org/snippets/Deep_Comparison_of_Two_Values_3
@@ -300,6 +300,37 @@ end
 
 function M.get_wrapped_index(i, max)
 	return (i - 1) % max + 1
+end
+
+
+function M.possibly_truncate(str, max_width, is_small, truncation_ending)
+	if FrameMan:CalculateTextWidth(str, is_small) <= max_width then
+		return str
+	end
+
+	if truncation_ending then
+		local rstripped_whitespace = str:match(".-(%s*)$")
+		max_width = max_width + FrameMan:CalculateTextWidth(rstripped_whitespace, is_small) - FrameMan:CalculateTextWidth(truncation_ending, is_small)
+	end
+
+	local index = math.ceil(#str / 2)
+	local step = math.ceil(index / 2)
+
+	while step > 0 do
+		if FrameMan:CalculateTextWidth(str:sub(1, index), is_small) < max_width then
+			index = index + step
+		elseif FrameMan:CalculateTextWidth(str:sub(1, index), is_small) > max_width then
+			index = index - step
+		end
+
+		step = math.floor(step / 2)
+	end
+
+	if truncation_ending then
+		return M.rstrip(str:sub(1, index)) .. truncation_ending
+	else
+		return str:sub(1, index)
+	end
 end
 
 

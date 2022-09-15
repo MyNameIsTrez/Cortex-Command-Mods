@@ -46,7 +46,7 @@ function M:init(window_manager, object_tree_manager)
 	self.object_tree_manager = object_tree_manager
 
 	self.window_top_padding = 25
-	self.window_left_padding = 20
+	self.window_left_padding = 15
 	self.window_right_padding = 40
 
 	-- TODO: Load this from a file that is automatically kept up-to-date with the game instead
@@ -62,7 +62,7 @@ function M:init(window_manager, object_tree_manager)
 			> FrameMan:CalculateTextWidth(str1, self.window_manager.text_is_small)
 	end)
 
-	self.property_names_width = FrameMan:CalculateTextWidth(property_names[max_length_property_name_index], self.window_manager.text_is_small) + 20
+	self.property_names_width = FrameMan:CalculateTextWidth(property_names[max_length_property_name_index], self.window_manager.text_is_small) + 37
 
 	self.property_values_width = 200
 	self.properties_width = self.property_names_width + self.property_values_width
@@ -80,6 +80,7 @@ end
 
 function M:draw()
 	self.selected_properties = self.object_tree_manager:get_selected_properties()
+
 	self:_update_properties_height()
 
 	self:_draw_properties_background()
@@ -184,7 +185,7 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local str = csts.value(selected_property)
+		local str = utils.possibly_truncate(csts.value(selected_property), self.property_values_width - 29, self.window_manager.text_is_small, "...")
 		self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.left);
 	end
 end

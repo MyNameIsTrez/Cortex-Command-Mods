@@ -46,10 +46,10 @@ local M = {};
 function M:init(window_manager)
 	self.window_manager = window_manager
 
-	self.pixels_of_indentation_per_depth = 20
+	self.pixels_of_indentation_per_depth = 15
 
 	self.window_top_padding = 16
-	self.window_left_padding = 20
+	self.window_left_padding = 15
 	self.window_right_padding = 40
 
 	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
