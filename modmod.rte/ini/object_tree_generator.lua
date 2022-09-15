@@ -41,21 +41,21 @@ local M = {};
 
 function M.get_object_tree(filepath)
 	local ast = ast_generator.get_ast(filepath)
-	return M._generate_object_tree(ast)
+	return generate_object_tree(ast)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M._generate_object_tree(ast)
+function generate_object_tree(ast)
 	local object_tree = {}
 
 	for _, a in ipairs(ast) do
 		if a.children ~= nil then
 			local b = {}
 
-			local children = M._generate_object_tree(a.children)
+			local children = generate_object_tree(a.children)
 
 			if #children > 0 then
 				b.children = children

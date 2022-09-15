@@ -52,8 +52,8 @@ end
 
 
 function M.Update()
-	M._Toggled()
-	M._Held()
+	Toggled()
+	Held()
 end
 
 
@@ -65,11 +65,11 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M._Toggled()
+function Toggled()
 	for key_code, functions_to_run in pairs(toggled_functions) do
 		print(key_code)
 		if (UInputMan:KeyPressed(key_code)) then
-			M._ToggleKey(key_code)
+			ToggleKey(key_code)
 
 			for _, function_to_run in ipairs(functions_to_run) do
 				function_to_run()
@@ -79,13 +79,13 @@ function M._Toggled()
 end
 
 
-function M._ToggleKey(key_code)
+function ToggleKey(key_code)
 	toggled_keys[key_code] = not toggled_keys[key_code]
 	print(toggled_keys[key_code])
 end
 
 
-function M._Held()
+function Held()
 	for key_code, functions_to_run in pairs(held_functions) do
 		if (UInputMan:KeyHeld(key_code)) then
 			for _, function_to_run in ipairs(functions_to_run) do

@@ -13,12 +13,12 @@
 
 -- 	local fileStr = fileFunctions.ReadFile("Coalition.rte/Devices/Weapons/UberCannon/UberCannon.ini")
 
--- 	fileStr = M._GetReplacedValueString(fileStr, "RateOfFire", 10000)
--- 	fileStr = M._GetReplacedValueString(fileStr, "ReloadTime", 0)
+-- 	fileStr = GetReplacedValueString(fileStr, "RateOfFire", 10000)
+-- 	fileStr = GetReplacedValueString(fileStr, "ReloadTime", 0)
 
 -- 	fileFunctions.WriteFile("Coalition.rte/Devices/Weapons/UberCannon/UberCannon.ini", fileStr)
 -- end
 
--- function M._GetReplacedValueString(fileString, property, newValue)
+-- function GetReplacedValueString(fileString, property, newValue)
 -- 	return fileString:gsub(property .. "[^\n]*", property .. " = " .. newValue)
 -- end

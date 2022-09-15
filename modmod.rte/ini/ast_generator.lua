@@ -39,14 +39,14 @@ local M = {};
 
 function M.get_ast(filepath)
 	local cst = cst_generator.get_cst(filepath)
-	return M._generate_ast(cst)
+	return generate_ast(cst)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M._generate_ast(cst)
+function generate_ast(cst)
 	local ast = {}
 
 	for _, a in ipairs(cst) do
@@ -66,7 +66,7 @@ function M._generate_ast(cst)
 		end
 		for _, c in ipairs(a) do
 			if c.type == "children" then
-				b.children = M._generate_ast(c.content)
+				b.children = generate_ast(c.content)
 				break
 			end
 		end

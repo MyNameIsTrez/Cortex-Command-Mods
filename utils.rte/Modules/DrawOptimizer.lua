@@ -48,8 +48,8 @@ function M.Add(topLeft, bottomRight, color)
 end
 
 function M.Update()
-	M._Merge();
-	M._Empty();
+	Merge();
+	Empty();
 end
 
 function M.Draw()
@@ -69,7 +69,7 @@ end
 
 
 -- TODO: This function currently assumes the elements are added in the order of top-left to bottom-right.
-function M._Merge()
+function Merge()
 	mergedData = {};
 	local mergedDataIndex = 1;
 
@@ -132,7 +132,7 @@ function M._Merge()
 	end
 end
 
-function M._Empty()
+function Empty()
 	data = {};
 	dataIndex = 1;
 end

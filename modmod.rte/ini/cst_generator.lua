@@ -41,14 +41,14 @@ local M = {};
 
 function M.get_cst(filepath)
 	local tokens = tokens_generator.get_tokens(filepath)
-	return M._generate_cst(tokens)
+	return generate_cst(tokens)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function M._generate_cst(tokens, parsed, token_idx, depth)
+function generate_cst(tokens, parsed, token_idx, depth)
 	--[[
 	newline -> start -> property -> equals -> value
 	^                                         v
@@ -72,7 +72,7 @@ function M._generate_cst(tokens, parsed, token_idx, depth)
 		if     state == "newline" and _is_deeper(depth, token, tokens, token_idx[1] + 1) then
 			local children = { type = "children", content = {} }
 			_append(children, parsed)
-			M._generate_cst(tokens, children.content, token_idx, depth + 1)
+			generate_cst(tokens, children.content, token_idx, depth + 1)
 			-- "state" is deliberately not being changed here.
 		elseif state == "newline" and _is_same_depth(depth, token, tokens, token_idx[1] + 1) then
 			table.insert(parsed, {})
