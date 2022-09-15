@@ -69,6 +69,11 @@ function M:init(window_manager, object_tree_manager)
 
 	self.selected_property_index = 1
 
+	local lines_height = self.window_manager.screen_height - self.window_top_padding - self.window_manager.text_top_padding
+	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
+
+	self.scrolling_line_offset = 0
+
 	return self
 end
 
@@ -95,7 +100,8 @@ function M:draw()
 	self:_draw_property_values()
 
 	if self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
-		self:_draw_selected_property_background()
+		self:_draw_selected_property_name_background()
+		self:_draw_selected_property_value_background()
 	end
 
 	self:_draw_bottom_background()
@@ -118,11 +124,21 @@ end
 
 function M:_key_pressed_up()
 	self.selected_property_index = self:_get_wrapped_selected_property_index(-1)
+
+	if self.selected_property_index - 1 < self.scrolling_line_offset then
+		self.scrolling_line_offset = self.selected_property_index - 1
+	elseif self.scrolling_line_offset + self.max_scrolling_lines < self.selected_property_index - 1 then
+		self.scrolling_line_offset = math.max(0, self.selected_property_index - self.max_scrolling_lines)
+	end
 end
 
 
 function M:_key_pressed_down()
 	self.selected_property_index = self:_get_wrapped_selected_property_index(1)
+
+	if self.selected_property_index > self.scrolling_line_offset + self.max_scrolling_lines or self.scrolling_line_offset > self.selected_property_index then
+		self.scrolling_line_offset = math.max(0, self.selected_property_index - self.max_scrolling_lines)
+	end
 end
 
 
@@ -164,11 +180,21 @@ function M:_draw_property_values_border()
 end
 
 
-function M:_draw_selected_property_background()
-	local x = self.window_manager.screen_width - self.properties_width
+function M:_draw_selected_property_name_background()
+	local x = self.window_manager.screen_width - self.properties_width + 1
 	local y = self.window_top_padding
-	local height_index = self.selected_property_index - 1
-	self.window_manager:draw_selected_line_background(Vector(x, y), self.properties_width, height_index)
+	local height_index = self.selected_property_index - self.scrolling_line_offset
+
+	self.window_manager:draw_selected_line_background(Vector(x, y), self.property_names_width - 2, height_index)
+end
+
+
+function M:_draw_selected_property_value_background()
+	local x = self.window_manager.screen_width - self.property_values_width - 1
+	local y = self.window_top_padding
+	local height_index = self.selected_property_index - self.scrolling_line_offset
+
+	self.window_manager:draw_selected_line_background(Vector(x, y), self.property_values_width, height_index)
 end
 
 
@@ -177,7 +203,7 @@ function M:_draw_property_names()
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
 		local str = csts.property(selected_property)
-		self.window_manager:draw_text_line(x, self.property_names_width - 2, 0, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.center);
+		self.window_manager:draw_text_line(x, self.property_names_width - 2, 0, self.window_top_padding, height_index, str, self.window_manager.alignment.center);
 	end
 end
 
@@ -187,7 +213,10 @@ function M:_draw_property_values()
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
 		local str = utils.possibly_truncate(csts.value(selected_property), self.property_values_width - 29, self.window_manager.text_is_small, "...")
-		self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - 1, str, self.window_manager.alignment.left);
+
+		if height_index > self.scrolling_line_offset then
+			self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - self.scrolling_line_offset, str, self.window_manager.alignment.left);
+		end
 	end
 end
 

@@ -77,7 +77,7 @@ function M:draw()
 	self:_draw_top_background()
 	self:_draw_object_tree_border()
 	-- self.object_tree_strings[5] = tostring(self.screen_offset)
-	self:_draw_object_tree_strings(self.object_tree_strings, {-1})
+	self:_draw_object_tree_strings(self.object_tree_strings, { 0 })
 	self:_draw_selected_object_background()
 	self:_draw_bottom_background()
 end
@@ -385,11 +385,7 @@ end
 
 
 function M:_draw_selected_object_background()
-	-- print("-------")
-	-- print(self:_get_selected_object_vertical_index())
-	-- print(self.scrolling_line_offset)
-	-- print("-------")
-	local height_index = self:_get_selected_object_vertical_index() - self.scrolling_line_offset
+	local height_index = self:_get_selected_object_vertical_index() - self.scrolling_line_offset + 1
 	self.window_manager:draw_selected_line_background(Vector(1, self.window_top_padding), self.tree_width - 2, height_index)
 end
 
@@ -399,6 +395,7 @@ function M:_draw_bottom_background()
 end
 
 
+-- TODO: Remove the -1 in here since Lua is 1-based
 function M:_get_selected_object_vertical_index()
 	return self:_get_selected_object_vertical_index_recursively(self.object_tree, 1, true) - 1
 end
@@ -452,7 +449,7 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 			self:_draw_object_tree_strings(v, height)
 		else
 			height[1] = height[1] + 1
-			if height[1] >= self.scrolling_line_offset then
+			if height[1] > self.scrolling_line_offset then
 				self.window_manager:draw_text_line(1, self.tree_width - 2, x_padding, self.window_top_padding, height[1] - self.scrolling_line_offset, v, self.window_manager.alignment.left);
 			end
 		end
