@@ -64,7 +64,7 @@ function M:init(window_manager, object_tree_manager)
 
 	self.property_names_width = FrameMan:CalculateTextWidth(property_names[max_length_property_name_index], self.window_manager.text_is_small) + 37
 
-	self.property_values_width = 200
+	self.property_values_width = 150
 	self.properties_width = self.property_names_width + self.property_values_width
 
 	self.selected_property_index = 1

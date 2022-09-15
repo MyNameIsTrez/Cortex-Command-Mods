@@ -133,8 +133,10 @@ function M:_key_pressed_down()
 		if #self.selected_object_indices == 1 then
 			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_index(1))
 		else
-			while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_indices > 1 do
-				table.remove(self.selected_object_indices)
+			if self:_parents_have_next_object() then
+				while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_indices > 1 do
+					table.remove(self.selected_object_indices)
+				end
 			end
 			if self:_get_last_selected_object_index() < self:_get_selected_object_parent_child_count() then
 				self:_set_last_selected_object_index(self:_get_last_selected_object_index() + 1)
@@ -177,6 +179,20 @@ function M:_get_wrapped_last_selected_object_index(index_change)
 end
 
 
+function M:_parents_have_next_object()
+	for i = #self.selected_object_indices, 1, -1 do
+		local ith_selected_object_index = self.selected_object_indices[i]
+		local ith_selected_object_parent_child_count = self:_get_ith_selected_object_parent_child_count(i)
+
+		if ith_selected_object_index < ith_selected_object_parent_child_count then
+			return true
+		end
+	end
+
+	return false
+end
+
+
 function M:_get_selected_object()
 	local selected_object = self.object_tree
 
@@ -212,16 +228,21 @@ end
 
 
 function M:_get_selected_object_parent_child_count()
+	return M:_get_ith_selected_object_parent_child_count(#self.selected_object_indices)
+end
+
+
+function M:_get_ith_selected_object_parent_child_count(selected_object_index)
 	local object_parent = self.object_tree
 
-	if #self.selected_object_indices == 1 then
+	if selected_object_index == 1 then
 		return #object_parent
 	end
 
 	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
 	object_parent = self.object_tree[self.selected_object_indices[1]]
 
-	for i = 2, #self.selected_object_indices - 1 do
+	for i = 2, selected_object_index - 1 do
 		local selected_object_index = self.selected_object_indices[i]
 		object_parent = object_parent.children[selected_object_index]
 	end
