@@ -166,8 +166,9 @@ end
 
 function M:_draw_selected_property_background()
 	local x = self.window_manager.screen_width - self.properties_width
-	local y = self.window_top_padding + (self.selected_property_index - 1) * self.window_manager.text_vertical_stride
-	self.window_manager:draw_selected_line_background(Vector(x, y), self.properties_width)
+	local y = self.window_top_padding
+	local height_index = self.selected_property_index - 1
+	self.window_manager:draw_selected_line_background(Vector(x, y), self.properties_width, height_index)
 end
 
 

@@ -58,6 +58,11 @@ function M:init(window_manager)
 
 	self.selected_object_indices = { 1 }
 
+	local lines_height = self.window_manager.screen_height - self.window_top_padding - self.window_manager.text_top_padding
+	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
+
+	self.scrolling_line_offset = 0
+
 	return self
 end
 
@@ -105,21 +110,39 @@ end
 
 
 function M:_key_pressed_up()
-	if self:_get_last_selected_object_index() > 1 and self:_get_previous_selected_object().children ~= nil and self:_get_previous_selected_object().collapsed == false then
+	if self:_get_last_selected_object_index() > 1 and self:_get_previous_selected_object().children ~= nil and not self:_get_previous_selected_object().collapsed then
 		self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
 
-		while self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false do
+		while self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed do
 			table.insert(self.selected_object_indices, 1)
 			self:_set_last_selected_object_index(self:_get_selected_object_parent_child_count())
+		end
+
+		if self:_get_selected_object_vertical_index() < self.scrolling_line_offset then
+			self.scrolling_line_offset = self:_get_selected_object_vertical_index()
 		end
 	else
 		if #self.selected_object_indices == 1 then
 			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_index(-1))
+
+			if self:_get_selected_object_vertical_index() < self.scrolling_line_offset then
+				self.scrolling_line_offset = self:_get_selected_object_vertical_index()
+			elseif self.scrolling_line_offset + self.max_scrolling_lines < self:_get_selected_object_vertical_index() then
+				self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+			end
 		else
 			if self:_get_last_selected_object_index() == 1 and #self.selected_object_indices > 1 then
 				table.remove(self.selected_object_indices)
+
+				if self:_get_selected_object_vertical_index() < self.scrolling_line_offset then
+					self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+				end
 			elseif self:_get_last_selected_object_index() > 1 then
 				self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
+
+				if self:_get_selected_object_vertical_index() < self.scrolling_line_offset then
+					self.scrolling_line_offset = self:_get_selected_object_vertical_index()
+				end
 			end
 		end
 	end
@@ -127,19 +150,32 @@ end
 
 
 function M:_key_pressed_down()
-	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
+	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
 		table.insert(self.selected_object_indices, 1)
+
+		if self:_get_selected_object_vertical_index() > self.scrolling_line_offset + self.max_scrolling_lines then
+			self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+		end
 	else
 		if #self.selected_object_indices == 1 then
 			self:_set_last_selected_object_index(self:_get_wrapped_last_selected_object_index(1))
+
+			if self:_get_selected_object_vertical_index() > self.scrolling_line_offset + self.max_scrolling_lines or self.scrolling_line_offset > self:_get_selected_object_vertical_index() then
+				self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+			end
 		else
 			if self:_parents_have_next_object() then
 				while self:_get_last_selected_object_index() == self:_get_selected_object_parent_child_count() and #self.selected_object_indices > 1 do
 					table.remove(self.selected_object_indices)
 				end
 			end
+
 			if self:_get_last_selected_object_index() < self:_get_selected_object_parent_child_count() then
 				self:_set_last_selected_object_index(self:_get_last_selected_object_index() + 1)
+
+				if self:_get_selected_object_vertical_index() > self.scrolling_line_offset + self.max_scrolling_lines then
+					self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+				end
 			end
 		end
 	end
@@ -147,9 +183,13 @@ end
 
 
 function M:_key_pressed_left()
-	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == false then
+	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
 		self:_get_selected_object().collapsed = true
 		self:_update_object_tree_strings()
+
+		if self:_get_last_object_vertical_index() - self.scrolling_line_offset < self.max_scrolling_lines then
+			self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+		end
 	elseif #self.selected_object_indices > 1 then
 		table.remove(self.selected_object_indices)
 	end
@@ -157,7 +197,7 @@ end
 
 
 function M:_key_pressed_right()
-	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed == true then
+	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed then
 		self:_get_selected_object().collapsed = false
 		self:_update_object_tree_strings()
 	end
@@ -240,7 +280,7 @@ function M:_get_ith_selected_object_parent_child_count(selected_object_index)
 	end
 
 	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	object_parent = self.object_tree[self.selected_object_indices[1]]
+	object_parent = object_parent[self.selected_object_indices[1]]
 
 	for i = 2, selected_object_index - 1 do
 		local selected_object_index = self.selected_object_indices[i]
@@ -345,8 +385,12 @@ end
 
 
 function M:_draw_selected_object_background()
-	local y = self.window_top_padding + self:_get_selected_object_vertical_index() * self.window_manager.text_vertical_stride
-	self.window_manager:draw_selected_line_background(Vector(1, y), self.tree_width - 2)
+	-- print("-------")
+	-- print(self:_get_selected_object_vertical_index())
+	-- print(self.scrolling_line_offset)
+	-- print("-------")
+	local height_index = self:_get_selected_object_vertical_index() - self.scrolling_line_offset
+	self.window_manager:draw_selected_line_background(Vector(1, self.window_top_padding), self.tree_width - 2, height_index)
 end
 
 
@@ -380,6 +424,26 @@ function M:_get_selected_object_vertical_index_recursively(object_tree, depth, s
 end
 
 
+function M:_get_last_object_vertical_index()
+	return self:_get_last_object_vertical_index_recursively(self.object_tree) - 1
+end
+
+
+function M:_get_last_object_vertical_index_recursively(object_tree)
+	local count = 0
+
+	for i, v in ipairs(object_tree) do
+		count = count + 1
+
+		if v.children ~= nil and not v.collapsed then
+			count = count + self:_get_last_object_vertical_index_recursively(v.children)
+		end
+	end
+
+	return count
+end
+
+
 function M:_draw_object_tree_strings(object_tree_strings, height)
 	local x_padding = self.window_left_padding + object_tree_strings.depth * self.pixels_of_indentation_per_depth
 
@@ -388,7 +452,9 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 			self:_draw_object_tree_strings(v, height)
 		else
 			height[1] = height[1] + 1
-			self.window_manager:draw_text_line(1, self.tree_width - 2, x_padding, self.window_top_padding, height[1], v, self.window_manager.alignment.left);
+			if height[1] >= self.scrolling_line_offset then
+				self.window_manager:draw_text_line(1, self.tree_width - 2, x_padding, self.window_top_padding, height[1] - self.scrolling_line_offset, v, self.window_manager.alignment.left);
+			end
 		end
 	end
 end

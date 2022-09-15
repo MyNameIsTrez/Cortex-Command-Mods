@@ -101,9 +101,10 @@ function M:draw_border(top_left_pos, width, height)
 end
 
 
-function M:draw_selected_line_background(top_left_pos, width)
-	self:_draw_line(top_left_pos + Vector(4 - 1, 0), width - 4 * 2 + 1, 0, self.selected_color)
-	self:_draw_line(top_left_pos + Vector(4 - 1, self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.selected_color)
+function M:draw_selected_line_background(top_left_pos, width, height_index)
+	self:_draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, self.selected_color)
+	-- self:_draw_line(top_left_pos + Vector(4 - 1, 0), width - 4 * 2 + 1, 0, self.selected_color)
+	-- self:_draw_line(top_left_pos + Vector(4 - 1, self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.selected_color)
 end
 
 
@@ -118,13 +119,17 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 	end
 
 	self:_draw_text(pos, text, self.text_is_small, alignment);
-
-	self:_draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride), width - 4 * 2 + 1, 0, self.unselected_color)
-	self:_draw_line(Vector(x + 4 - 1, y_padding + (height_index + 1) * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, self.unselected_color)
+	self:_draw_selection_lines(x, width, y_padding, height_index, self.unselected_color)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function M:_draw_selection_lines(x, width, y_padding, height_index, color)
+	self:_draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride), width - 4 * 2 + 1, 0, color)
+	self:_draw_line(Vector(x + 4 - 1, y_padding + (height_index + 1) * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, color)
+end
 
 
 function M:_draw_box(top_left_pos, width, height, color)
