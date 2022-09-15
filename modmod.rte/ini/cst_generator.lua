@@ -118,7 +118,7 @@ function _is_deeper(depth, token, tokens, next_token_idx)
 	new_depth = _get_depth(token, tokens, next_token_idx)
 
 	if new_depth > depth + 1 then
-		error("Too many tabs!")
+		error(string.format("Too many tabs after one another were found at filepath '%s' at character %d. If you aren't able to find where the excessive tabs are, ask MyNameIsTrez#1585 in the CCCP Discord server for help.", token.filepath, token.index))
 	end
 
 	return new_depth > depth
