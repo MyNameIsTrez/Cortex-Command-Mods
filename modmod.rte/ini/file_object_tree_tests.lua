@@ -117,7 +117,7 @@ end
 
 function file_object_tree_test(file_name, expected)
 	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local object_tree = object_tree_generator.get_file_object_tree("modmod.rte/ini/ini_test_files", file_name .. ".ini")
+	local object_tree = object_tree_generator.get_file_object_tree(filepath)
 
 	tests.test("object tree", file_name, object_tree, expected)
 end

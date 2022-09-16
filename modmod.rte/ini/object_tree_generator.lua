@@ -51,7 +51,8 @@ function M.get_object_tree(file_structure)
 end
 
 
-function M.get_file_object_tree(parent_directory, file_name)
+function M.get_file_object_tree(filepath)
+	local parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
 	local filepath = parent_directory .. "/" .. file_name
 	local ast = ast_generator.get_ast(filepath)
 

@@ -93,19 +93,25 @@ function get_ini_paths()
 	for data_module in PresetMan.Modules do
 		local data_module_file_name = data_module.FileName
 
-		local object_tree = object_tree_generator.get_file_object_tree(data_module_file_name, "Index.ini")
-
-		add_datamodule_ini_paths_recursively(object_tree, ini_paths)
+		add_object_tree_ini_paths(data_module_file_name .. "/Index.ini", ini_paths)
 	end
 
 	return ini_paths
 end
 
 
-function add_datamodule_ini_paths_recursively(object_tree, ini_paths)
+function add_object_tree_ini_paths(ini_path, ini_paths)
+	print(ini_path)
+	local object_tree = object_tree_generator.get_file_object_tree(ini_path)
+	utils.RecursivelyPrint(object_tree)
+	add_ini_paths(object_tree, ini_paths)
+end
+
+
+function add_ini_paths(object_tree, ini_paths)
 	for _, v in ipairs(object_tree.children) do
 		if v.children ~= nil then
-			add_datamodule_ini_paths_recursively(v, ini_paths)
+			add_ini_paths(v, ini_paths)
 		end
 
 		if v.properties then
@@ -114,7 +120,12 @@ function add_datamodule_ini_paths_recursively(object_tree, ini_paths)
 
 				if is_load_ini_property(property) then
 					local ini_path = csts.value(subproperty)
-					ini_paths[ini_path] = true
+
+					local visited_before = ini_paths[ini_path]
+					if not visited_before then
+						ini_paths[ini_path] = true
+						add_object_tree_ini_paths(ini_path)
+					end
 				end
 			end
 		end
