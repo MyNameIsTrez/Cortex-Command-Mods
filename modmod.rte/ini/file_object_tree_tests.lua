@@ -50,65 +50,59 @@ function M.file_object_tree_tests()
 	file_object_tree_test("simple", {})
 	file_object_tree_test("comments", {})
 	ast = get_ast("nested")
-	file_object_tree_test("nested", {
+	file_object_tree_test("nested", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
-	})
+	}})
 	ast = get_ast("multiple")
-	file_object_tree_test("multiple", {
+	file_object_tree_test("multiple", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children },
 		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer, properties = ast[2].children }
-	})
+	}})
 	ast = get_ast("complex")
-	file_object_tree_test("complex", {
+	file_object_tree_test("complex", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, properties = ast[1].children }
-	})
+	}})
 	ast = get_ast("deindentation_1")
-	file_object_tree_test("deindentation_1", {
+	file_object_tree_test("deindentation_1", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
-	})
+	}})
 	ast = get_ast("deindentation_2")
-	file_object_tree_test("deindentation_2", {
+	file_object_tree_test("deindentation_2", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
-	})
+	}})
 	ast = get_ast("deindentation_3")
-	file_object_tree_test("deindentation_3", {
+	file_object_tree_test("deindentation_3", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
-	})
-	ast = get_ast("spaces")
-	file_object_tree_test("spaces", {
-	})
+	}})
+	file_object_tree_test("spaces", {})
 	ast = get_ast("comment_before_tabs")
-	file_object_tree_test("comment_before_tabs", {
+	file_object_tree_test("comment_before_tabs", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
 			}}
 		}}
-	})
+	}})
 	ast = get_ast("comment_in_tabs")
-	file_object_tree_test("comment_in_tabs", {
+	file_object_tree_test("comment_in_tabs", { children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
 			}}
 		}}
-	})
-	ast = get_ast("spaces_at_start_of_line")
-	file_object_tree_test("spaces_at_start_of_line", {
-	})
+	}})
+	file_object_tree_test("spaces_at_start_of_line", {})
 	ast = get_ast("datamodule")
-	file_object_tree_test("datamodule", {
+	file_object_tree_test("datamodule", { children = {
 		{ property_pointer = ast[1].property_pointer, collapsed = true, properties = { ast[1].children[2] }, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children },
 		}}
-	})
-	ast = get_ast("value_on_next_line")
-	file_object_tree_test("value_on_next_line", {
-	})
+	}})
+	file_object_tree_test("value_on_next_line", {})
 end
 
 
