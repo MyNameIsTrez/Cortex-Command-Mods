@@ -42,8 +42,9 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M:init(window_manager)
+function M:init(window_manager, autoscroll_manager)
 	self.window_manager = window_manager
+	self.autoscroll_manager = autoscroll_manager
 
 	self.pixels_of_indentation_per_depth = 15
 
@@ -100,19 +101,19 @@ end
 
 
 function M:_key_pressed()
-	if UInputMan:KeyPressed(keys.ArrowUp) then
-		self:_key_pressed_up()
-	elseif UInputMan:KeyPressed(keys.ArrowDown) then
-		self:_key_pressed_down()
+	if self.autoscroll_manager:move(keys.ArrowUp) then
+		self:_up()
+	elseif self.autoscroll_manager:move(keys.ArrowDown) then
+		self:_down()
 	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
-		self:_key_pressed_left()
+		self:_left()
 	elseif UInputMan:KeyPressed(keys.ArrowRight) then
-		self:_key_pressed_right()
+		self:_right()
 	end
 end
 
 
-function M:_key_pressed_up()
+function M:_up()
 	if self:_get_last_selected_object_index() > 1 and self:_get_previous_selected_object().children ~= nil and not self:_get_previous_selected_object().collapsed then
 		self:_set_last_selected_object_index(self:_get_last_selected_object_index() - 1)
 
@@ -152,7 +153,7 @@ function M:_key_pressed_up()
 end
 
 
-function M:_key_pressed_down()
+function M:_down()
 	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
 		table.insert(self.selected_object_indices, 1)
 
@@ -185,7 +186,7 @@ function M:_key_pressed_down()
 end
 
 
-function M:_key_pressed_left()
+function M:_left()
 	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
 		self:_get_selected_object().collapsed = true
 		self:_update_object_tree_strings()
@@ -199,7 +200,7 @@ function M:_key_pressed_left()
 end
 
 
-function M:_key_pressed_right()
+function M:_right()
 	local selected_object = self:_get_selected_object()
 
 	if selected_object.children ~= nil and selected_object.collapsed then

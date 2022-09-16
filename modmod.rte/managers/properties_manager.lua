@@ -41,9 +41,10 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M:init(window_manager, object_tree_manager)
+function M:init(window_manager, object_tree_manager, autoscroll_manager)
 	self.window_manager = window_manager
 	self.object_tree_manager = object_tree_manager
+	self.autoscroll_manager = autoscroll_manager
 
 	self.window_top_padding = 25
 	self.window_left_padding = 15
@@ -112,17 +113,17 @@ end
 
 
 function M:_key_pressed()
-	if UInputMan:KeyPressed(keys.ArrowUp) then
-		self:_key_pressed_up()
-	elseif UInputMan:KeyPressed(keys.ArrowDown) then
-		self:_key_pressed_down()
+	if self.autoscroll_manager:move(keys.ArrowUp) then
+		self:_up()
+	elseif self.autoscroll_manager:move(keys.ArrowDown) then
+		self:_down()
 	elseif UInputMan:KeyPressed(keys.Enter) then
-		self:_key_pressed_enter()
+		self:_enter()
 	end
 end
 
 
-function M:_key_pressed_up()
+function M:_up()
 	self.selected_property_index = self:_get_wrapped_selected_property_index(-1)
 
 	if self.selected_property_index - 1 < self.scrolling_line_offset then
@@ -133,7 +134,7 @@ function M:_key_pressed_up()
 end
 
 
-function M:_key_pressed_down()
+function M:_down()
 	self.selected_property_index = self:_get_wrapped_selected_property_index(1)
 
 	if self.selected_property_index > self.scrolling_line_offset + self.max_scrolling_lines or self.scrolling_line_offset > self.selected_property_index then
@@ -142,7 +143,7 @@ function M:_key_pressed_down()
 end
 
 
-function M:_key_pressed_enter()
+function M:_enter()
 end
 
 

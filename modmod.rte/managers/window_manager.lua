@@ -73,7 +73,7 @@ function M:init()
 
 	self.screen_of_player = ActivityMan:GetActivity():ScreenOfPlayer(self.player_id)
 	self.scroll_speed = 0.3 -- TODO: This needs to be dynamic
-	self.scroll_timer = Timer()
+	self.window_scroll_timer = Timer()
 
 	self.alignment = { left = 0, center = 1, right = 2 }
 
@@ -214,7 +214,7 @@ function M:_update_screen_offset()
 	end
 
 	local scroll_difference = offset_target - self.screen_offset
-	local scroll_progress = self.scroll_speed * self.scroll_timer.ElapsedRealTimeMS * 0.05
+	local scroll_progress = self.scroll_speed * self.window_scroll_timer.ElapsedRealTimeMS * 0.05
 	scroll_progress = math.min(1, scroll_progress)
 	local scroll_result = (scroll_difference * scroll_progress).Rounded
 	local new_screen_offset = self.screen_offset + scroll_result
@@ -229,7 +229,7 @@ function M:_update_screen_offset()
 
 	SceneMan:SetOffset(old_screen_offset, self.player_id)
 
-	self.scroll_timer:Reset()
+	self.window_scroll_timer:Reset()
 end
 
 

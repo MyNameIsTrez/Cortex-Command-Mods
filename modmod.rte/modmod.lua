@@ -2,6 +2,7 @@
 
 
 local window_manager = dofile("modmod.rte/managers/window_manager.lua")
+local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
 
@@ -13,8 +14,9 @@ local keys = dofile("utils.rte/Data/Keys.lua");
 
 function ModMod:StartScript()
 	self.window_manager = window_manager:init()
-	self.object_tree_manager = object_tree_manager:init(self.window_manager)
-	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager)
+	self.autoscroll_manager = autoscroll_manager:init()
+	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
+	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager)
 end
 
 
