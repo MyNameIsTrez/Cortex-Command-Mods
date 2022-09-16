@@ -119,6 +119,11 @@ function M.ast_tests()
 			}}
 		}}
 	})
+	cst = get_cst("include_files")
+	ast_test("include_files", {
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
+	})
 	cst = get_cst("spaces")
 	ast_test("spaces", {
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }

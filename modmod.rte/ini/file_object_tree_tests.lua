@@ -78,6 +78,7 @@ function M.file_object_tree_tests()
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	}})
+	file_object_tree_test("include_files", {})
 	file_object_tree_test("spaces", {})
 	ast = get_ast("comment_before_tabs")
 	file_object_tree_test("comment_before_tabs", { file_name = "comment_before_tabs.ini", collapsed = true, children = {

@@ -101,9 +101,9 @@ end
 
 
 function add_object_tree_ini_paths(ini_path, ini_paths)
-	print(ini_path)
+	-- print(ini_path)
 	local object_tree = object_tree_generator.get_file_object_tree(ini_path)
-	utils.RecursivelyPrint(object_tree)
+	-- utils.RecursivelyPrint(object_tree)
 	add_ini_paths(object_tree, ini_paths)
 end
 

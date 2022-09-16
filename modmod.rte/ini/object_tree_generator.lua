@@ -91,24 +91,6 @@ function get_object_tree_recursively(file_structure, parent_directory)
 end
 
 
--- function get_full_cst(input_folder, subfolder_path)
--- function get_full_cst()
--- 	local file_structure = get_file_structure()
-
--- 	utils.RecursivelyPrint(file_structure)
--- end
-
-
--- function is_mod_folder_or_subfolder(path)
-
--- end
-
-
-function get_file_structure()
-
-end
-
-
 function generate_file_object_tree(ast)
 	local file_object_tree = {}
 

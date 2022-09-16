@@ -206,6 +206,14 @@ function M.cst_tests()
 			}}
 		}
 	})
+	cst_test("include_files", {
+		{
+			{ type = "property", content = "IncludeFile" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "A.ini" }, { type = "extra", content = "\n\n" },
+		},
+		{
+			{ type = "property", content = "IncludeFile" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "B.ini" }, { type = "extra", content = "\n" },
+		}
+	})
 	cst_test("spaces", {
 		{
 			{ type = "property", content = "Foo" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "Bar Baz" },
