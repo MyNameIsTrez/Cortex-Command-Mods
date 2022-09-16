@@ -156,8 +156,8 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function tokenizer_test(filename, expected)
-	local filepath = test_files.get_test_path_from_filename(filename)
+function tokenizer_test(file_name, expected)
+	local filepath = test_files.get_test_path_from_file_name(file_name)
 	local tokens = tokens_generator.get_tokens(filepath)
 
 	local tokens_without_metadata = {}
@@ -165,7 +165,7 @@ function tokenizer_test(filename, expected)
 		table.insert(tokens_without_metadata, { type = token.type, content = token.content })
 	end
 
-	tests.test("tokenizer", filename, tokens_without_metadata, expected)
+	tests.test("tokenizer", file_name, tokens_without_metadata, expected)
 end
 
 

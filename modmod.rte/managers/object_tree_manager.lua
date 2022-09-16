@@ -51,11 +51,10 @@ function M:init(window_manager)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	-- local file_structure = file_structure_generator.get_file_structure()
-	-- self.object_tree = object_tree_generator.get_object_tree(file_structure)
-	-- utils.RecursivelyPrint(self.object_tree)
+	local file_structure = file_structure_generator.get_file_structure()
+	self.object_tree = object_tree_generator.get_object_tree(file_structure)
 
-	self.object_tree = object_tree_generator.get_file_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
+	-- utils.RecursivelyPrint(self.object_tree)
 
 	self:_update_object_tree_strings()
 
@@ -76,6 +75,7 @@ end
 
 
 function M:draw()
+	-- print("draw()")
 	self:_draw_object_tree_background()
 	self:_draw_top_background()
 	self:_draw_object_tree_border()
@@ -303,6 +303,10 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 
 		if v.preset_name_pointer ~= nil then
 			str = string.format("%s%s (%s)", str, v.preset_name_pointer.content, csts.property(v))
+		elseif v.file_name ~= nil then
+			str = str .. v.file_name
+		elseif v.directory_name ~= nil then
+			str = str .. v.directory_name .. "/"
 		else
 			str = str .. csts.property(v)
 		end
@@ -394,11 +398,11 @@ function M:_get_selected_object_vertical_index_recursively(object_tree, depth, s
 
 		if i == self.selected_object_indices[depth] and stop then
 			if v.children ~= nil and not v.collapsed and depth + 1 <= #self.selected_object_indices then
-				count = count + self:_get_selected_object_vertical_index_recursively(v.children, depth + 1, true)
+				count = count + self:_get_selected_object_vertical_index_recursively(v, depth + 1, true)
 			end
 			return count
 		elseif v.children ~= nil and not v.collapsed then
-			count = count + self:_get_selected_object_vertical_index_recursively(v.children, depth + 1, false)
+			count = count + self:_get_selected_object_vertical_index_recursively(v, depth + 1, false)
 		end
 	end
 
@@ -418,7 +422,7 @@ function M:_get_last_object_vertical_index_recursively(object_tree)
 		count = count + 1
 
 		if v.children ~= nil and not v.collapsed then
-			count = count + self:_get_last_object_vertical_index_recursively(v.children)
+			count = count + self:_get_last_object_vertical_index_recursively(v)
 		end
 	end
 

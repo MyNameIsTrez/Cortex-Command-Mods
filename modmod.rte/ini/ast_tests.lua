@@ -169,17 +169,17 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function get_cst(filename)
-	local filepath = test_files.get_test_path_from_filename(filename)
+function get_cst(file_name)
+	local filepath = test_files.get_test_path_from_file_name(file_name)
 	return cst_generator.get_cst(filepath)
 end
 
 
-function ast_test(filename, expected)
-	local filepath = test_files.get_test_path_from_filename(filename)
+function ast_test(file_name, expected)
+	local filepath = test_files.get_test_path_from_file_name(file_name)
 	local ast = ast_generator.get_ast(filepath)
 
-	tests.test("ast", filename, ast, expected)
+	tests.test("ast", file_name, ast, expected)
 end
 
 

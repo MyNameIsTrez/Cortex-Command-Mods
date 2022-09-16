@@ -40,8 +40,8 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_object_tree(file_structure, parent_directory)
-	object_tree = get_object_tree_recursively(file_structure, parent_directory)
+function M.get_object_tree(file_structure)
+	object_tree = get_object_tree_recursively(file_structure)
 
 	if utils.get_key_count(object_tree.children) == 0 then
 		return object_tree.children
@@ -51,9 +51,11 @@ function M.get_object_tree(file_structure, parent_directory)
 end
 
 
-function M.get_file_object_tree(filepath)
+function M.get_file_object_tree(parent_directory, file_name)
+	local filepath = parent_directory .. "/" .. file_name
 	local ast = ast_generator.get_ast(filepath)
-	local file_object_tree = { children = generate_file_object_tree(ast) }
+
+	local file_object_tree = { file_name = file_name, collapsed = true, children = generate_file_object_tree(ast) }
 
 	if #file_object_tree.children == 0 then
 		return file_object_tree.children
@@ -71,12 +73,16 @@ function get_object_tree_recursively(file_structure, parent_directory)
 
 	local object_tree = {}
 	object_tree.children = {}
+	object_tree.directory_name = parent_directory
+	object_tree.collapsed = true
 
 	for k, v in pairs(file_structure) do
 		if type(v) == "table" then
-			object_tree.children[k] = get_object_tree_recursively(v, parent_directory .. "/" .. k)
+			table.insert(object_tree.children, get_object_tree_recursively(v, parent_directory .. "/" .. k))
+			object_tree.children[#object_tree.children].directory_name = k
+			object_tree.children[#object_tree.children].collapsed = true
 		else
-			object_tree.children[v] = M.get_file_object_tree(parent_directory .. "/" .. v)
+			table.insert(object_tree.children, M.get_file_object_tree(parent_directory, v))
 		end
 	end
 

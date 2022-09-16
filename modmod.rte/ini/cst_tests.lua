@@ -295,11 +295,11 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function cst_test(filename, expected)
-	local filepath = test_files.get_test_path_from_filename(filename)
+function cst_test(file_name, expected)
+	local filepath = test_files.get_test_path_from_file_name(file_name)
 	local cst = cst_generator.get_cst(filepath)
 
-	tests.test("cst", filename, cst, expected)
+	tests.test("cst", file_name, cst, expected)
 end
 
 

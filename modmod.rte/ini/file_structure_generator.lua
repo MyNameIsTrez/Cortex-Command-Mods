@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local ini_file_structure = dofile("modmod.rte/ini_file_structure.lua")
+
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -37,8 +37,44 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
+--[[
+Returned format:
+{
+	["Browncoats.rte"] = {
+		Actors = {
+			Infantry = {
+				BrowncoatHeavy = {
+					"BrowncoatHeavy.ini"
+				}
+			}
+		}
+	}
+}
+]]--
 function M.get_file_structure()
-	return ini_file_structure
+	return {
+		["Browncoats.rte"] = {
+			Actors = {
+				Infantry = {
+					BrowncoatHeavy = {
+						"BrowncoatHeavy.ini"
+					},
+					BrowncoatLight = {
+						"BrowncoatLight.ini"
+					}
+				}
+			}
+		},
+		["Coalition.rte"] = {
+			Devices = {
+				Weapons = {
+					GatlingGun = {
+						"GatlingGun.ini"
+					}
+				}
+			}
+		}
+	}
 end
 
 
