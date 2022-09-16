@@ -200,9 +200,17 @@ end
 
 
 function M:_key_pressed_right()
-	if self:_get_selected_object().children ~= nil and self:_get_selected_object().collapsed then
-		self:_get_selected_object().collapsed = false
+	local selected_object = self:_get_selected_object()
+
+	if selected_object.children ~= nil and selected_object.collapsed then
+		selected_object.collapsed = false
 		self:_update_object_tree_strings()
+	elseif selected_object.children ~= nil and not selected_object.collapsed and not selected_object.properties then
+		table.insert(self.selected_object_indices, 1)
+
+		if self:_get_selected_object_vertical_index() > self.scrolling_line_offset + self.max_scrolling_lines then
+			self.scrolling_line_offset = math.max(0, self:_get_selected_object_vertical_index() - self.max_scrolling_lines)
+		end
 	end
 end
 
