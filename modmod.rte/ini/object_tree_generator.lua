@@ -40,17 +40,15 @@ local M = {};
 
 
 function M.get_object_tree(file_structure, parent_path)
-	parent_path = parent_path or ""
+	parent_path = parent_path or "."
 
 	local object_tree = {}
 
 	for k, v in pairs(file_structure) do
-		local path = parent_path .. "/" .. v
-
 		if type(v) == "table" then
-			M.get_object_tree(v, path)
+			object_tree[k] = M.get_object_tree(v, parent_path .. "/" .. k)
 		else
-			object_tree[k] = M.get_file_object_tree(path)
+			object_tree[v] = M.get_file_object_tree(parent_path .. "/" .. v)
 		end
 	end
 

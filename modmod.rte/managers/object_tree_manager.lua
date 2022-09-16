@@ -1,12 +1,11 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local file_structure_generator = dofile("modmod.rte/ini/file_structure_generator.lua")
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
-
-local keys = dofile("utils.rte/Data/Keys.lua");
-
 local csts = dofile("modmod.rte/ini/csts.lua")
 
+local keys = dofile("utils.rte/Data/Keys.lua");
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
@@ -51,6 +50,10 @@ function M:init(window_manager)
 	self.window_top_padding = 16
 	self.window_left_padding = 15
 	self.window_right_padding = 40
+
+	-- local file_structure = file_structure_generator.get_file_structure()
+	-- self.object_tree = object_tree_generator.get_object_tree(file_structure)
+	-- utils.RecursivelyPrint(self.object_tree)
 
 	self.object_tree = object_tree_generator.get_file_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
