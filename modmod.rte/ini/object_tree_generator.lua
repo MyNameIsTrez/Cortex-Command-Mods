@@ -39,13 +39,51 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_object_tree(filepath)
+function M.get_object_tree(file_structure, parent_path)
+	parent_path = parent_path or ""
+
+	local object_tree = {}
+
+	for k, v in pairs(file_structure) do
+		local path = parent_path .. "/" .. v
+
+		if type(v) == "table" then
+			M.get_object_tree(v, path)
+		else
+			object_tree[k] = M.get_file_object_tree(path)
+		end
+	end
+
+	return object_tree
+end
+
+
+-- function M.get_file_object_tree(path)
+function M.get_file_object_tree(filepath)
 	local ast = ast_generator.get_ast(filepath)
 	return generate_object_tree(ast)
 end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+-- function get_full_cst(input_folder, subfolder_path)
+-- function get_full_cst()
+-- 	local file_structure = get_file_structure()
+
+-- 	utils.RecursivelyPrint(file_structure)
+-- end
+
+
+-- function is_mod_folder_or_subfolder(path)
+
+-- end
+
+
+function get_file_structure()
+
+end
 
 
 function generate_object_tree(ast)

@@ -52,7 +52,7 @@ function M:init(window_manager)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	self.object_tree = object_tree_generator.get_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
+	self.object_tree = object_tree_generator.get_file_object_tree("Browncoats.rte/Actors/Infantry/BrowncoatHeavy/BrowncoatHeavy.ini")
 
 	self:_update_object_tree_strings()
 
