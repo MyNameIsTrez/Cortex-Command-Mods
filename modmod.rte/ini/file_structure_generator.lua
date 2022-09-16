@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
+local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 local csts = dofile("modmod.rte/ini/csts.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
@@ -93,40 +93,36 @@ function get_ini_paths()
 	for data_module in PresetMan.Modules do
 		local data_module_file_name = data_module.FileName
 
-		add_object_tree_ini_paths(data_module_file_name .. "/Index.ini", ini_paths)
+		add_file_ini_paths(data_module_file_name .. "/Index.ini", ini_paths)
 	end
 
 	return ini_paths
 end
 
 
-function add_object_tree_ini_paths(ini_path, ini_paths)
-	-- print(ini_path)
-	local object_tree = object_tree_generator.get_file_object_tree(ini_path)
-	-- utils.RecursivelyPrint(object_tree)
-	add_ini_paths(object_tree, ini_paths)
+function add_file_ini_paths(ini_path, ini_paths)
+	print(ini_path)
+	local ast = ast_generator.get_ast(ini_path)
+	-- utils.RecursivelyPrint(ast)
+	add_ini_paths(ast, ini_paths)
 end
 
 
-function add_ini_paths(object_tree, ini_paths)
-	for _, v in ipairs(object_tree.children) do
+function add_ini_paths(ast, ini_paths)
+	for _, v in ipairs(ast) do
 		if v.children ~= nil then
-			add_ini_paths(v, ini_paths)
+			add_ini_paths(v.children, ini_paths)
 		end
 
-		if v.properties then
-			for _, subproperty in ipairs(v.properties) do
-				local property = csts.property(subproperty)
+		local property = csts.property(v)
 
-				if is_load_ini_property(property) then
-					local ini_path = csts.value(subproperty)
+		if is_load_ini_property(property) then
+			local ini_path = csts.value(v)
 
-					local visited_before = ini_paths[ini_path]
-					if not visited_before then
-						ini_paths[ini_path] = true
-						add_object_tree_ini_paths(ini_path)
-					end
-				end
+			local visited_before = ini_paths[ini_path]
+			if not visited_before then
+				ini_paths[ini_path] = true
+				add_file_ini_paths(ini_path, ini_paths)
 			end
 		end
 	end

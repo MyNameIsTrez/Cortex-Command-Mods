@@ -56,6 +56,10 @@ function M.get_tokens(filepath)
 	local text = file_functions.ReadFile(filepath)
 	text = utils.lstrip(text)
 
+	-- TODO: This is a hotfix for shitty Techion.rte/Devices/Tools/Nanolyzer/Nanolyzer.ini
+	-- Make a Data repo PR that fixes this instead
+	text = text:gsub("\t    ", "\t\t")
+
 	text_len = #text
 
 	i = 1
