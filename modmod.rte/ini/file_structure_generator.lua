@@ -56,31 +56,24 @@ Returned format:
 ]]--
 function M.get_file_structure()
 	local ini_paths = get_ini_paths()
-	utils.RecursivelyPrint(ini_paths)
 
-	return {
-		["Browncoats.rte"] = {
-			Actors = {
-				Infantry = {
-					BrowncoatHeavy = {
-						"BrowncoatHeavy.ini"
-					},
-					BrowncoatLight = {
-						"BrowncoatLight.ini"
-					}
-				}
-			}
-		},
-		["Coalition.rte"] = {
-			Devices = {
-				Weapons = {
-					GatlingGun = {
-						"GatlingGun.ini"
-					}
-				}
-			}
-		}
-	}
+	local file_structure = {}
+
+	for ini_path, _ in pairs(ini_paths) do
+		local x = file_structure
+
+		for part in ini_path:gmatch("([^/]*)/") do
+			if x[part] == nil then
+				x[part] = {}
+			end
+
+			x = x[part]
+		end
+
+		table.insert(x, ini_path:match(".*/(.*)"))
+	end
+
+	return file_structure
 end
 
 
@@ -101,9 +94,7 @@ end
 
 
 function add_file_ini_paths(ini_path, ini_paths)
-	print(ini_path)
 	local ast = ast_generator.get_ast(ini_path)
-	-- utils.RecursivelyPrint(ast)
 	add_ini_paths(ast, ini_paths)
 end
 

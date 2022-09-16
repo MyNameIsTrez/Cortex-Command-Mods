@@ -52,7 +52,16 @@ end
 
 
 function M.get_file_object_tree(filepath)
-	local parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
+	local parent_directory
+	local file_name
+
+	if filepath:sub(1, 1) == "." then
+		parent_directory = "."
+		file_name = filepath:sub(3, #filepath)
+	else
+		parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
+	end
+
 	local filepath = parent_directory .. "/" .. file_name
 	local ast = ast_generator.get_ast(filepath)
 
@@ -83,7 +92,7 @@ function get_object_tree_recursively(file_structure, parent_directory)
 			object_tree.children[#object_tree.children].directory_name = k
 			object_tree.children[#object_tree.children].collapsed = true
 		else
-			table.insert(object_tree.children, M.get_file_object_tree(parent_directory, v))
+			table.insert(object_tree.children, M.get_file_object_tree(parent_directory .. "/" .. v))
 		end
 	end
 
