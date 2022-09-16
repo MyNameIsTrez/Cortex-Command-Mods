@@ -50,37 +50,37 @@ function M.file_object_tree_tests()
 	file_object_tree_test("simple", {})
 	file_object_tree_test("comments", {})
 	ast = get_ast("nested")
-	file_object_tree_test("nested", { file_name = "nested", children = {
+	file_object_tree_test("nested", { file_name = "nested.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
 	}})
 	ast = get_ast("multiple")
-	file_object_tree_test("multiple", { file_name = "multiple", children = {
+	file_object_tree_test("multiple", { file_name = "multiple.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children },
 		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer, properties = ast[2].children }
 	}})
 	ast = get_ast("complex")
-	file_object_tree_test("complex", { file_name = "complex", children = {
+	file_object_tree_test("complex", { file_name = "complex.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, properties = ast[1].children }
 	}})
 	ast = get_ast("deindentation_1")
-	file_object_tree_test("deindentation_1", { file_name = "deindentation 1", children = {
+	file_object_tree_test("deindentation_1", { file_name = "deindentation_1.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
 	}})
 	ast = get_ast("deindentation_2")
-	file_object_tree_test("deindentation_2", { file_name = "deindentation 2", children = {
+	file_object_tree_test("deindentation_2", { file_name = "deindentation_2.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	}})
 	ast = get_ast("deindentation_3")
-	file_object_tree_test("deindentation_3", { file_name = "deindentation 3", children = {
+	file_object_tree_test("deindentation_3", { file_name = "deindentation_3.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, preset_name_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	}})
 	file_object_tree_test("spaces", {})
 	ast = get_ast("comment_before_tabs")
-	file_object_tree_test("comment_before_tabs", { file_name = "comment_before_tabs", children = {
+	file_object_tree_test("comment_before_tabs", { file_name = "comment_before_tabs.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
@@ -88,7 +88,7 @@ function M.file_object_tree_tests()
 		}}
 	}})
 	ast = get_ast("comment_in_tabs")
-	file_object_tree_test("comment_in_tabs", { file_name = "comment_in_tabs", children = {
+	file_object_tree_test("comment_in_tabs", { file_name = "comment_in_tabs.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, collapsed = true, children = {
 				{ property_pointer = ast[1].children[1].children[1].property_pointer, value_pointer = ast[1].children[1].children[1].value_pointer, properties = ast[1].children[1].children[1].children }
@@ -97,7 +97,7 @@ function M.file_object_tree_tests()
 	}})
 	file_object_tree_test("spaces_at_start_of_line", {})
 	ast = get_ast("datamodule")
-	file_object_tree_test("datamodule", { file_name = "datamodule", children = {
+	file_object_tree_test("datamodule", { file_name = "datamodule.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, collapsed = true, properties = { ast[1].children[2] }, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children },
 		}}
@@ -117,7 +117,7 @@ end
 
 function file_object_tree_test(file_name, expected)
 	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local object_tree = object_tree_generator.get_file_object_tree("modmod.rte/ini/ini_test_files", file_name)
+	local object_tree = object_tree_generator.get_file_object_tree("modmod.rte/ini/ini_test_files", file_name .. ".ini")
 
 	tests.test("object tree", file_name, object_tree, expected)
 end
