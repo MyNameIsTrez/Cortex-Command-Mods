@@ -239,11 +239,7 @@ end
 function M:_get_selected_object()
 	local selected_object = self.object_tree
 
-	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	selected_object = selected_object[self.selected_object_indices[1]]
-
-	for i = 2, #self.selected_object_indices do
-		local selected_object_index = self.selected_object_indices[i]
+	for _, selected_object_index in ipairs(self.selected_object_indices) do
 		selected_object = selected_object.children[selected_object_index]
 	end
 
@@ -254,14 +250,7 @@ end
 function M:_get_previous_selected_object()
 	local selected_object = self.object_tree
 
-	if #self.selected_object_indices == 1 and self:_get_last_selected_object_index() > 1 then
-		return selected_object[self:_get_last_selected_object_index() - 1]
-	end
-
-	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	selected_object = selected_object[self.selected_object_indices[1]]
-
-	for i = 2, #self.selected_object_indices - 1 do
+	for i = 1, #self.selected_object_indices - 1 do
 		local selected_object_index = self.selected_object_indices[i]
 		selected_object = selected_object.children[selected_object_index]
 	end
@@ -275,17 +264,10 @@ function M:_get_selected_object_parent_child_count()
 end
 
 
-function M:_get_ith_selected_object_parent_child_count(selected_object_index)
+function M:_get_ith_selected_object_parent_child_count(ith_selected_object_index)
 	local object_parent = self.object_tree
 
-	if selected_object_index == 1 then
-		return #object_parent
-	end
-
-	-- TODO: Make object tree immediately start with a list of children so this iteration can be simpler
-	object_parent = object_parent[self.selected_object_indices[1]]
-
-	for i = 2, selected_object_index - 1 do
+	for i = 1, ith_selected_object_index - 1 do
 		local selected_object_index = self.selected_object_indices[i]
 		object_parent = object_parent.children[selected_object_index]
 	end
@@ -306,7 +288,7 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 
 	object_tree_strings.depth = depth
 
-	for _, v in ipairs(object_tree) do
+	for _, v in ipairs(object_tree.children) do
 		local str = ""
 
 		if v.children ~= nil then
@@ -328,7 +310,7 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 		table.insert(object_tree_strings, str)
 
 		if v.children ~= nil and not v.collapsed then
-			table.insert(object_tree_strings, self:_get_object_tree_strings_recursively(v.children, depth + 1))
+			table.insert(object_tree_strings, self:_get_object_tree_strings_recursively(v, depth + 1))
 		end
 	end
 
@@ -407,7 +389,7 @@ end
 function M:_get_selected_object_vertical_index_recursively(object_tree, depth, stop)
 	local count = 0
 
-	for i, v in ipairs(object_tree) do
+	for i, v in ipairs(object_tree.children) do
 		count = count + 1
 
 		if i == self.selected_object_indices[depth] and stop then
@@ -432,7 +414,7 @@ end
 function M:_get_last_object_vertical_index_recursively(object_tree)
 	local count = 0
 
-	for i, v in ipairs(object_tree) do
+	for i, v in ipairs(object_tree.children) do
 		count = count + 1
 
 		if v.children ~= nil and not v.collapsed then
