@@ -179,12 +179,12 @@ end
 ---This isn't the same as using the # operator, since that doesn't count the keys, only the indices.
 ---@param t table
 ---@return number count
-function M.GetKeyCount(t)
-	local count = 0;
+function M.get_key_count(t)
+	local count = 0
 	for _, _ in pairs(t) do
-		count = count + 1;
+		count = count + 1
 	end
-	return count;
+	return count
 end
 
 

@@ -319,7 +319,7 @@ end
 
 
 function M:_update_object_tree_width()
-	self.tree_width = 0
+	self.object_tree_width = 0
 	self:_update_object_tree_width_recursively(self.object_tree_strings)
 end
 
@@ -331,7 +331,7 @@ function M:_update_object_tree_width_recursively(object_tree_strings)
 		if type(v) == "table" then
 			self:_update_object_tree_width_recursively(v)
 		else
-			self.tree_width = math.max(self.tree_width, x + FrameMan:CalculateTextWidth(v, self.window_manager.text_is_small))
+			self.object_tree_width = math.max(self.object_tree_width, x + FrameMan:CalculateTextWidth(v, self.window_manager.text_is_small))
 		end
 	end
 end
@@ -355,28 +355,28 @@ end
 
 
 function M:_draw_object_tree_background()
-	self.window_manager:draw_border_fill(Vector(0, 0), self.tree_width, self.window_manager.screen_height, self.window_manager.background_color)
+	self.window_manager:draw_border_fill(Vector(0, 0), self.object_tree_width, self.window_manager.screen_height, self.window_manager.background_color)
 end
 
 
 function M:_draw_top_background()
-	self.window_manager:draw_border_fill(Vector(0, 0), self.tree_width, self.window_top_padding, self.window_manager.unselected_color)
+	self.window_manager:draw_border_fill(Vector(0, 0), self.object_tree_width, self.window_top_padding, self.window_manager.unselected_color)
 end
 
 
 function M:_draw_object_tree_border()
-	self.window_manager:draw_border(Vector(0, self.window_top_padding - 2), self.tree_width, self.tree_height)
+	self.window_manager:draw_border(Vector(0, self.window_top_padding - 2), self.object_tree_width, self.tree_height)
 end
 
 
 function M:_draw_selected_object_background()
 	local height_index = self:_get_selected_object_vertical_index() - self.scrolling_line_offset + 1
-	self.window_manager:draw_selected_line_background(Vector(1, self.window_top_padding), self.tree_width - 2, height_index)
+	self.window_manager:draw_selected_line_background(Vector(1, self.window_top_padding), self.object_tree_width - 2, height_index)
 end
 
 
 function M:_draw_bottom_background()
-	self.window_manager:draw_border_fill(Vector(0, self.window_top_padding + self.tree_height - 4), self.tree_width, self.window_manager.screen_height - self.window_top_padding - self.tree_height + 4, self.window_manager.unselected_color)
+	self.window_manager:draw_border_fill(Vector(0, self.window_top_padding + self.tree_height - 4), self.object_tree_width, self.window_manager.screen_height - self.window_top_padding - self.tree_height + 4, self.window_manager.unselected_color)
 end
 
 
@@ -435,7 +435,7 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 		else
 			height[1] = height[1] + 1
 			if height[1] > self.scrolling_line_offset then
-				self.window_manager:draw_text_line(1, self.tree_width - 2, x_padding, self.window_top_padding, height[1] - self.scrolling_line_offset, v, self.window_manager.alignment.left);
+				self.window_manager:draw_text_line(1, self.object_tree_width - 2, x_padding, self.window_top_padding, height[1] - self.scrolling_line_offset, v, self.window_manager.alignment.left);
 			end
 		end
 	end

@@ -2,8 +2,9 @@
 
 
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
-
 local csts = dofile("modmod.rte/ini/csts.lua")
+
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -40,19 +41,13 @@ local M = {};
 
 
 function M.get_object_tree(file_structure, parent_directory)
-	parent_directory = parent_directory or "."
+	object_tree = get_object_tree_recursively(file_structure, parent_directory)
 
-	local object_tree = {}
-
-	for k, v in pairs(file_structure) do
-		if type(v) == "table" then
-			object_tree[k] = M.get_object_tree(v, parent_directory .. "/" .. k)
-		else
-			object_tree[v] = M.get_file_object_tree(parent_directory .. "/" .. v)
-		end
+	if utils.get_key_count(object_tree.children) == 0 then
+		return object_tree.children
+	else
+		return object_tree
 	end
-
-	return object_tree
 end
 
 
@@ -69,6 +64,24 @@ end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+
+function get_object_tree_recursively(file_structure, parent_directory)
+	parent_directory = parent_directory or "."
+
+	local object_tree = {}
+	object_tree.children = {}
+
+	for k, v in pairs(file_structure) do
+		if type(v) == "table" then
+			object_tree.children[k] = get_object_tree_recursively(v, parent_directory .. "/" .. k)
+		else
+			object_tree.children[v] = M.get_file_object_tree(parent_directory .. "/" .. v)
+		end
+	end
+
+	return object_tree
+end
 
 
 -- function get_full_cst(input_folder, subfolder_path)
