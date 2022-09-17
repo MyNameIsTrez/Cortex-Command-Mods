@@ -59,7 +59,7 @@ function M.file_object_tree_tests()
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
 	}})
 	ast = get_ast("comments")
-	file_object_tree_test("comments", {})
+	file_object_tree_test("comments", { file_name = "comments.ini" })
 	ast = get_ast("nested")
 	file_object_tree_test("nested", { file_name = "nested.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }

@@ -74,7 +74,6 @@ end
 
 
 function M:draw()
-	-- print("draw()")
 	self:_draw_object_tree_background()
 	self:_draw_top_background()
 	self:_draw_object_tree_border()

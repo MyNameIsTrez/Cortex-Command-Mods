@@ -52,15 +52,7 @@ end
 
 
 function M.get_file_object_tree(filepath)
-	local parent_directory
-	local file_name
-
-	if filepath:sub(1, 1) == "." then
-		parent_directory = "."
-		file_name = filepath:sub(3, #filepath)
-	else
-		parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
-	end
+	parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
 
 	local filepath = parent_directory .. "/" .. file_name
 	local ast = ast_generator.get_ast(filepath)
@@ -72,9 +64,7 @@ function M.get_file_object_tree(filepath)
 	if ast_has_children(ast) then
 		file_object_tree.collapsed = true
 		file_object_tree.children = inner_file_object_tree
-	elseif ast[1] == nil then
-		return inner_file_object_tree
-	else
+	elseif ast[1] ~= nil then
 		file_object_tree.properties = ast
 	end
 
