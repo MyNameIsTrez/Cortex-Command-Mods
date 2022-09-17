@@ -65,13 +65,20 @@ function M.get_file_object_tree(filepath)
 	local filepath = parent_directory .. "/" .. file_name
 	local ast = ast_generator.get_ast(filepath)
 
-	local file_object_tree = { file_name = file_name, collapsed = true, children = generate_file_object_tree(ast) }
+	local inner_file_object_tree = generate_inner_file_object_tree(ast)
 
-	if #file_object_tree.children == 0 then
-		return file_object_tree.children
+	local file_object_tree = { file_name = file_name }
+
+	if ast_has_children(ast) then
+		file_object_tree.collapsed = true
+		file_object_tree.children = inner_file_object_tree
+	elseif ast[1] == nil then
+		return inner_file_object_tree
 	else
-		return file_object_tree
+		file_object_tree.properties = ast
 	end
+
+	return file_object_tree
 end
 
 
@@ -100,14 +107,14 @@ function get_object_tree_recursively(file_structure, parent_directory)
 end
 
 
-function generate_file_object_tree(ast)
+function generate_inner_file_object_tree(ast)
 	local file_object_tree = {}
 
 	for _, a in ipairs(ast) do
 		if a.children ~= nil then
 			local b = {}
 
-			local children = generate_file_object_tree(a.children)
+			local children = generate_inner_file_object_tree(a.children)
 
 			if #children > 0 then
 				b.children = children
@@ -137,6 +144,17 @@ function generate_file_object_tree(ast)
 	end
 
 	return file_object_tree
+end
+
+
+function ast_has_children(ast)
+	for _, v in ipairs(ast) do
+		if v.children ~= nil then
+			return true
+		end
+	end
+
+	return false
 end
 
 

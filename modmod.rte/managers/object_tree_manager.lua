@@ -55,8 +55,6 @@ function M:init(window_manager, autoscroll_manager)
 	local file_structure = file_structure_generator.get_file_structure()
 	self.object_tree = object_tree_generator.get_object_tree(file_structure)
 
-	-- utils.RecursivelyPrint(self.object_tree)
-
 	self:_update_object_tree_strings()
 
 	self.selected_object_indices = { 1 }

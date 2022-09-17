@@ -45,9 +45,20 @@ local M = {};
 function M.file_object_tree_tests()
 	local ast
 
-	file_object_tree_test("path", {})
-	file_object_tree_test("lstripped_tab", {})
-	file_object_tree_test("simple", {})
+	ast = get_ast("path")
+	file_object_tree_test("path", { file_name = "path.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer },
+		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+	}})
+	ast = get_ast("lstripped_tab")
+	file_object_tree_test("lstripped_tab", { file_name = "lstripped_tab.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+	}})
+	ast = get_ast("simple")
+	file_object_tree_test("simple", { file_name = "simple.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+	}})
+	ast = get_ast("comments")
 	file_object_tree_test("comments", {})
 	ast = get_ast("nested")
 	file_object_tree_test("nested", { file_name = "nested.ini", collapsed = true, children = {
@@ -78,8 +89,15 @@ function M.file_object_tree_tests()
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children }
 		}}
 	}})
-	file_object_tree_test("include_files", {})
-	file_object_tree_test("spaces", {})
+	ast = get_ast("include_files")
+	file_object_tree_test("include_files", { file_name = "include_files.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer },
+		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+	}})
+	ast = get_ast("spaces")
+	file_object_tree_test("spaces", { file_name = "spaces.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+	}})
 	ast = get_ast("comment_before_tabs")
 	file_object_tree_test("comment_before_tabs", { file_name = "comment_before_tabs.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, collapsed = true, children = {
@@ -96,14 +114,21 @@ function M.file_object_tree_tests()
 			}}
 		}}
 	}})
-	file_object_tree_test("spaces_at_start_of_line", {})
+	ast = get_ast("spaces_at_start_of_line")
+	file_object_tree_test("spaces_at_start_of_line", { file_name = "spaces_at_start_of_line.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer },
+		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+	}})
 	ast = get_ast("datamodule")
 	file_object_tree_test("datamodule", { file_name = "datamodule.ini", collapsed = true, children = {
 		{ property_pointer = ast[1].property_pointer, collapsed = true, properties = { ast[1].children[2] }, children = {
 			{ property_pointer = ast[1].children[1].property_pointer, value_pointer = ast[1].children[1].value_pointer, properties = ast[1].children[1].children },
 		}}
 	}})
-	file_object_tree_test("value_on_next_line", {})
+	ast = get_ast("value_on_next_line")
+	file_object_tree_test("value_on_next_line", { file_name = "value_on_next_line.ini", properties = {
+		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
+	}})
 end
 
 
