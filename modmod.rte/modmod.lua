@@ -17,16 +17,10 @@ local key_codes = dofile("utils.rte/Data/KeyCodes.lua");
 
 
 function ModMod:StartScript()
-	self.window_manager = window_manager:init()
-	self.autoscroll_manager = autoscroll_manager:init()
-	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
-	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
-
 	self.activity = ActivityMan:GetActivity()
 
-	self.run_update_function = true
-
-	UInputMan:WhichKeyHeld()
+	self.run_update_function = false
+	self.initialized = false
 end
 
 
@@ -52,6 +46,11 @@ function ModMod:UpdateScript()
 
 	if UInputMan:KeyPressed(keys.N) then
 		self.run_update_function = not self.run_update_function
+
+		if not self.initialized then
+			self.initialized = true
+			self:initialize()
+		end
 	end
 
 	self.previous_frame_controlled_actor = controlled_actor
@@ -96,4 +95,17 @@ function ModMod:UpdateScript()
 	-- 	print(input_handler.get_held_key_character())
 	-- 	ConsoleMan:SaveAllText("LogConsole.txt")
 	-- end
+end
+
+
+-- FUNCTIONS -------------------------------------------------------------------
+
+
+function ModMod:initialize()
+	self.window_manager = window_manager:init()
+	self.autoscroll_manager = autoscroll_manager:init()
+	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
+	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
+
+	UInputMan:WhichKeyHeld()
 end
