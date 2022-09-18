@@ -22,6 +22,8 @@ function ModMod:StartScript()
 	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
 	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
 
+	self.run_update_function = true
+
 	UInputMan:WhichKeyHeld()
 end
 
@@ -30,6 +32,14 @@ end
 
 
 function ModMod:UpdateScript()
+	if UInputMan:KeyPressed(keys.N) then
+		self.run_update_function = not self.run_update_function
+	end
+
+	if not self.run_update_function then
+		return
+	end
+
 	if input_handler.any_key_pressed() then
 		self.held_key_character = input_handler.get_held_key_character()
 		-- print("Held key character: " .. tostring(self.held_key_character))

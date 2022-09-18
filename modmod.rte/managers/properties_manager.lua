@@ -87,7 +87,6 @@ end
 function M:update()
 	if self.is_editing_line then
 		self.line_editor_manager:update()
-		self.line_editor_manager:draw()
 
 		if UInputMan:KeyPressed(keys.Enter) then
 			self.is_editing_line = false
@@ -126,6 +125,10 @@ function M:draw()
 	end
 
 	self:_draw_bottom_background()
+
+	if self.is_editing_line then
+		self.line_editor_manager:draw()
+	end
 end
 
 
@@ -141,8 +144,6 @@ function M:_key_pressed()
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(self.selected_properties[self.selected_property_index])
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
-		-- print("Pressed Enter")
-		-- ConsoleMan:SaveAllText("LogConsole.txt")
 	end
 end
 
@@ -233,7 +234,14 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local str = utils.possibly_truncate(csts.get_value(selected_property), self.property_values_width - 29, self.window_manager.text_is_small, "...")
+		local selected_line = csts.get_value(selected_property)
+
+		local str
+		if self.is_editing_line and height_index == self.selected_property_index then
+			str = utils.possibly_truncate(selected_line:reverse(), self.property_values_width - 29, self.window_manager.text_is_small, "..."):reverse()
+		else
+			str = utils.possibly_truncate(selected_line, self.property_values_width - 29, self.window_manager.text_is_small, "...")
+		end
 
 		if height_index > self.scrolling_line_offset then
 			self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - self.scrolling_line_offset, str, self.window_manager.alignment.left);
