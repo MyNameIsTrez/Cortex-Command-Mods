@@ -3,7 +3,8 @@
 
 local keys = dofile("utils.rte/Data/Keys.lua")
 local colors = dofile("utils.rte/Data/Colors.lua")
--- local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
+local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
+local key_characters = dofile("utils.rte/Data/KeyCharacters.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -55,6 +56,48 @@ function M.Update()
 	Toggled()
 	Held()
 end
+
+
+function M.any_key_pressed()
+	for key_code, _ in pairs(key_codes) do
+		if UInputMan:KeyPressed(key_code) then
+			return true
+		end
+	end
+	return false
+end
+
+
+function M.get_held_key_character()
+	local key_code = UInputMan:WhichKeyHeld()
+	local key = key_characters[key_code]
+
+	if key == nil then
+		return nil
+	end
+
+	local shift_held = UInputMan.FlagShiftState
+
+	if not shift_held and key_code >= 1 and key_code <= 26 then
+		return key:lower()
+	end
+
+	return key
+end
+
+
+-- function M.get_held_key()
+-- 	local key_code = UInputMan:WhichKeyHeld()
+-- 	local key = key_codes[key_code]
+
+-- 	local shift_held = UInputMan.FlagShiftState
+
+-- 	if not shift_held and key_code >= 1 and key_code <= 26 then
+-- 		return key:lower()
+-- 	end
+
+-- 	return key
+-- end
 
 
 -- function M.GetKeyNameHeld()

@@ -120,7 +120,7 @@ function generate_inner_file_object_tree(ast)
 			b.properties = {}
 
 			for _, child in ipairs(a.children) do
-				if csts.property(child) == "PresetName" then
+				if csts.get_property(child) == "PresetName" then
 					b.preset_name_pointer = child.value_pointer
 				end
 				if child.children == nil then

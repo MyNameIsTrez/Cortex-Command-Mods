@@ -57,7 +57,7 @@ return {
 	"F10",
 	"F11",
 	"F12",
-	"Esc",
+	"Escape",
 	"Grave",
 	"Minus",
 	"Equals",

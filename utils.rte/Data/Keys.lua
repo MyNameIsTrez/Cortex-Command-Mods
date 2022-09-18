@@ -61,7 +61,7 @@ return {
 	F10 = 56,
 	F11 = 57,
 	F12 = 58,
-	Esc = 59,
+	Escape = 59,
 	Grave = 60,
 	Minus = 61,
 	Equals = 62,

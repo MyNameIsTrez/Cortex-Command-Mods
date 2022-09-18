@@ -37,13 +37,23 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.property(ast)
+function M.get_property(ast)
 	return ast.property_pointer.content
 end
 
 
-function M.value(ast)
+function M.get_value(ast)
 	return ast.value_pointer.content
+end
+
+
+function M.set_property(ast, content)
+	ast.property_pointer.content = content
+end
+
+
+function M.set_value(ast, content)
+	ast.value_pointer.content = content
 end
 
 

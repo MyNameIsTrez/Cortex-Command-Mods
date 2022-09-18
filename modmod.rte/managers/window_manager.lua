@@ -57,8 +57,8 @@ function M:init()
 	self.text_is_small = true
 
 	local no_maximum_width = 0
-	local font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
-	self.text_vertical_stride = self.text_top_padding + font_height + text_bottom_padding
+	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
+	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
 
 	self.background_color = 146
 	self.background_border_color = 71
@@ -121,12 +121,17 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 end
 
 
+function M:draw_line(top_left_pos, offset_x, offset_y, color)
+	PrimitiveMan:DrawLinePrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(offset_x, offset_y), color)
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
 function M:_draw_selection_lines(x, width, y_padding, height_index, color)
-	self:_draw_line(Vector(x + 4 - 1, y_padding + (height_index - 1) * self.text_vertical_stride), width - 4 * 2 + 1, 0, color)
-	self:_draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, color)
+	self:draw_line(Vector(x + 4 - 1, y_padding + (height_index - 1) * self.text_vertical_stride), width - 4 * 2 + 1, 0, color)
+	self:draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, color)
 end
 
 
@@ -138,11 +143,6 @@ end
 function M:_draw_box_fill(top_left_pos, width, height, color)
 	local screen_top_left_pos = self.screen_offset + top_left_pos
 	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width - 1, height - 1), color)
-end
-
-
-function M:_draw_line(top_left_pos, offset_x, offset_y, color)
-	PrimitiveMan:DrawLinePrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(offset_x, offset_y), color)
 end
 
 

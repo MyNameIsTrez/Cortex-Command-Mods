@@ -1,7 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local keys = dofile("utils.rte/Data/Keys.lua");
+local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
+
+local keys = dofile("utils.rte/Data/Keys.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -11,7 +13,7 @@ local csts = dofile("modmod.rte/ini/csts.lua")
 -- MODULE START ----------------------------------------------------------------
 
 
-local M = {};
+local M = {}
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
@@ -41,10 +43,11 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M:init(window_manager, object_tree_manager, autoscroll_manager)
+function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 	self.window_manager = window_manager
 	self.object_tree_manager = object_tree_manager
 	self.autoscroll_manager = autoscroll_manager
+	self.line_editor_manager = line_editor_manager:init(window_manager, self, modmod)
 
 	self.window_top_padding = 25
 	self.window_left_padding = 15
@@ -75,12 +78,29 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager)
 
 	self.scrolling_line_offset = 0
 
+	self.is_editing_line = false
+
 	return self
 end
 
 
 function M:update()
-	self:_key_pressed()
+	if self.is_editing_line then
+		self.line_editor_manager:update()
+		self.line_editor_manager:draw()
+
+		if UInputMan:KeyPressed(keys.Enter) then
+			self.is_editing_line = false
+
+			-- TODO: Get filename of edited property and overwrite the original file
+		elseif UInputMan:KeyPressed(keys.ArrowUp) or UInputMan:KeyPressed(keys.ArrowDown) then
+			self.is_editing_line = false
+
+			csts.set_value(self.selected_properties[self.selected_property_index], self.old_line_value)
+		end
+	else
+		self:_key_pressed()
+	end
 end
 
 
@@ -118,7 +138,11 @@ function M:_key_pressed()
 	elseif self.autoscroll_manager:move(keys.ArrowDown) then
 		self:_down()
 	elseif UInputMan:KeyPressed(keys.Enter) then
-		self:_enter()
+		self.is_editing_line = true
+		self.old_line_value = csts.get_value(self.selected_properties[self.selected_property_index])
+		self.line_editor_manager:move_cursor_to_end_of_selected_line()
+		-- print("Pressed Enter")
+		-- ConsoleMan:SaveAllText("LogConsole.txt")
 	end
 end
 
@@ -140,10 +164,6 @@ function M:_down()
 	if self.selected_property_index > self.scrolling_line_offset + self.max_scrolling_lines or self.scrolling_line_offset > self.selected_property_index then
 		self.scrolling_line_offset = math.max(0, self.selected_property_index - self.max_scrolling_lines)
 	end
-end
-
-
-function M:_enter()
 end
 
 
@@ -203,7 +223,7 @@ function M:_draw_property_names()
 	local x = self.window_manager.screen_width - self.properties_width + 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local str = csts.property(selected_property)
+		local str = csts.get_property(selected_property)
 		self.window_manager:draw_text_line(x, self.property_names_width - 2, 0, self.window_top_padding, height_index, str, self.window_manager.alignment.center);
 	end
 end
@@ -213,7 +233,7 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local str = utils.possibly_truncate(csts.value(selected_property), self.property_values_width - 29, self.window_manager.text_is_small, "...")
+		local str = utils.possibly_truncate(csts.get_value(selected_property), self.property_values_width - 29, self.window_manager.text_is_small, "...")
 
 		if height_index > self.scrolling_line_offset then
 			self.window_manager:draw_text_line(x, self.property_values_width, self.window_left_padding, self.window_top_padding, height_index - self.scrolling_line_offset, str, self.window_manager.alignment.left);
@@ -230,4 +250,4 @@ end
 -- MODULE END ------------------------------------------------------------------
 
 
-return M;
+return M

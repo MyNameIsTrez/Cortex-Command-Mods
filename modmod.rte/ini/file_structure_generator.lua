@@ -105,10 +105,10 @@ function add_ini_paths(ast, ini_paths)
 			add_ini_paths(v.children, ini_paths)
 		end
 
-		local property = csts.property(v)
+		local property = csts.get_property(v)
 
 		if is_load_ini_property(property) then
-			local ini_path = csts.value(v)
+			local ini_path = csts.get_value(v)
 
 			local visited_before = ini_paths[ini_path]
 			if not visited_before then

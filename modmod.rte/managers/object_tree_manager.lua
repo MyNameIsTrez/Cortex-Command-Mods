@@ -302,13 +302,13 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 		str = str .. " "
 
 		if v.preset_name_pointer ~= nil then
-			str = string.format("%s%s (%s)", str, v.preset_name_pointer.content, csts.property(v))
+			str = string.format("%s%s (%s)", str, v.preset_name_pointer.content, csts.get_property(v))
 		elseif v.file_name ~= nil then
 			str = str .. v.file_name
 		elseif v.directory_name ~= nil then
 			str = str .. v.directory_name .. "/"
 		else
-			str = str .. csts.property(v)
+			str = str .. csts.get_property(v)
 		end
 
 		table.insert(object_tree_strings, str)
