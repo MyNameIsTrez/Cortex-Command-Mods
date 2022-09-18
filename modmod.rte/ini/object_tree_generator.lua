@@ -64,8 +64,11 @@ function M.get_file_object_tree(filepath)
 	if ast_has_children(ast) then
 		file_object_tree.collapsed = true
 		file_object_tree.children = inner_file_object_tree
-	elseif ast[1] ~= nil then
-		file_object_tree.properties = ast
+	end
+
+	local properties = ast_get_properties(ast)
+	if #properties > 0 then
+		file_object_tree.properties = properties
 	end
 
 	return file_object_tree
@@ -145,6 +148,19 @@ function ast_has_children(ast)
 	end
 
 	return false
+end
+
+
+function ast_get_properties(ast)
+	local properties = {}
+
+	for _, v in ipairs(ast) do
+		if v.children == nil then
+			table.insert(properties, v)
+		end
+	end
+
+	return properties
 end
 
 

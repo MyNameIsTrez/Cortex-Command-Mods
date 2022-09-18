@@ -129,6 +129,13 @@ function M.file_object_tree_tests()
 	file_object_tree_test("value_on_next_line", { file_name = "value_on_next_line.ini", properties = {
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
 	}})
+	ast = get_ast("object_and_property")
+	file_object_tree_test("object_and_property", { file_name = "object_and_property.ini", collapsed = true, properties = {
+			{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+		}, children = {
+			{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
+		}
+	})
 end
 
 

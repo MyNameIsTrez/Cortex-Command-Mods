@@ -168,6 +168,13 @@ function M.ast_tests()
 	ast_test("value_on_next_line", {
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
 	})
+	cst = get_cst("object_and_property")
+	ast_test("object_and_property", {
+		{ property_pointer = cst[1][1], value_pointer = cst[1][5], children = {
+			{ property_pointer = cst[1][7].content[1][2], value_pointer = cst[1][7].content[1][6] }
+		}},
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
+	})
 end
 
 
