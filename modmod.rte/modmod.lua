@@ -22,6 +22,8 @@ function ModMod:StartScript()
 	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
 	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
 
+	self.activity = ActivityMan:GetActivity()
+
 	self.run_update_function = true
 
 	UInputMan:WhichKeyHeld()
@@ -32,9 +34,27 @@ end
 
 
 function ModMod:UpdateScript()
+	local controlled_actor = self.activity:GetControlledActor(Activity.PLAYER_1)
+
+	if controlled_actor ~= nil then
+		if self.run_update_function then
+			controlled_actor.Status = Actor.INACTIVE
+		end
+		if not self.run_update_function then
+			controlled_actor.Status = Actor.STABLE
+		end
+		if self.previous_frame_controlled_actor ~= nil and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID then
+			self.previous_frame_controlled_actor.Status = Actor.STABLE
+		end
+	elseif self.previous_frame_controlled_actor ~= nil then
+		self.previous_frame_controlled_actor.Status = Actor.STABLE
+	end
+
 	if UInputMan:KeyPressed(keys.N) then
 		self.run_update_function = not self.run_update_function
 	end
+
+	self.previous_frame_controlled_actor = controlled_actor
 
 	if not self.run_update_function then
 		return
