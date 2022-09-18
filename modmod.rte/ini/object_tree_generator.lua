@@ -1,7 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
+local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
+
 local csts = dofile("modmod.rte/ini/csts.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
@@ -55,11 +57,13 @@ function M.get_file_object_tree(filepath)
 	parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
 
 	local filepath = parent_directory .. "/" .. file_name
-	local ast = ast_generator.get_ast(filepath)
+
+	local cst = cst_generator.get_cst(filepath)
+	local ast = ast_generator.get_ast(cst)
 
 	local inner_file_object_tree = generate_inner_file_object_tree(ast)
 
-	local file_object_tree = { file_name = file_name }
+	local file_object_tree = { file_name = file_name, cst = cst }
 
 	if ast_has_children(ast) then
 		file_object_tree.collapsed = true

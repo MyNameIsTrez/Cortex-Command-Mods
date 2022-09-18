@@ -189,7 +189,7 @@ end
 
 function ast_test(file_name, expected)
 	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local ast = ast_generator.get_ast(filepath)
+	local ast = ast_generator.get_filepath_ast(filepath)
 
 	tests.test("ast", file_name, ast, expected)
 end

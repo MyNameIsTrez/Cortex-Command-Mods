@@ -4,7 +4,6 @@
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
 local keys = dofile("utils.rte/Data/Keys.lua")
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local csts = dofile("modmod.rte/ini/csts.lua")
@@ -90,11 +89,9 @@ function M:update()
 
 		if UInputMan:KeyPressed(keys.Enter) then
 			self.is_editing_line = false
-
-			-- TODO: Get filename of edited property and overwrite the original file
+			self.object_tree_manager:write_selected_file_cst()
 		elseif UInputMan:KeyPressed(keys.ArrowUp) or UInputMan:KeyPressed(keys.ArrowDown) then
 			self.is_editing_line = false
-
 			csts.set_value(self.selected_properties[self.selected_property_index], self.old_line_value)
 		end
 	else

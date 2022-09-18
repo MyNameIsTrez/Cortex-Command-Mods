@@ -94,7 +94,7 @@ end
 
 
 function add_file_ini_paths(ini_path, ini_paths)
-	local ast = ast_generator.get_ast(ini_path)
+	local ast = ast_generator.get_filepath_ast(ini_path)
 	add_ini_paths(ast, ini_paths)
 end
 

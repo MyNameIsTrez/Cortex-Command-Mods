@@ -5,6 +5,8 @@ local file_structure_generator = dofile("modmod.rte/ini/file_structure_generator
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 local csts = dofile("modmod.rte/ini/csts.lua")
 
+local writer = dofile("modmod.rte/ini/writer.lua")
+
 local keys = dofile("utils.rte/Data/Keys.lua");
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -91,6 +93,12 @@ end
 
 function M:get_selected_properties()
 	return self:_get_selected_object().properties or {}
+end
+
+function M:write_selected_file_cst()
+	local file_cst = self:_get_selected_file_cst()
+	local file_path = self:_get_selected_file_path()
+	writer.write_ini_file_cst(file_cst, file_path)
 end
 
 
@@ -219,6 +227,35 @@ end
 
 function M:_get_wrapped_last_selected_object_index(index_change)
 	return utils.get_wrapped_index(self:_get_last_selected_object_index() + index_change, self:_get_selected_object_parent_child_count())
+end
+
+
+function M:_get_selected_file_cst()
+	local selected_object = self.object_tree
+
+	for _, selected_object_index in ipairs(self.selected_object_indices) do
+		selected_object = selected_object.children[selected_object_index]
+
+		if selected_object.cst ~= nil then
+			return selected_object.cst
+		end
+	end
+end
+
+
+function M:_get_selected_file_path()
+	local file_path = "."
+	local selected_object = self.object_tree
+
+	for _, selected_object_index in ipairs(self.selected_object_indices) do
+		selected_object = selected_object.children[selected_object_index]
+
+		if selected_object.file_name ~= nil then
+			return file_path .. "/" .. selected_object.file_name
+		else
+			file_path = file_path .. "/" .. selected_object.directory_name
+		end
+	end
 end
 
 

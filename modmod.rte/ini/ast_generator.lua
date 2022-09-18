@@ -37,8 +37,13 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_ast(filepath)
+function M.get_filepath_ast(filepath)
 	local cst = cst_generator.get_cst(filepath)
+	return generate_ast(cst)
+end
+
+
+function M.get_ast(cst)
 	return generate_ast(cst)
 end
 

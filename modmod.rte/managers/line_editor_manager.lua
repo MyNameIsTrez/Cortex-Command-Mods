@@ -69,11 +69,14 @@ function M:draw()
 	local selected_character = selected_line:sub(self.cursor_x - 1, self.cursor_x - 1)
 
 	local x = self.window_manager.screen_width - self.properties_manager.property_values_width - 1 + self.properties_manager.window_left_padding + character_x
-	local y = self.properties_manager.window_top_padding + self.window_manager.font_height
 
 	local height_index = self.properties_manager.selected_property_index - self.properties_manager.scrolling_line_offset
+	local y = self.properties_manager.window_top_padding + self.window_manager.font_height + (height_index - 1) * self.window_manager.text_vertical_stride
 
-	self.window_manager:draw_line(Vector(x, y), 4, 0, self.cursor_color)
+	local x_offset = 4
+	local y_offset = 0
+
+	self.window_manager:draw_line(Vector(x, y), x_offset, y_offset, self.cursor_color)
 end
 
 
