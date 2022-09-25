@@ -349,6 +349,18 @@ function M.flush_log()
 end
 
 
+function M.debug_print(str)
+	print(str)
+	M.flush_log()
+end
+
+
+function M.debug_print_recursively(str, recursive)
+	M.RecursivelyPrint(str, recursive)
+	M.flush_log()
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 

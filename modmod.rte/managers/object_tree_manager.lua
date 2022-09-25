@@ -153,11 +153,15 @@ function M:_up()
 			end
 		end
 	end
+
+	self:_potentially_load_file()
 end
 
 
 function M:_down()
-	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
+	local selected_object = self:_get_selected_object()
+
+	if selected_object.children ~= nil and not selected_object.collapsed then
 		table.insert(self.selected_object_indices, 1)
 
 		if self:_get_selected_object_vertical_index() > self.scrolling_line_offset + self.max_scrolling_lines then
@@ -186,12 +190,16 @@ function M:_down()
 			end
 		end
 	end
+
+	self:_potentially_load_file()
 end
 
 
 function M:_left()
-	if self:_get_selected_object().children ~= nil and not self:_get_selected_object().collapsed then
-		self:_get_selected_object().collapsed = true
+	local selected_object = self:_get_selected_object()
+
+	if selected_object.children ~= nil and not selected_object.collapsed then
+		selected_object.collapsed = true
 		self:_update_object_tree_strings()
 
 		if self:_get_last_object_vertical_index() - self.scrolling_line_offset < self.max_scrolling_lines then
@@ -222,8 +230,11 @@ function M:_right()
 
 			for file_name in LuaMan:FileList(selected_object_path) do
 				if utils.path_extension(file_name) == ".ini" then
-					local file_path = utils.path_join(selected_object_path, file_name)
-					local file_object = object_tree_generator.get_file_object_tree(file_path)
+					-- local file_path = utils.path_join(selected_object_path, file_name)
+					-- local file_object = object_tree_generator.get_file_object_tree(file_path)
+
+					local file_object = {}
+					file_object.file_name = file_name
 
 					table.insert(selected_object.children, file_object)
 				end
@@ -339,6 +350,21 @@ function M:_get_ith_selected_object_parent_child_count(ith_selected_object_index
 	end
 
 	return #object_parent.children
+end
+
+
+function M:_potentially_load_file()
+	local selected_object = self:_get_selected_object()
+	if selected_object.file_name ~= nil and selected_object.children == nil and selected_object.properties == nil then
+		local file_path = self:_get_selected_object_path()
+
+		-- TODO: Do this in a nicer way somehow?
+		local file_object = object_tree_generator.get_file_object_tree(file_path)
+		selected_object.cst = file_object.cst
+		selected_object.children = file_object.children
+		selected_object.collapsed = file_object.collapsed
+		selected_object.properties = file_object.properties
+	end
 end
 
 
