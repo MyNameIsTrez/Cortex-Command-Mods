@@ -344,6 +344,11 @@ function M.path_extension(path)
 end
 
 
+function M.flush_log()
+	ConsoleMan:SaveAllText("LogConsole.txt")
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
