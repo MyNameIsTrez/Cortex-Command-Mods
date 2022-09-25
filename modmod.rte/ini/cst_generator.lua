@@ -39,8 +39,8 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_cst(filepath)
-	local tokens = tokens_generator.get_tokens(filepath)
+function M.get_cst(file_path)
+	local tokens = tokens_generator.get_tokens(file_path)
 	return generate_cst(tokens)
 end
 
@@ -118,7 +118,7 @@ function _is_deeper(depth, token, tokens, next_token_idx)
 	new_depth = _get_depth(token, tokens, next_token_idx)
 
 	if new_depth > depth + 1 then
-		error(string.format("Too many tabs after one another were found at filepath '%s' at character %d. If you aren't able to find where the excessive tabs are, ask MyNameIsTrez#1585 in the CCCP Discord server for help.", token.filepath, token.index))
+		error(string.format("Too many tabs after one another were found at file_path '%s' at character %d. If you aren't able to find where the excessive tabs are, ask MyNameIsTrez#1585 in the CCCP Discord server for help.", token.file_path, token.index))
 	end
 
 	return new_depth > depth

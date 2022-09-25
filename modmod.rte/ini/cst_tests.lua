@@ -317,8 +317,8 @@ end
 
 
 function cst_test(file_name, expected)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local cst = cst_generator.get_cst(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	local cst = cst_generator.get_cst(file_path)
 
 	tests.test("cst", file_name, cst, expected)
 end

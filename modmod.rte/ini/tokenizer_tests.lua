@@ -157,8 +157,8 @@ end
 
 
 function tokenizer_test(file_name, expected)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local tokens = tokens_generator.get_tokens(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	local tokens = tokens_generator.get_tokens(file_path)
 
 	local tokens_without_metadata = {}
 	for _, token in ipairs(tokens) do

@@ -162,14 +162,14 @@ end
 
 
 function get_ast(file_name)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	return ast_generator.get_filepath_ast(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	return ast_generator.get_file_path_ast(file_path)
 end
 
 
 function file_object_tree_test(file_name, expected)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local object_tree = object_tree_generator.get_file_object_tree(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	local object_tree = object_tree_generator.get_file_object_tree(file_path)
 
 	tests.test("object tree", file_name, object_tree, expected)
 end

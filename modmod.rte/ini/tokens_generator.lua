@@ -50,10 +50,10 @@ local word = C((1 - delimiter)^1)
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_tokens(filepath)
+function M.get_tokens(file_path)
 	local tokens = {}
 
-	local text = file_functions.ReadFile(filepath)
+	local text = file_functions.ReadFile(file_path)
 	text = utils.lstrip(text)
 
 	-- TODO: This is a hotfix for shitty Techion.rte/Devices/Tools/Nanolyzer/Nanolyzer.ini
@@ -67,17 +67,17 @@ function M.get_tokens(filepath)
 		local char = text:sub(i, i)
 
 		if char == "/" then
-			i = _tokenize_comment(i, text_len, text, tokens, filepath)
+			i = _tokenize_comment(i, text_len, text, tokens, file_path)
 		elseif char == "\t" then
-			i = _tokenize_tabs(i, text_len, text, tokens, filepath)
+			i = _tokenize_tabs(i, text_len, text, tokens, file_path)
 		elseif char == " " then
-			i = _tokenize_spaces(i, text_len, text, tokens, filepath)
+			i = _tokenize_spaces(i, text_len, text, tokens, file_path)
 		elseif char == "=" then
-			i = _tokenize_equals(i, text_len, text, tokens, filepath)
+			i = _tokenize_equals(i, text_len, text, tokens, file_path)
 		elseif char == "\n" then
-			i = _tokenize_newline(i, text_len, text, tokens, filepath)
+			i = _tokenize_newline(i, text_len, text, tokens, file_path)
 		else
-			i = _tokenize_word(i, text_len, text, tokens, filepath)
+			i = _tokenize_word(i, text_len, text, tokens, file_path)
 		end
 	end
 
@@ -88,16 +88,16 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
-function _tokenize_comment(i, text_len, text, tokens, filepath)
+function _tokenize_comment(i, text_len, text, tokens, file_path)
 	if i + 1 <= text_len and text:sub(i + 1, i + 1) == "/" then
-		return _tokenize_single_line_comment(i, text_len, text, tokens, filepath)
+		return _tokenize_single_line_comment(i, text_len, text, tokens, file_path)
 	else
-		return _tokenize_multi_line_comment(i, text_len, text, tokens, filepath)
+		return _tokenize_multi_line_comment(i, text_len, text, tokens, file_path)
 	end
 end
 
 
-function _tokenize_single_line_comment(i, text_len, text, tokens, filepath)
+function _tokenize_single_line_comment(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and text:sub(i, i) ~= "\n" do
@@ -105,18 +105,18 @@ function _tokenize_single_line_comment(i, text_len, text, tokens, filepath)
 		i = i + 1
 	end
 
-	table.insert(tokens, _get_token("EXTRA", token, i, filepath))
+	table.insert(tokens, _get_token("EXTRA", token, i, file_path))
 
 	return i
 end
 
 
-function _get_token(type_, content, i, filepath)
-	return { type = type_, content = content, index = i, filepath = filepath }
+function _get_token(type_, content, i, file_path)
+	return { type = type_, content = content, index = i, file_path = file_path }
 end
 
 
-function _tokenize_multi_line_comment(i, text_len, text, tokens, filepath)
+function _tokenize_multi_line_comment(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and not (text:sub(i, i) == "*" and i + 1 <= text_len and text:sub(i + 1, i + 1) == "/") do
@@ -127,13 +127,13 @@ function _tokenize_multi_line_comment(i, text_len, text, tokens, filepath)
 	token = token .. "*/"
 	i = i + 2
 
-	table.insert(tokens, _get_token("EXTRA", token, i, filepath))
+	table.insert(tokens, _get_token("EXTRA", token, i, file_path))
 
 	return i
 end
 
 
-function _tokenize_tabs(i, text_len, text, tokens, filepath)
+function _tokenize_tabs(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and text:sub(i, i) == "\t" do
@@ -141,13 +141,13 @@ function _tokenize_tabs(i, text_len, text, tokens, filepath)
 		i = i + 1
 	end
 
-	table.insert(tokens, _get_token("TABS", token, i, filepath))
+	table.insert(tokens, _get_token("TABS", token, i, file_path))
 
 	return i
 end
 
 
-function _tokenize_spaces(i, text_len, text, tokens, filepath)
+function _tokenize_spaces(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and text:sub(i, i) == " " do
@@ -155,13 +155,13 @@ function _tokenize_spaces(i, text_len, text, tokens, filepath)
 		i = i + 1
 	end
 
-	table.insert(tokens, _get_token("EXTRA", token, i, filepath))
+	table.insert(tokens, _get_token("EXTRA", token, i, file_path))
 
 	return i
 end
 
 
-function _tokenize_equals(i, text_len, text, tokens, filepath)
+function _tokenize_equals(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and text:sub(i, i) == "=" do
@@ -169,13 +169,13 @@ function _tokenize_equals(i, text_len, text, tokens, filepath)
 		i = i + 1
 	end
 
-	table.insert(tokens, _get_token("EQUALS", token, i, filepath))
+	table.insert(tokens, _get_token("EQUALS", token, i, file_path))
 
 	return i
 end
 
 
-function _tokenize_newline(i, text_len, text, tokens, filepath)
+function _tokenize_newline(i, text_len, text, tokens, file_path)
 	local token = ""
 
 	while i <= text_len and text:sub(i, i) == "\n" do
@@ -183,20 +183,20 @@ function _tokenize_newline(i, text_len, text, tokens, filepath)
 		i = i + 1
 	end
 
-	table.insert(tokens, _get_token("NEWLINES", token, i, filepath))
+	table.insert(tokens, _get_token("NEWLINES", token, i, file_path))
 
 	return i
 end
 
 
-function _tokenize_word(i, text_len, text, tokens, filepath)
+function _tokenize_word(i, text_len, text, tokens, file_path)
 	local subtext = text:sub(i)
 
 	local token = word:match(subtext)
 
 	i = i + #token
 
-	table.insert(tokens, _get_token("WORD", token, i, filepath))
+	table.insert(tokens, _get_token("WORD", token, i, file_path))
 
 	return i
 end

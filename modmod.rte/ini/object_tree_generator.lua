@@ -62,12 +62,12 @@ function M.get_starting_object_tree()
 end
 
 
-function M.get_file_object_tree(filepath)
-	local parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
+function M.get_file_object_tree(file_path)
+	local parent_directory, file_name = file_path:match("(.*)/(.*%.ini)")
 
-	local filepath = utils.path_join(parent_directory, file_name)
+	local file_path = utils.path_join(parent_directory, file_name)
 
-	local cst = cst_generator.get_cst(filepath)
+	local cst = cst_generator.get_cst(file_path)
 	local ast = ast_generator.get_ast(cst)
 
 	local inner_file_object_tree = generate_inner_file_object_tree(ast)

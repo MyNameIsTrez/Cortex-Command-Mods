@@ -182,14 +182,14 @@ end
 
 
 function get_cst(file_name)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	return cst_generator.get_cst(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	return cst_generator.get_cst(file_path)
 end
 
 
 function ast_test(file_name, expected)
-	local filepath = test_files.get_test_path_from_file_name(file_name)
-	local ast = ast_generator.get_filepath_ast(filepath)
+	local file_path = test_files.get_test_path_from_file_name(file_name)
+	local ast = ast_generator.get_file_path_ast(file_path)
 
 	tests.test("ast", file_name, ast, expected)
 end
