@@ -43,8 +43,8 @@ function M:init()
 		[keys.ArrowDown] = Timer(),
 	}
 
-	self.minimum_ms_held_before_autoscroll = 200
-	self.ms_between_autoscrolls = 50
+	self.minimum_ms_held_before_autoscroll = 300
+	self.ms_between_autoscrolls = 80
 
 	for _, timer in pairs(self.keys) do
 		timer:SetRealTimeLimitMS(self.minimum_ms_held_before_autoscroll)
