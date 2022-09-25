@@ -1,7 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local file_structure_generator = dofile("modmod.rte/ini/file_structure_generator.lua")
 local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
 local csts = dofile("modmod.rte/ini/csts.lua")
 
@@ -54,8 +53,7 @@ function M:init(window_manager, autoscroll_manager)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	local file_structure = file_structure_generator.get_file_structure()
-	self.object_tree = object_tree_generator.get_object_tree(file_structure)
+	self.object_tree = object_tree_generator.get_starting_object_tree()
 
 	self:_update_object_tree_strings()
 
@@ -97,7 +95,7 @@ end
 
 function M:write_selected_file_cst()
 	local file_cst = self:_get_selected_file_cst()
-	local file_path = self:_get_selected_file_path()
+	local file_path = self:_get_selected_object_path()
 	writer.write_ini_file_cst(file_cst, file_path)
 end
 
@@ -208,9 +206,38 @@ end
 function M:_right()
 	local selected_object = self:_get_selected_object()
 
-	if selected_object.children ~= nil and selected_object.collapsed then
-		selected_object.collapsed = false
-		self:_update_object_tree_strings()
+	if selected_object.collapsed then
+		if selected_object.children == nil then
+			selected_object.children = {}
+
+			local selected_object_path = self:_get_selected_object_path()
+
+			for directory_name in LuaMan:DirectoryList(selected_object_path) do
+				local directory_object = {}
+				directory_object.directory_name = directory_name
+				directory_object.collapsed = true
+
+				table.insert(selected_object.children, directory_object)
+			end
+
+			for file_name in LuaMan:FileList(selected_object_path) do
+				if utils.path_extension(file_name) == ".ini" then
+					local file_path = utils.path_join(selected_object_path, file_name)
+					local file_object = object_tree_generator.get_file_object_tree(file_path)
+
+					table.insert(selected_object.children, file_object)
+				end
+			end
+
+			if #selected_object.children == 0 then
+				selected_object.children = nil
+			end
+		end
+
+		if selected_object.children ~= nil then
+			selected_object.collapsed = false
+			self:_update_object_tree_strings()
+		end
 	end
 end
 
@@ -243,7 +270,7 @@ function M:_get_selected_file_cst()
 end
 
 
-function M:_get_selected_file_path()
+function M:_get_selected_object_path()
 	local file_path = "."
 	local selected_object = self.object_tree
 
@@ -256,6 +283,8 @@ function M:_get_selected_file_path()
 			file_path = file_path .. "/" .. selected_object.directory_name
 		end
 	end
+
+	return file_path
 end
 
 
@@ -328,12 +357,10 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 	for _, v in ipairs(object_tree.children) do
 		local str = ""
 
-		if v.children ~= nil then
-			if v.collapsed then
-				str = str .. "v"
-			else
-				str = str .. ">"
-			end
+		if v.collapsed then
+			str = str .. "v"
+		elseif v.collapsed == false then
+			str = str .. ">"
 		end
 
 		str = str .. " "

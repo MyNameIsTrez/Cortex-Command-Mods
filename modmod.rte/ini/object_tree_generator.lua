@@ -42,21 +42,30 @@ local M = {};
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 
-function M.get_object_tree(file_structure)
-	object_tree = get_object_tree_recursively(file_structure)
+function M.get_starting_object_tree()
+	local object_tree = {}
+	object_tree.children = {}
 
-	if utils.get_key_count(object_tree.children) == 0 then
-		return object_tree.children
-	else
-		return object_tree
+	for data_module in PresetMan.Modules do
+		local data_module_file_name = data_module.FileName
+
+		local data_module_object = {}
+		data_module_object.directory_name = data_module_file_name
+		data_module_object.collapsed = true
+
+		table.insert(object_tree.children, data_module_object)
 	end
+
+	table.sort(object_tree.children, function(a, b) return a.directory_name < b.directory_name end)
+
+	return object_tree
 end
 
 
 function M.get_file_object_tree(filepath)
-	parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
+	local parent_directory, file_name = filepath:match("(.*)/(.*%.ini)")
 
-	local filepath = parent_directory .. "/" .. file_name
+	local filepath = utils.path_join(parent_directory, file_name)
 
 	local cst = cst_generator.get_cst(filepath)
 	local ast = ast_generator.get_ast(cst)
@@ -80,28 +89,6 @@ end
 
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-function get_object_tree_recursively(file_structure, parent_directory)
-	parent_directory = parent_directory or "."
-
-	local object_tree = {}
-	object_tree.children = {}
-	object_tree.directory_name = parent_directory
-	object_tree.collapsed = true
-
-	for k, v in pairs(file_structure) do
-		if type(v) == "table" then
-			table.insert(object_tree.children, get_object_tree_recursively(v, parent_directory .. "/" .. k))
-			object_tree.children[#object_tree.children].directory_name = k
-			object_tree.children[#object_tree.children].collapsed = true
-		else
-			table.insert(object_tree.children, M.get_file_object_tree(parent_directory .. "/" .. v))
-		end
-	end
-
-	return object_tree
-end
 
 
 function generate_inner_file_object_tree(ast)

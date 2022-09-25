@@ -334,6 +334,16 @@ function M.possibly_truncate(str, max_width, is_small, truncation_ending)
 end
 
 
+function M.path_join(path_1, path_2)
+	return path_1 .. "/" .. path_2
+end
+
+
+function M.path_extension(path)
+	return path:match(".*(%..*)")
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
