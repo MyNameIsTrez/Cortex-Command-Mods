@@ -21,6 +21,8 @@ function ModMod:StartScript()
 
 	self.run_update_function = false
 	self.initialized = false
+
+	-- UInputMan:WhichKeyHeld()
 end
 
 
@@ -28,21 +30,7 @@ end
 
 
 function ModMod:UpdateScript()
-	local controlled_actor = self.activity:GetControlledActor(Activity.PLAYER_1)
-
-	if controlled_actor ~= nil then
-		if self.run_update_function then
-			controlled_actor.Status = Actor.INACTIVE
-		end
-		if not self.run_update_function then
-			controlled_actor.Status = Actor.STABLE
-		end
-		if self.previous_frame_controlled_actor ~= nil and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID then
-			self.previous_frame_controlled_actor.Status = Actor.STABLE
-		end
-	elseif self.previous_frame_controlled_actor ~= nil then
-		self.previous_frame_controlled_actor.Status = Actor.STABLE
-	end
+	self:update_controlled_actor()
 
 	if UInputMan:KeyPressed(keys.N) then
 		self.run_update_function = not self.run_update_function
@@ -52,8 +40,6 @@ function ModMod:UpdateScript()
 			self:initialize()
 		end
 	end
-
-	self.previous_frame_controlled_actor = controlled_actor
 
 	if not self.run_update_function then
 		return
@@ -67,19 +53,7 @@ function ModMod:UpdateScript()
 
 	self.window_manager:update()
 
-	if UInputMan:KeyPressed(keys.ArrowRight)
-		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
-		and self.object_tree_manager:has_not_collapsed_properties_object_selected() then
-		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
-	elseif UInputMan:KeyPressed(keys.ArrowLeft)
-		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties and not self.properties_manager.is_editing_line then
-		self.properties_manager.selected_property_index = 1
-		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
-	elseif self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
-		self.properties_manager:update()
-	elseif self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree then
-		self.object_tree_manager:update()
-	end
+	self:_key_pressed()
 
 	self.object_tree_manager:draw()
 	self.properties_manager:draw()
@@ -108,4 +82,42 @@ function ModMod:initialize()
 	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
 
 	UInputMan:WhichKeyHeld()
+end
+
+
+function ModMod:update_controlled_actor()
+	local controlled_actor = self.activity:GetControlledActor(Activity.PLAYER_1)
+
+	if controlled_actor ~= nil then
+		if self.run_update_function then
+			controlled_actor.Status = Actor.INACTIVE
+		end
+		if not self.run_update_function then
+			controlled_actor.Status = Actor.STABLE
+		end
+		if self.previous_frame_controlled_actor ~= nil and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID then
+			self.previous_frame_controlled_actor.Status = Actor.STABLE
+		end
+	elseif self.previous_frame_controlled_actor ~= nil then
+		self.previous_frame_controlled_actor.Status = Actor.STABLE
+	end
+
+	self.previous_frame_controlled_actor = controlled_actor
+end
+
+
+function ModMod:_key_pressed()
+	if UInputMan:KeyPressed(keys.ArrowRight)
+		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
+		and self.object_tree_manager:has_not_collapsed_properties_object_selected() then
+		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
+	elseif UInputMan:KeyPressed(keys.ArrowLeft)
+		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties and not self.properties_manager.is_editing_line then
+		self.properties_manager.selected_property_index = 1
+		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
+	elseif self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
+		self.properties_manager:update()
+	elseif self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree then
+		self.object_tree_manager:update()
+	end
 end
