@@ -6,7 +6,8 @@ local csts = dofile("modmod.rte/ini/csts.lua")
 
 local writer = dofile("modmod.rte/ini/writer.lua")
 
-local keys = dofile("utils.rte/Data/Keys.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua");
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 
@@ -104,13 +105,13 @@ end
 
 
 function M:_key_pressed()
-	if self.autoscroll_manager:move(keys.ArrowUp) then
+	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
-	elseif self.autoscroll_manager:move(keys.ArrowDown) then
+	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
-	elseif UInputMan:KeyPressed(keys.ArrowLeft) then
+	elseif UInputMan:KeyPressed(key_bindings.left) then
 		self:_left()
-	elseif UInputMan:KeyPressed(keys.ArrowRight) then
+	elseif UInputMan:KeyPressed(key_bindings.right) then
 		self:_right()
 	end
 end

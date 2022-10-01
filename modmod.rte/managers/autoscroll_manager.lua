@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local keys = dofile("utils.rte/Data/Keys.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua");
 
 
 -- MODULE START ----------------------------------------------------------------
@@ -39,8 +39,8 @@ local M = {};
 
 function M:init()
 	self.keys = {
-		[keys.ArrowUp] = Timer(),
-		[keys.ArrowDown] = Timer(),
+		[key_bindings.up] = Timer(),
+		[key_bindings.down] = Timer(),
 	}
 
 	self.minimum_ms_held_before_autoscroll = 300

@@ -3,8 +3,7 @@
 
 local csts = dofile("modmod.rte/ini/csts.lua")
 
-local keys = dofile("utils.rte/Data/Keys.lua")
-local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
+local key_bindings = dofile("modmod.rte/key_bindings.lua");
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 
@@ -92,7 +91,7 @@ end
 function M:_key_pressed()
 	local selected_line = csts.get_value(self.properties_manager.selected_properties[self.properties_manager.selected_property_index])
 
-	if UInputMan:KeyPressed(keys.Backspace) and #selected_line > 0 then
+	if UInputMan:KeyPressed(key_bindings.backspace) and #selected_line > 0 then
 		csts.set_value(self.properties_manager.selected_properties[self.properties_manager.selected_property_index], selected_line:sub(1, #selected_line - 1))
 		self.cursor_x = self.cursor_x - 1
 	elseif input_handler.any_key_pressed() and self.modmod.held_key_character ~= nil then

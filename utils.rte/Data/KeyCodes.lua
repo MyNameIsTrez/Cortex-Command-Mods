@@ -1,3 +1,7 @@
+-- Sources:
+-- http://wiki.datarealms.com/Keylist
+-- https://github.com/liballeg/allegro5/blob/master/include/allegro5/keycodes.h
+
 return {
 	"A",
 	"B",
@@ -69,7 +73,7 @@ return {
 	nil,
 	"Apostrophe",
 	"Backslash",
-	nil, -- Less than(<) / Greater than(>) but I have no clue how these are typed without the Shift key being recognized by CCCP
+	nil, -- Less than(<) / Greater than(>) = 71, but I have no clue how these are typed without the Shift key being recognized by CCCP
 	"Comma",
 	"Period",
 	"Slash",

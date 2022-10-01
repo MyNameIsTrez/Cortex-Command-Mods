@@ -6,7 +6,7 @@ local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
 
-local keys = dofile("utils.rte/Data/Keys.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua");
 
 -- TODO: Remove
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua");
@@ -32,7 +32,7 @@ end
 function ModMod:UpdateScript()
 	self:update_controlled_actor()
 
-	if UInputMan:KeyPressed(keys.N) then
+	if UInputMan:KeyPressed(key_bindings.show_modmod) then
 		self.run_update_function = not self.run_update_function
 
 		if not self.initialized then
@@ -45,6 +45,7 @@ function ModMod:UpdateScript()
 		return
 	end
 
+	-- TODO: Shouldn't this be done in line_editor_manager.lua where self.held_key_character is used?
 	if input_handler.any_key_pressed() then
 		self.held_key_character = input_handler.get_held_key_character()
 		-- print("Held key character: " .. tostring(self.held_key_character))
@@ -57,18 +58,6 @@ function ModMod:UpdateScript()
 
 	self.object_tree_manager:draw()
 	self.properties_manager:draw()
-
-	-- if not self.x_pressed and UInputMan:KeyPressed(keys.X) then
-	-- 	print("Pressed X")
-	-- 	ConsoleMan:SaveAllText("LogConsole.txt")
-
-	-- 	self.x_pressed = true
-	-- end
-
-	-- if self.x_pressed and input_handler.any_key_pressed() then
-	-- 	print(input_handler.get_held_key_character())
-	-- 	ConsoleMan:SaveAllText("LogConsole.txt")
-	-- end
 end
 
 
@@ -107,11 +96,11 @@ end
 
 
 function ModMod:_key_pressed()
-	if UInputMan:KeyPressed(keys.ArrowRight)
+	if UInputMan:KeyPressed(key_bindings.right)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
 		and self.object_tree_manager:has_not_collapsed_properties_object_selected() then
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
-	elseif UInputMan:KeyPressed(keys.ArrowLeft)
+	elseif UInputMan:KeyPressed(key_bindings.left)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties and not self.properties_manager.is_editing_line then
 		self.properties_manager.selected_property_index = 1
 		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree

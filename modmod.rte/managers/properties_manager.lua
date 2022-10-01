@@ -3,7 +3,8 @@
 
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
-local keys = dofile("utils.rte/Data/Keys.lua")
+local key_bindings = dofile("modmod.rte/key_bindings.lua");
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local csts = dofile("modmod.rte/ini/csts.lua")
@@ -87,10 +88,10 @@ function M:update()
 	if self.is_editing_line then
 		self.line_editor_manager:update()
 
-		if UInputMan:KeyPressed(keys.Enter) then
+		if UInputMan:KeyPressed(key_bindings.enter) then
 			self.is_editing_line = false
 			self.object_tree_manager:write_selected_file_cst()
-		elseif UInputMan:KeyPressed(keys.ArrowUp) or UInputMan:KeyPressed(keys.ArrowDown) then
+		elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 			self.is_editing_line = false
 			csts.set_value(self.selected_properties[self.selected_property_index], self.old_line_value)
 		end
@@ -133,11 +134,11 @@ end
 
 
 function M:_key_pressed()
-	if self.autoscroll_manager:move(keys.ArrowUp) then
+	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
-	elseif self.autoscroll_manager:move(keys.ArrowDown) then
+	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
-	elseif UInputMan:KeyPressed(keys.Enter) then
+	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(self.selected_properties[self.selected_property_index])
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()

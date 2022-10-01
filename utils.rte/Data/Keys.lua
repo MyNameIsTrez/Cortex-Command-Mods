@@ -1,4 +1,4 @@
--- Inspiration:
+-- Sources:
 -- http://wiki.datarealms.com/Keylist
 -- https://github.com/liballeg/allegro5/blob/master/include/allegro5/keycodes.h
 
@@ -72,7 +72,7 @@ return {
 	Enter = 67,
 	Apostrophe = 69,
 	Backslash = 70,
-	-- Less than(<) / Greater than(>) = 71 but I have no clue how these are typed without the Shift key being recognized by CCCP
+	-- Less than(<) / Greater than(>) = 71, but I have no clue how these are typed without the Shift key being recognized by CCCP
 	Comma = 72,
 	Period = 73,
 	Slash = 74,
