@@ -155,11 +155,7 @@ function M.file_object_tree_tests()
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer }
 	}})
 	cst = get_cst("traditional")
-	ast = get_ast("traditional")
-	file_object_tree_test("traditional", { file_name = "traditional.ini", cst = cst, properties = {
-		{ property_pointer = ast[1].property_pointer },
-		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
-	}})
+	file_object_tree_test("traditional", { file_name = "traditional.ini", cst = cst })
 	cst = get_cst("value_on_next_line")
 	ast = get_ast("value_on_next_line")
 	file_object_tree_test("value_on_next_line", { file_name = "value_on_next_line.ini", cst = cst, properties = {

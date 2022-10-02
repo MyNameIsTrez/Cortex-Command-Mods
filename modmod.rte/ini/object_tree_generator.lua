@@ -74,6 +74,10 @@ function M.get_file_object_tree(file_path)
 
 	local file_object_tree = { file_name = file_name, cst = cst }
 
+	if ast_is_traditional_ini(ast) then
+		return file_object_tree
+	end
+
 	if ast_has_children(ast) then
 		file_object_tree.collapsed = true
 		file_object_tree.children = inner_file_object_tree
@@ -128,6 +132,21 @@ function generate_inner_file_object_tree(ast)
 	end
 
 	return file_object_tree
+end
+
+
+function ast_is_traditional_ini(ast)
+	local property
+
+	for _, v in ipairs(ast) do
+		property = csts.get_property(v)
+
+		if property:sub(1, 1) == "[" and property:sub(-1, -1) == "]" then
+			return true
+		end
+	end
+
+	return false
 end
 
 
