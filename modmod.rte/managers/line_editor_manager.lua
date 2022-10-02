@@ -94,7 +94,7 @@ function M:is_value_correct_type()
 	local property_value_type = property_value_types[property]
 
 	-- In the case a property name isn't in the table yet, this function assumes the value type is valid
-	if property_value_type == "number" and tonumber(value_string) == nil then
+	if (property_value_type == "number" or property_value_type == "boolean") and tonumber(value_string) == nil then
 		return false
 	end
 
