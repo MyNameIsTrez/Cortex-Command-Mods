@@ -3,13 +3,13 @@
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
-local colors = dofile("utils.rte/Data/Colors.lua");
+local colors = dofile("utils.rte/Data/Colors.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
 
 
-local M = {};
+local M = {}
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
@@ -236,4 +236,4 @@ end
 -- MODULE END ------------------------------------------------------------------
 
 
-return M;
+return M

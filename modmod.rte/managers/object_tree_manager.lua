@@ -6,7 +6,7 @@ local csts = dofile("modmod.rte/ini/csts.lua")
 
 local writer = dofile("modmod.rte/ini/writer.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -14,7 +14,7 @@ local utils = dofile("utils.rte/Modules/Utils.lua")
 -- MODULE START ----------------------------------------------------------------
 
 
-local M = {};
+local M = {}
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
@@ -94,10 +94,22 @@ function M:get_selected_properties()
 	return self:_get_selected_object().properties or {}
 end
 
+
 function M:write_selected_file_cst()
 	local file_cst = self:_get_selected_file_cst()
 	local file_path = self:_get_selected_object_path()
 	writer.write_ini_file_cst(file_cst, file_path)
+end
+
+
+function M:get_selected_preset_name()
+	local preset_name_pointer = self:_get_selected_object().preset_name_pointer
+
+	if preset_name_pointer ~= nil then
+		return preset_name_pointer.content
+	else
+		return nil
+	end
 end
 
 
@@ -356,6 +368,7 @@ end
 
 function M:_potentially_load_file()
 	local selected_object = self:_get_selected_object()
+
 	if selected_object.file_name ~= nil and selected_object.children == nil and selected_object.properties == nil then
 		local file_path = self:_get_selected_object_path()
 
@@ -365,6 +378,8 @@ function M:_potentially_load_file()
 		selected_object.children = file_object.children
 		selected_object.collapsed = file_object.collapsed
 		selected_object.properties = file_object.properties
+
+		self:_update_object_tree_strings()
 	end
 end
 
@@ -388,6 +403,8 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 			str = str .. "v"
 		elseif v.collapsed == false then
 			str = str .. ">"
+		else
+			str = str .. "  " -- TODO: It's jank how this only works because two spaces are the same width as a v and >
 		end
 
 		str = str .. " "
@@ -540,4 +557,4 @@ end
 -- MODULE END ------------------------------------------------------------------
 
 
-return M;
+return M
