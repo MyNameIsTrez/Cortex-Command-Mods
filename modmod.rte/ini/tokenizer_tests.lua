@@ -150,6 +150,10 @@ function M.tokenizer_tests()
 	tokenizer_test("value_on_next_line", {
 		{ type = "WORD", content = "Foo" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "NEWLINES", content = "\n" }, { type = "WORD", content = "Bar" },
 	})
+	tokenizer_test("traditional", {
+		{ type = "WORD", content = "[Foo]" }, { type = "NEWLINES", content = "\n" },
+		{ type = "WORD", content = "Bar" }, { type = "EXTRA", content = " " }, { type = "EQUALS", content = "=" }, { type = "EXTRA", content = " " }, { type = "WORD", content = "42" }, { type = "NEWLINES", content = "\n" },
+	})
 end
 
 

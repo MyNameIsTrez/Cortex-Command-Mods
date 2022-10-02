@@ -155,6 +155,12 @@ function M.file_object_tree_tests()
 			{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer, properties = ast[1].children }
 		}
 	})
+	cst = get_cst("traditional")
+	ast = get_ast("traditional")
+	file_object_tree_test("traditional", { file_name = "traditional.ini", cst = cst, properties = {
+		{ property_pointer = ast[1].property_pointer },
+		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
+	}})
 end
 
 

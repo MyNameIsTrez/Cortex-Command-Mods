@@ -310,6 +310,14 @@ function M.cst_tests()
 			{ type = "property", content = "IncludeFile" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "A.ini" }, { type = "extra", content = "\n" },
 		}
 	})
+	cst_test("traditional", {
+		{
+			{ type = "property", content = "[Foo]" }, { type = "extra", content = "\n" },
+		},
+		{
+			{ type = "property", content = "Bar" }, { type = "extra", content = " " }, { type = "extra", content = "=" }, { type = "extra", content = " " }, { type = "value", content = "42" }, { type = "extra", content = "\n" },
+		}
+	})
 end
 
 

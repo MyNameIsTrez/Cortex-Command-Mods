@@ -175,6 +175,11 @@ function M.ast_tests()
 		}},
 		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
 	})
+	cst = get_cst("traditional")
+	ast_test("traditional", {
+		{ property_pointer = cst[1][1] },
+		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
+	})
 end
 
 
