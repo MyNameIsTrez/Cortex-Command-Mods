@@ -127,6 +127,10 @@ function M.ast_tests()
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5] },
 		{ property_pointer = cst[2][1], value_pointer = cst[2][5] }
 	})
+
+	-- This is expected to raise a "Too many tabs found" error.
+	-- ast_test("invalid_tabbing", {})
+
 	cst = get_cst("lstripped_tab")
 	ast_test("lstripped_tab", {
 		{ property_pointer = cst[1][1], value_pointer = cst[1][5] }

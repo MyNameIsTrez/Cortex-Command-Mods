@@ -65,7 +65,6 @@ function M.file_object_tree_tests()
 		}}
 	}})
 	cst = get_cst("comments")
-	ast = get_ast("comments")
 	file_object_tree_test("comments", { file_name = "comments.ini", cst = cst })
 	cst = get_cst("complex")
 	ast = get_ast("complex")
@@ -104,6 +103,11 @@ function M.file_object_tree_tests()
 		{ property_pointer = ast[1].property_pointer, value_pointer = ast[1].value_pointer },
 		{ property_pointer = ast[2].property_pointer, value_pointer = ast[2].value_pointer }
 	}})
+
+	-- This is expected to raise a "Too many tabs found" error.
+	-- cst = get_cst("invalid_tabbing")
+	-- file_object_tree_test("invalid_tabbing", { file_name = "invalid_tabbng.ini", cst = cst })
+
 	cst = get_cst("lstripped_tab")
 	ast = get_ast("lstripped_tab")
 	file_object_tree_test("lstripped_tab", { file_name = "lstripped_tab.ini", cst = cst, properties = {
