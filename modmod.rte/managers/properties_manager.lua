@@ -3,7 +3,7 @@
 
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -88,12 +88,14 @@ function M:update()
 	if self.is_editing_line then
 		self.line_editor_manager:update()
 
-		if UInputMan:KeyPressed(key_bindings.enter) then
+		-- TODO: Does this if-elseif belong here? It is weird having it inside of this update(), instead of _key_pressed()
+		if UInputMan:KeyPressed(key_bindings.enter) and self.line_editor_manager:is_value_correct_type() then
 			self.is_editing_line = false
 			self.object_tree_manager:write_selected_file_cst()
+			self:_update_properties_live()
 		elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 			self.is_editing_line = false
-			csts.set_value(self.selected_properties[self.selected_property_index], self.old_line_value)
+			csts.set_value(self:get_selected_property(), self.old_line_value)
 		end
 	else
 		self:_key_pressed()
@@ -130,6 +132,11 @@ function M:draw()
 end
 
 
+function M:get_selected_property()
+	return self.selected_properties[self.selected_property_index]
+end
+
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 
@@ -140,7 +147,7 @@ function M:_key_pressed()
 		self:_down()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
-		self.old_line_value = csts.get_value(self.selected_properties[self.selected_property_index])
+		self.old_line_value = csts.get_value(self:get_selected_property())
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
 	end
 end
@@ -250,6 +257,36 @@ end
 
 function M:_draw_bottom_background()
 	self.window_manager:draw_border_fill(Vector(self.window_manager.screen_width - self.properties_width, self.window_top_padding + self.properties_height - 4), self.properties_width, self.window_manager.screen_height - self.window_top_padding - self.properties_height + 4, self.window_manager.unselected_color)
+end
+
+
+function M:_update_properties_live()
+	local selected_preset_name = self.object_tree_manager:get_selected_preset_name()
+
+	for actor in MovableMan.Actors do
+		if actor.ClassName == "AHuman" then
+			local a_human = ToAHuman(actor)
+
+			local equipped_item = a_human.EquippedItem
+
+			if equipped_item ~= nil and equipped_item.PresetName == selected_preset_name then
+				local hd_firearm = ToHDFirearm(equipped_item)
+
+				local selected_property = self:get_selected_property()
+				local property = csts.get_property(selected_property)
+				local value_string = csts.get_value(selected_property)
+
+				local value
+				if tonumber(value_string) ~= nil then
+					value = tonumber(value_string)
+				else
+					value = value_string
+				end
+
+				hd_firearm[property] = value
+			end
+		end
+	end
 end
 
 

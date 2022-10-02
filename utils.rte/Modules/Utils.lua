@@ -349,7 +349,7 @@ function M.flush_log()
 end
 
 
-function M.debug_print(str, recursive)
+function M.print(str, recursive)
 	if type(str) == "table" then
 		M.RecursivelyPrint(str, recursive)
 	else

@@ -1,13 +1,13 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua");
+local key_bindings = dofile("modmod.rte/key_bindings.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
 
 
-local M = {};
+local M = {}
 
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
@@ -83,4 +83,4 @@ end
 -- MODULE END ------------------------------------------------------------------
 
 
-return M;
+return M
