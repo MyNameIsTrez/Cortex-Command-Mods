@@ -6,7 +6,7 @@ local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua");
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua");
 
 -- TODO: Remove
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua");
@@ -45,14 +45,16 @@ function ModMod:UpdateScript()
 		return
 	end
 
+	self.window_manager:update()
+
 	-- TODO: Shouldn't this be done in line_editor_manager.lua where self.held_key_character is used?
 	if input_handler.any_key_pressed() then
 		self.held_key_character = input_handler.get_held_key_character()
 		-- print("Held key character: " .. tostring(self.held_key_character))
 		-- ConsoleMan:SaveAllText("LogConsole.txt")
-	end
 
-	self.window_manager:update()
+		-- self:_key_pressed()
+	end
 
 	self:_key_pressed()
 

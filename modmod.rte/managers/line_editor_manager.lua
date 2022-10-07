@@ -3,8 +3,8 @@
 
 local csts = dofile("modmod.rte/ini/csts.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua")
-local property_value_types = dofile("modmod.rte/property_value_types.lua")
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
+local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 
@@ -112,6 +112,7 @@ function M:_key_pressed()
 		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
 		self.cursor_x = self.cursor_x - 1
 	elseif input_handler.any_key_pressed() and self.modmod.held_key_character ~= nil then
+	-- elseif self.modmod.held_key_character ~= nil then
 		csts.set_value(self.properties_manager:get_selected_property(), selected_line .. self.modmod.held_key_character)
 		self.cursor_x = self.cursor_x + 1
 	end

@@ -3,7 +3,7 @@
 
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua")
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 

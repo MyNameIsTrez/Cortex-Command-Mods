@@ -6,7 +6,7 @@ local csts = dofile("modmod.rte/ini/csts.lua")
 
 local writer = dofile("modmod.rte/ini/writer.lua")
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua")
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -65,12 +65,15 @@ function M:init(window_manager, autoscroll_manager)
 
 	self.scrolling_line_offset = 0
 
+	self.item_change_sound = CreateSoundContainer("Item Change", "modmod.rte")
+
 	return self
 end
 
 
 function M:update()
 	self:_key_pressed()
+	-- self.item_change_sound:Play()
 end
 
 
@@ -119,12 +122,16 @@ end
 function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
+		self.item_change_sound:Play()
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
+		self.item_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.left) then
 		self:_left()
+		self.item_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.right) then
 		self:_right()
+		self.item_change_sound:Play()
 	end
 end
 

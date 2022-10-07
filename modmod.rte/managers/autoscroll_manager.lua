@@ -1,7 +1,7 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
 
-local key_bindings = dofile("modmod.rte/key_bindings.lua")
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 
 -- MODULE START ----------------------------------------------------------------
