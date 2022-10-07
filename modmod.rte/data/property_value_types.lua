@@ -361,4 +361,5 @@ return {
 	GripStrengthMultiplier = "number",
 	Stickiness = "number",
 	B = "number",
+	Scale = "number",
 }
