@@ -1,55 +1,31 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
-
 
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.get_file_path_ast(file_path)
 	local cst = cst_generator.get_cst(file_path)
 	return generate_ast(cst)
 end
 
-
 function M.get_ast(cst)
 	return generate_ast(cst)
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 
 function generate_ast(cst)
 	local ast = {}
@@ -84,8 +60,6 @@ function generate_ast(cst)
 	return ast
 end
 
-
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M

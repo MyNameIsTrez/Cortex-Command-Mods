@@ -1,43 +1,22 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local colors = dofile("utils.rte/Data/Colors.lua")
 
-
 -- MODULE START ----------------------------------------------------------------
-
 
 local M = {}
 
-
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
-
-
-
 
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
 
-
-
-
-
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
-
-
-
 
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M:init()
 	self.target_wrapped = false
@@ -83,28 +62,23 @@ function M:init()
 	return self
 end
 
-
 function M:update()
 	self:_update_screen_offset()
 end
-
 
 function M:draw_border_fill(top_left_pos, width, height, color)
 	self:_draw_box_fill(top_left_pos, width, height, color)
 	self:draw_border(top_left_pos, width, height)
 end
 
-
 function M:draw_border(top_left_pos, width, height)
 	self:_draw_box(top_left_pos, width, height, self.background_border_color)
 	self:_draw_box(top_left_pos + Vector(1, 1), width - 2, height - 2, self.background_border_color)
 end
 
-
 function M:draw_selected_line_background(top_left_pos, width, height_index)
 	self:_draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, self.selected_color)
 end
-
 
 function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
 	local y = y_padding + self.text_top_padding + (height_index - 1) * self.text_vertical_stride
@@ -116,40 +90,51 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 		pos = Vector(x + width / 2, y)
 	end
 
-	self:_draw_text(pos, text, self.text_is_small, alignment);
+	self:_draw_text(pos, text, self.text_is_small, alignment)
 	self:_draw_selection_lines(x, width, y_padding, height_index, self.unselected_color)
 end
 
-
 function M:draw_line(top_left_pos, offset_x, offset_y, color)
-	PrimitiveMan:DrawLinePrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(offset_x, offset_y), color)
+	PrimitiveMan:DrawLinePrimitive(
+		self.screen_offset + top_left_pos,
+		self.screen_offset + top_left_pos + Vector(offset_x, offset_y),
+		color
+	)
 end
-
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-
 function M:_draw_selection_lines(x, width, y_padding, height_index, color)
-	self:draw_line(Vector(x + 4 - 1, y_padding + (height_index - 1) * self.text_vertical_stride), width - 4 * 2 + 1, 0, color)
-	self:draw_line(Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride - 1), width - 4 * 2 + 1, 0, color)
+	self:draw_line(
+		Vector(x + 4 - 1, y_padding + (height_index - 1) * self.text_vertical_stride),
+		width - 4 * 2 + 1,
+		0,
+		color
+	)
+	self:draw_line(
+		Vector(x + 4 - 1, y_padding + height_index * self.text_vertical_stride - 1),
+		width - 4 * 2 + 1,
+		0,
+		color
+	)
 end
-
 
 function M:_draw_box(top_left_pos, width, height, color)
-	PrimitiveMan:DrawBoxPrimitive(self.screen_offset + top_left_pos, self.screen_offset + top_left_pos + Vector(width - 1, height - 1), color)
+	PrimitiveMan:DrawBoxPrimitive(
+		self.screen_offset + top_left_pos,
+		self.screen_offset + top_left_pos + Vector(width - 1, height - 1),
+		color
+	)
 end
-
 
 function M:_draw_box_fill(top_left_pos, width, height, color)
 	local screen_top_left_pos = self.screen_offset + top_left_pos
 	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width - 1, height - 1), color)
 end
 
-
 function M:_draw_text(top_left_pos, text, text_is_small, alignment)
-	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, text_is_small, alignment);
+	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, text_is_small, alignment)
 end
-
 
 function M:_update_screen_offset()
 	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
@@ -160,8 +145,10 @@ function M:_update_screen_offset()
 	end
 
 	-- TODO: Not sure whether this scroll_target - self.previous_scroll_target is correct since it was originally targetCenter.m_X
-	if (SceneMan.SceneWrapsX and math.abs(scroll_target.X - self.previous_scroll_target.X) > self.half_scene_width) or
-	   (SceneMan.SceneWrapsY and math.abs(scroll_target.X - self.previous_scroll_target.Y) > self.half_scene_height) then
+	if
+		(SceneMan.SceneWrapsX and math.abs(scroll_target.X - self.previous_scroll_target.X) > self.half_scene_width)
+		or (SceneMan.SceneWrapsY and math.abs(scroll_target.X - self.previous_scroll_target.Y) > self.half_scene_height)
+	then
 		self.target_wrapped = true
 		-- print("x")
 	end
@@ -207,10 +194,10 @@ function M:_update_screen_offset()
 
 	local offset_target = scroll_target - self.half_screen_size
 
-	if (offset_target.Floored == self.screen_offset.Floored) then
+	if offset_target.Floored == self.screen_offset.Floored then
 		return
-	-- else
-	-- 	print(offset_target.Floored - self.screen_offset.Floored)
+		-- else
+		-- 	print(offset_target.Floored - self.screen_offset.Floored)
 	end
 
 	local scroll_difference = offset_target - self.screen_offset
@@ -232,8 +219,6 @@ function M:_update_screen_offset()
 	self.window_scroll_timer:Reset()
 end
 
-
 -- MODULE END ------------------------------------------------------------------
-
 
 return M

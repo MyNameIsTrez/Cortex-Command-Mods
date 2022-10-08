@@ -1,41 +1,20 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
-
 
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.write_ini_file_cst(file_cst, file_path)
 	local lines = {}
@@ -48,9 +27,7 @@ function M.write_ini_file_cst(file_cst, file_path)
 	file_functions.WriteFile(file_path, str)
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 
 function append_lines_recursively(file_cst, lines)
 	for _, token in ipairs(file_cst) do
@@ -64,8 +41,6 @@ function append_lines_recursively(file_cst, lines)
 	end
 end
 
-
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M

@@ -1,54 +1,31 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local l = dofile("utils.rte/Modules/lulpeg.lua")
 
-
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 
 local P = l.P
 local C = l.C
 
-local space = l.S(" \t")^0
-local delimiter =
-	P(space^-1 * "=" ) +
-	P(space^-1 * "//") +
-	P(space^-1 * "/*") +
-	P(space^-1 * "\n")
+local space = l.S(" \t") ^ 0
+local delimiter = P(space ^ -1 * "=") + P(space ^ -1 * "//") + P(space ^ -1 * "/*") + P(space ^ -1 * "\n")
 
-local word = C((1 - delimiter)^1)
-
+local word = C((1 - delimiter) ^ 1)
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.get_tokens(file_path)
 	local tokens = {}
@@ -84,9 +61,7 @@ function M.get_tokens(file_path)
 	return tokens
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 
 function _tokenize_comment(i, text_len, text, tokens, file_path)
 	if i + 1 <= text_len and text:sub(i + 1, i + 1) == "/" then
@@ -95,7 +70,6 @@ function _tokenize_comment(i, text_len, text, tokens, file_path)
 		return _tokenize_multi_line_comment(i, text_len, text, tokens, file_path)
 	end
 end
-
 
 function _tokenize_single_line_comment(i, text_len, text, tokens, file_path)
 	local token = ""
@@ -110,11 +84,9 @@ function _tokenize_single_line_comment(i, text_len, text, tokens, file_path)
 	return i
 end
 
-
 function _get_token(type_, content, i, file_path)
 	return { type = type_, content = content, index = i, file_path = file_path }
 end
-
 
 function _tokenize_multi_line_comment(i, text_len, text, tokens, file_path)
 	local token = ""
@@ -132,7 +104,6 @@ function _tokenize_multi_line_comment(i, text_len, text, tokens, file_path)
 	return i
 end
 
-
 function _tokenize_tabs(i, text_len, text, tokens, file_path)
 	local token = ""
 
@@ -145,7 +116,6 @@ function _tokenize_tabs(i, text_len, text, tokens, file_path)
 
 	return i
 end
-
 
 function _tokenize_spaces(i, text_len, text, tokens, file_path)
 	local token = ""
@@ -160,7 +130,6 @@ function _tokenize_spaces(i, text_len, text, tokens, file_path)
 	return i
 end
 
-
 function _tokenize_equals(i, text_len, text, tokens, file_path)
 	local token = ""
 
@@ -173,7 +142,6 @@ function _tokenize_equals(i, text_len, text, tokens, file_path)
 
 	return i
 end
-
 
 function _tokenize_newline(i, text_len, text, tokens, file_path)
 	local token = ""
@@ -188,7 +156,6 @@ function _tokenize_newline(i, text_len, text, tokens, file_path)
 	return i
 end
 
-
 function _tokenize_word(i, text_len, text, tokens, file_path)
 	local subtext = text:sub(i)
 
@@ -201,8 +168,6 @@ function _tokenize_word(i, text_len, text, tokens, file_path)
 	return i
 end
 
-
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M

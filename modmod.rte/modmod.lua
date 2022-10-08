@@ -1,20 +1,17 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local window_manager = dofile("modmod.rte/managers/window_manager.lua")
 local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
 
-local key_bindings = dofile("modmod.rte/data/key_bindings.lua");
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 -- TODO: Remove
-local input_handler = dofile("utils.rte/Modules/InputHandler.lua");
-local key_codes = dofile("utils.rte/Data/KeyCodes.lua");
-
+local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
+local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
-
 
 function ModMod:StartScript()
 	self.activity = ActivityMan:GetActivity()
@@ -25,9 +22,7 @@ function ModMod:StartScript()
 	-- UInputMan:WhichKeyHeld()
 end
 
-
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
-
 
 function ModMod:UpdateScript()
 	self:update_controlled_actor()
@@ -56,9 +51,7 @@ function ModMod:UpdateScript()
 	self:_draw()
 end
 
-
 -- FUNCTIONS -------------------------------------------------------------------
-
 
 function ModMod:update_controlled_actor()
 	local controlled_actor = self.activity:GetControlledActor(Activity.PLAYER_1)
@@ -70,7 +63,10 @@ function ModMod:update_controlled_actor()
 		if not self.run_update_function then
 			controlled_actor.Status = Actor.STABLE
 		end
-		if self.previous_frame_controlled_actor ~= nil and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID then
+		if
+			self.previous_frame_controlled_actor ~= nil
+			and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID
+		then
 			self.previous_frame_controlled_actor.Status = Actor.STABLE
 		end
 	elseif self.previous_frame_controlled_actor ~= nil then
@@ -80,16 +76,19 @@ function ModMod:update_controlled_actor()
 	self.previous_frame_controlled_actor = controlled_actor
 end
 
-
 function ModMod:initialize()
 	self.window_manager = window_manager:init()
 	self.autoscroll_manager = autoscroll_manager:init()
 	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
-	self.properties_manager = properties_manager:init(self.window_manager, self.object_tree_manager, self.autoscroll_manager, self)
+	self.properties_manager = properties_manager:init(
+		self.window_manager,
+		self.object_tree_manager,
+		self.autoscroll_manager,
+		self
+	)
 
 	UInputMan:WhichKeyHeld()
 end
-
 
 function ModMod:_update()
 	self.window_manager:update()
@@ -105,17 +104,21 @@ function ModMod:_update()
 	end
 end
 
-
 function ModMod:_update_selected_window()
-	if UInputMan:KeyPressed(key_bindings.right)
-			and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
-			and self.object_tree_manager:has_not_collapsed_properties_object_selected() then
+	if
+		UInputMan:KeyPressed(key_bindings.right)
+		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
+		and self.object_tree_manager:has_not_collapsed_properties_object_selected()
+	then
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
 		return true
 	end
 
-	if UInputMan:KeyPressed(key_bindings.left)
-			and self.window_manager.selected_window == self.window_manager.selectable_windows.properties and not self.properties_manager.is_editing_line then
+	if
+		UInputMan:KeyPressed(key_bindings.left)
+		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties
+		and not self.properties_manager.is_editing_line
+	then
 		self.properties_manager.selected_property_index = 1
 		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
 		return true
@@ -123,7 +126,6 @@ function ModMod:_update_selected_window()
 
 	return false
 end
-
 
 function ModMod:_draw()
 	self.object_tree_manager:draw()

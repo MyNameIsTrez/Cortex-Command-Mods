@@ -1,41 +1,20 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
-
 
 -- MODULE START ----------------------------------------------------------------
 
-
 local M = {}
-
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M:init()
 	self.keys = {
@@ -52,7 +31,6 @@ function M:init()
 
 	return self
 end
-
 
 function M:move(key)
 	if UInputMan:KeyPressed(key) then
@@ -73,14 +51,8 @@ function M:move(key)
 	return false
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-
-
-
-
 -- MODULE END ------------------------------------------------------------------
-
 
 return M

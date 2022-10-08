@@ -1,6 +1,5 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
 
@@ -8,39 +7,19 @@ local csts = dofile("modmod.rte/ini/csts.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
-
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.get_starting_object_tree()
 	local object_tree = {}
@@ -56,11 +35,12 @@ function M.get_starting_object_tree()
 		table.insert(object_tree.children, data_module_object)
 	end
 
-	table.sort(object_tree.children, function(a, b) return a.directory_name < b.directory_name end)
+	table.sort(object_tree.children, function(a, b)
+		return a.directory_name < b.directory_name
+	end)
 
 	return object_tree
 end
-
 
 function M.get_file_object_tree(file_path)
 	local parent_directory, file_name = file_path:match("(.*)/(.*%.ini)")
@@ -91,9 +71,7 @@ function M.get_file_object_tree(file_path)
 	return file_object_tree
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 
 function generate_inner_file_object_tree(ast)
 	local file_object_tree = {}
@@ -134,7 +112,6 @@ function generate_inner_file_object_tree(ast)
 	return file_object_tree
 end
 
-
 function ast_is_traditional_ini(ast)
 	local property
 
@@ -149,7 +126,6 @@ function ast_is_traditional_ini(ast)
 	return false
 end
 
-
 function ast_has_children(ast)
 	for _, v in ipairs(ast) do
 		if v.children ~= nil then
@@ -159,7 +135,6 @@ function ast_has_children(ast)
 
 	return false
 end
-
 
 function ast_get_properties(ast)
 	local properties = {}
@@ -173,8 +148,6 @@ function ast_get_properties(ast)
 	return properties
 end
 
-
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M
