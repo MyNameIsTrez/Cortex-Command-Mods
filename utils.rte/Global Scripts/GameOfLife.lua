@@ -1,49 +1,44 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
-local DrawOptimizer = dofile("utils.rte/Modules/DrawOptimizer.lua");
-
+local DrawOptimizer = dofile("utils.rte/Modules/DrawOptimizer.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 
-
 function GameOfLife:StartScript()
 	-- CONFIGURABLE VARIABLES
-	self.framesBetweenUpdates = 1;
+	self.framesBetweenUpdates = 1
 
 	-- TODO: Set this equal to the variable of the top-left of the player's screen every frame instead!
-	self.topLeft = Vector(1800, 500);
+	self.topLeft = Vector(1800, 500)
 
-	self.columns = 50;
-	self.rows = 50;
+	self.columns = 50
+	self.rows = 50
 	-- self.columns = 5;
 	-- self.rows = 5;
 
-	self.cellSize = 3;
+	self.cellSize = 3
 	-- self.cellSize = 1;
 
-	self.deadColor = 4;
-	self.aliveColor = 20;
-
+	self.deadColor = 4
+	self.aliveColor = 20
 
 	-- INTERNAL VARIABLES
 	self.cellSizeVector = Vector(self.cellSize - 1, self.cellSize - 1)
-	self.frame = 0;
-	self.state = GameOfLife:GetEmptyState();
-	self.nextState = nil;
-
+	self.frame = 0
+	self.state = GameOfLife:GetEmptyState()
+	self.nextState = nil
 
 	-- SETUP
-	GameOfLife:KillAllCells();
+	GameOfLife:KillAllCells()
 
 	-- CONFIGURABLE STARTING STATES
 
 	-- R-pentomino for 30x30
-	self.state[14][15] = true;
-	self.state[14][16] = true;
-	self.state[15][14] = true;
-	self.state[15][15] = true;
-	self.state[16][15] = true;
+	self.state[14][15] = true
+	self.state[14][16] = true
+	self.state[15][14] = true
+	self.state[15][15] = true
+	self.state[16][15] = true
 
 	-- R-pentomino for 5x5
 	-- self.state[2][3] = true;
@@ -55,106 +50,117 @@ end
 
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
 
-
 function GameOfLife:UpdateScript()
-	self.frame = self.frame + 1;
+	self.frame = self.frame + 1
 
 	-- + 1 so a self.framesBetweenUpdates of 0 works.
 	if self.frame == 1 or self.frame % (self.framesBetweenUpdates + 1) == 0 then
-		GameOfLife:Update();
-		GameOfLife:QueueDraw();
-		DrawOptimizer.Update();
+		GameOfLife:Update()
+		GameOfLife:QueueDraw()
+		DrawOptimizer.Update()
 	end
 
-	DrawOptimizer.Draw();
+	DrawOptimizer.Draw()
 end
 
 -- METHODS ---------------------------------------------------------------------
 
-
 function GameOfLife:GetEmptyState()
-	local state = {};
+	local state = {}
 
 	for row = 1, self.rows do
-		state[row] = {};
+		state[row] = {}
 	end
 
-	return state;
+	return state
 end
 
 function GameOfLife:KillAllCells()
 	for row = 1, self.rows do
 		for column = 1, self.columns do
-			self.state[row][column] = false;
+			self.state[row][column] = false
 		end
 	end
 end
 
 function GameOfLife:Update()
-	local neighbors;
+	local neighbors
 
-	self.nextState = GameOfLife:GetEmptyState();
+	self.nextState = GameOfLife:GetEmptyState()
 
 	for row = 1, self.rows do
 		for column = 1, self.columns do
-			neighbors = GameOfLife:CountCellNeighbors(row, column);
+			neighbors = GameOfLife:CountCellNeighbors(row, column)
 
-			GameOfLife:UpdateCellState(row, column, neighbors);
+			GameOfLife:UpdateCellState(row, column, neighbors)
 		end
 	end
 
-	self.state = self.nextState;
+	self.state = self.nextState
 end
 
 function GameOfLife:CountCellNeighbors(row, column)
-	local neighbors = 0;
+	local neighbors = 0
 
 	if row > 1 then
-		if column > 1 and self.state[row - 1][column - 1] then neighbors = neighbors + 1; end
-		if self.state[row - 1][column - 0] then neighbors = neighbors + 1; end
-		if column < self.columns and self.state[row - 1][column + 1] then neighbors = neighbors + 1; end
+		if column > 1 and self.state[row - 1][column - 1] then
+			neighbors = neighbors + 1
+		end
+		if self.state[row - 1][column - 0] then
+			neighbors = neighbors + 1
+		end
+		if column < self.columns and self.state[row - 1][column + 1] then
+			neighbors = neighbors + 1
+		end
 	end
 
-	if column > 1 and self.state[row - 0][column - 1] then neighbors = neighbors + 1; end
-	if column < self.columns and self.state[row - 0][column + 1] then neighbors = neighbors + 1; end
+	if column > 1 and self.state[row - 0][column - 1] then
+		neighbors = neighbors + 1
+	end
+	if column < self.columns and self.state[row - 0][column + 1] then
+		neighbors = neighbors + 1
+	end
 
 	if row < self.rows then
-		if column > 1 and self.state[row + 1][column - 1] then neighbors = neighbors + 1; end
-		if self.state[row + 1][column - 0] then neighbors = neighbors + 1; end
-		if column < self.columns and self.state[row + 1][column + 1] then neighbors = neighbors + 1; end
+		if column > 1 and self.state[row + 1][column - 1] then
+			neighbors = neighbors + 1
+		end
+		if self.state[row + 1][column - 0] then
+			neighbors = neighbors + 1
+		end
+		if column < self.columns and self.state[row + 1][column + 1] then
+			neighbors = neighbors + 1
+		end
 	end
 
-	return neighbors;
+	return neighbors
 end
 
 function GameOfLife:UpdateCellState(row, column, neighbors)
 	if neighbors < 2 or neighbors > 3 then
-		self.nextState[row][column] = false;
+		self.nextState[row][column] = false
 	elseif neighbors == 2 then
-		self.nextState[row][column] = self.state[row][column];
+		self.nextState[row][column] = self.state[row][column]
 	elseif neighbors == 3 then
-		self.nextState[row][column] = true;
+		self.nextState[row][column] = true
 	end
 end
 
 function GameOfLife:QueueDraw()
 	for row = 1, self.rows do
 		for column = 1, self.columns do
-			GameOfLife:QueueDrawCell(row, column);
+			GameOfLife:QueueDrawCell(row, column)
 		end
 	end
 end
 
 function GameOfLife:QueueDrawCell(row, column)
-	local offset = Vector(
-		(column - 1) * self.cellSize,
-		(row - 1) * self.cellSize
-	)
+	local offset = Vector((column - 1) * self.cellSize, (row - 1) * self.cellSize)
 
-	local cellTopLeft = self.topLeft + offset;
+	local cellTopLeft = self.topLeft + offset
 	local cellBottomRight = cellTopLeft + self.cellSizeVector
 
-	local color = self.state[row][column] and self.aliveColor or self.deadColor;
+	local color = self.state[row][column] and self.aliveColor or self.deadColor
 
-	DrawOptimizer.Add(cellTopLeft, cellBottomRight, color);
+	DrawOptimizer.Add(cellTopLeft, cellBottomRight, color)
 end

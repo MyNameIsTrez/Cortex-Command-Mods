@@ -94,4 +94,4 @@ return {
 	"NumpadPlus",
 	"NumpadPeriod",
 	"NumpadEnter",
-};
+}

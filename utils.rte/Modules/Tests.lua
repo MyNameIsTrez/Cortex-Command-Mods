@@ -1,41 +1,20 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
-
 
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
 
-
-
-
-
 -- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
-
-
-
 
 -- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
 
-
-
-
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.test(test_type, test_name, result, expected)
 	if not utils.deepequals(result, expected) then
@@ -47,14 +26,8 @@ function M.test(test_type, test_name, result, expected)
 	end
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-
-
 
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M

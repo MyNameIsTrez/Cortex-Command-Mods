@@ -3,5 +3,5 @@ return {
 	orange = 47,
 	yellow = 122,
 	green = 128,
-	blue = 208
-};
+	blue = 208,
+}

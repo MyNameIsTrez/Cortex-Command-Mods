@@ -1,39 +1,37 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
 local keys = dofile("utils.rte/Data/Keys.lua")
 local colors = dofile("utils.rte/Data/Colors.lua")
 local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
 local key_characters = dofile("utils.rte/Data/KeyCharacters.lua")
 
-
 -- MODULE START ----------------------------------------------------------------
-
 
 local M = {}
 
-
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
 
-
 local toggled_functions = {
-	[keys.B] = { function() print("Pressed B") end }
+	[keys.B] = {
+		function()
+			print("Pressed B")
+		end,
+	},
 }
-
 
 local held_functions = {
-	[keys.C] = { function() print("Held C") end }
+	[keys.C] = {
+		function()
+			print("Held C")
+		end,
+	},
 }
-
 
 -- INTERNAL VARIABLES ----------------------------------------------------------
 
-
 local toggled_keys = {}
 
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 function M.register_toggled_function(key_code, fn)
 	if toggled_functions[key_code] == nil then
@@ -43,7 +41,6 @@ function M.register_toggled_function(key_code, fn)
 	print(key_code)
 end
 
-
 -- function M.register_held_function(key_code, fn)
 -- 	if held_functions[key_code] == nil then
 -- 		held_functions[key_code] = {}
@@ -51,12 +48,10 @@ end
 -- 	table.insert(held_functions[key_code], fn)
 -- end
 
-
 function M.Update()
 	Toggled()
 	Held()
 end
-
 
 function M.any_key_pressed()
 	for key_code, _ in pairs(key_codes) do
@@ -66,7 +61,6 @@ function M.any_key_pressed()
 	end
 	return false
 end
-
 
 function M.get_held_key_character()
 	local key_code = UInputMan:WhichKeyHeld()
@@ -85,7 +79,6 @@ function M.get_held_key_character()
 	return key
 end
 
-
 -- function M.get_held_key()
 -- 	local key_code = UInputMan:WhichKeyHeld()
 -- 	local key = key_codes[key_code]
@@ -99,19 +92,16 @@ end
 -- 	return key
 -- end
 
-
 -- function M.GetKeyNameHeld()
 -- 	return key_codes[UInputMan:WhichKeyHeld()]
 -- end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 
 function Toggled()
 	for key_code, functions_to_run in pairs(toggled_functions) do
 		print(key_code)
-		if (UInputMan:KeyPressed(key_code)) then
+		if UInputMan:KeyPressed(key_code) then
 			ToggleKey(key_code)
 
 			for _, function_to_run in ipairs(functions_to_run) do
@@ -121,16 +111,14 @@ function Toggled()
 	end
 end
 
-
 function ToggleKey(key_code)
 	toggled_keys[key_code] = not toggled_keys[key_code]
 	print(toggled_keys[key_code])
 end
 
-
 function Held()
 	for key_code, functions_to_run in pairs(held_functions) do
-		if (UInputMan:KeyHeld(key_code)) then
+		if UInputMan:KeyHeld(key_code) then
 			for _, function_to_run in ipairs(functions_to_run) do
 				function_to_run()
 			end
@@ -142,8 +130,6 @@ function Held()
 	end
 end
 
-
 -- MODULE END ------------------------------------------------------------------
-
 
 return M

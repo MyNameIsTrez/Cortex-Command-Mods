@@ -1,34 +1,27 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
-local utils = dofile("utils.rte/Modules/Utils.lua");
-
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
-
 
 function Benchmarker:StartScript()
 	-- CONFIGURABLE VARIABLES
 
-
 	-- Wait for at least 2 frames, because the first frame includes the time it took to load the scene.
 	-- It also allows the user to go back to the main menu to disable the benchmarker, before the game slows down to a crawl.
-	self.frameDelayBeforeBenchmarking = 100;
-
+	self.frameDelayBeforeBenchmarking = 100
 
 	-- INTERNAL VARIABLES
-	self.tests = {};
-	self.timer = Timer();
-	self.frame = 0;
-	self.finished = false;
-	self.ranTest = false;
+	self.tests = {}
+	self.timer = Timer()
+	self.frame = 0
+	self.finished = false
+	self.ranTest = false
 
-	Benchmarker:AddTests();
+	Benchmarker:AddTests()
 end
 
-
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
-
 
 function Benchmarker:UpdateScript()
 	-- self.frame = self.frame + 1;
@@ -50,57 +43,58 @@ function Benchmarker:UpdateScript()
 	-- end
 
 	if not self.finished then
-		Benchmarker:AdvanceFrame();
+		Benchmarker:AdvanceFrame()
 	end
 end
 
-
 -- METHODS ---------------------------------------------------------------------
 
-
 function Benchmarker:AdvanceFrame()
-	self.frame = self.frame + 1;
+	self.frame = self.frame + 1
 
 	if self.frame == 1 then
-		utils.Printf("Waiting for %d frames before starting the benchmark...", self.frameDelayBeforeBenchmarking);
+		utils.Printf("Waiting for %d frames before starting the benchmark...", self.frameDelayBeforeBenchmarking)
 	end
 
 	-- If no tests have been added, abort benchmarking.
 	if self.frame == 1 and #self.tests == 0 then
-		Benchmarker:Finish();
-		return;
+		Benchmarker:Finish()
+		return
 	end
 
 	if self.frame >= self.frameDelayBeforeBenchmarking then
 		-- Benchmark every other frame so the game gets enough time to update self.timer.ElapsedRealTimeMS
 		if not self.ranTest then
-			self.timer:Reset();
-			Benchmarker:RunNextTest();
-			self.ranTest = true;
+			self.timer:Reset()
+			Benchmarker:RunNextTest()
+			self.ranTest = true
 		else
-			local iterations, funName = unpack(table.remove(self.tests));
+			local iterations, funName = unpack(table.remove(self.tests))
 
-			local formattediterations = utils.AddThousandsSeparator(iterations);
-			local formattedMilliseconds = utils.AddThousandsSeparator(self.timer.ElapsedRealTimeMS);
-			utils.Printf("iterations: %s, function name: %s, elapsed time: %s milliseconds", formattediterations, funName, formattedMilliseconds);
+			local formattediterations = utils.AddThousandsSeparator(iterations)
+			local formattedMilliseconds = utils.AddThousandsSeparator(self.timer.ElapsedRealTimeMS)
+			utils.Printf(
+				"iterations: %s, function name: %s, elapsed time: %s milliseconds",
+				formattediterations,
+				funName,
+				formattedMilliseconds
+			)
 
-			self.ranTest = false;
+			self.ranTest = false
 
 			if #self.tests == 0 then
-				Benchmarker:Finish();
-				return;
+				Benchmarker:Finish()
+				return
 			end
 		end
 	end
 end
 
-
 function Benchmarker:Finish()
-	self.finished = true;
+	self.finished = true
 
-	print("Finished benchmarking!");
+	print("Finished benchmarking!")
 end
-
 
 function Benchmarker:AddTests(timer)
 	-- local input = 0.5;
@@ -115,7 +109,6 @@ function Benchmarker:AddTests(timer)
 
 	-- Benchmarker:AddTest(1e8, "utils.Map", utils.Map, { input, inputStart, inputEnd, outputStart, outputEnd });
 	-- Benchmarker:AddTest(1e8, "utils.MapUsingSlope", utils.MapUsingSlope, { input, slope, outputStart, outputEnd });
-
 
 	-- Website with interesting tests to add: https://springrts.com/wiki/Lua_Performance
 
@@ -180,10 +173,7 @@ function Benchmarker:AddTests(timer)
 	-- 	{ a, #a }
 	-- );
 
-
 	-- TODO: Add tests for empting a table with 0/1/5/10/100/1000 vs setting it equal to a new table.
-
-
 
 	-- RESULT: EVERYTHING GOT FAST EXCEPT FOR PAIRS, WHICH IS NOW 3X SLOWER THAN IPAIRS
 	-- Benchmarker:AddTest(1e7, "adding items which resize the table",
@@ -221,7 +211,6 @@ function Benchmarker:AddTests(timer)
 	-- 	end,
 	-- 	{ }
 	-- );
-
 
 	-- RESULT: SAME SPEED
 
@@ -261,31 +250,20 @@ function Benchmarker:AddTests(timer)
 	-- 	{ }
 	-- );
 
+	Benchmarker:AddTest(1e8, "redeclaring function argument as local", function(n)
+		local n = n or 42
+		n = n + 1
+	end, {})
 
-	Benchmarker:AddTest(1e8, "redeclaring function argument as local",
-		function(n)
-			local n = n or 42;
-			n = n + 1;
-		end,
-		{  }
-	);
+	Benchmarker:AddTest(1e8, "not redeclaring function argument as local", function(n)
+		n = n or 42
+		n = n + 1
+	end, {})
 
-	Benchmarker:AddTest(1e8, "not redeclaring function argument as local",
-		function(n)
-			n = n or 42;
-			n = n + 1;
-		end,
-		{  }
-	);
-
-	Benchmarker:AddTest(1e8, "should declare n as global",
-		function()
-			n = n or 42;
-			n = n + 1;
-		end,
-		{  }
-	);
-
+	Benchmarker:AddTest(1e8, "should declare n as global", function()
+		n = n or 42
+		n = n + 1
+	end, {})
 
 	-- Benchmarker:AddTest(1e3, "1M table adding values",
 	-- 	function(t)
@@ -304,20 +282,17 @@ function Benchmarker:AddTests(timer)
 	-- 	end,
 	-- 	{ utils.GetEmptyTableNDim({1000, 2000}) }
 	-- );
-
 end
-
 
 function Benchmarker:AddTest(iterations, funName, fun, args)
-	table.insert(self.tests, { iterations, funName, fun, args });
+	table.insert(self.tests, { iterations, funName, fun, args })
 end
 
-
 function Benchmarker:RunNextTest()
-	local iterations, _, fun, args = unpack(self.tests[#self.tests]);
+	local iterations, _, fun, args = unpack(self.tests[#self.tests])
 
 	for _ = 1, iterations do
-		fun(unpack(args));
+		fun(unpack(args))
 	end
 	print(n)
 end

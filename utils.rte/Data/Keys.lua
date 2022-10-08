@@ -93,4 +93,4 @@ return {
 	NumpadPlus = 89,
 	NumpadPeriod = 90,
 	NumpadEnter = 91,
-};
+}

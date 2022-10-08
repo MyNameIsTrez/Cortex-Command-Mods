@@ -1,29 +1,16 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-
-local colors = dofile("utils.rte/Data/Colors.lua");
-
+local colors = dofile("utils.rte/Data/Colors.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
-
-local M = {};
-
+local M = {}
 
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
 
-
-
-
-
 -- INTERNAL VARIABLES ----------------------------------------------------------
 
-
-
-
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
 
 -- function Visualizer:StartScript()
 -- 	-- self.continuousFns = {
@@ -47,7 +34,6 @@ local M = {};
 -- 	-- self.updateTimer:SetSimTimeLimitMS(1000);
 -- 	-- self.i = 0;
 -- end
-
 
 -- function Visualizer:UpdateScript()
 -- 	local startX = 100; local startY = 100;
@@ -106,27 +92,20 @@ local M = {};
 --     end
 -- end
 
-
 function Visualizer:UpdateScript(self)
-	local radius = 10;
+	local radius = 10
 
 	for actor in MovableMan.Actors do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.red);
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.red)
 	end
 
 	for actor in MovableMan.Particles do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.yellow);
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.yellow)
 	end
 end
 
-
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-
-
-
 
 -- MODULE END ------------------------------------------------------------------
 
-
-return M;
+return M
