@@ -1,9 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
-local csts = dofile("modmod.rte/ini/csts.lua")
+local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
-local writer = dofile("modmod.rte/ini/writer.lua")
+local writer = dofile("modmod.rte/ini_object_tree/writer.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 

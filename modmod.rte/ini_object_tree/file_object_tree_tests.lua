@@ -1,10 +1,10 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
-local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
-local object_tree_generator = dofile("modmod.rte/ini/object_tree_generator.lua")
+local cst_generator = dofile("modmod.rte/ini_object_tree/cst_generator.lua")
+local ast_generator = dofile("modmod.rte/ini_object_tree/ast_generator.lua")
+local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
 
-local test_files = dofile("modmod.rte/ini/test_files.lua")
+local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
 local tests = dofile("utils.rte/Modules/Tests.lua")
 

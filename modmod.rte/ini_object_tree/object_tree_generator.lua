@@ -1,9 +1,9 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
-local ast_generator = dofile("modmod.rte/ini/ast_generator.lua")
+local cst_generator = dofile("modmod.rte/ini_object_tree/cst_generator.lua")
+local ast_generator = dofile("modmod.rte/ini_object_tree/ast_generator.lua")
 
-local csts = dofile("modmod.rte/ini/csts.lua")
+local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 

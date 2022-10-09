@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local cst_generator = dofile("modmod.rte/ini/cst_generator.lua")
+local cst_generator = dofile("modmod.rte/ini_object_tree/cst_generator.lua")
 
 -- MODULE START ----------------------------------------------------------------
 

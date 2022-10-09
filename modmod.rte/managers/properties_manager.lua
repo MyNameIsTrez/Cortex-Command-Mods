@@ -6,7 +6,7 @@ local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
-local csts = dofile("modmod.rte/ini/csts.lua")
+local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
