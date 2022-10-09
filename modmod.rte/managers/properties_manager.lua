@@ -49,6 +49,7 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 		"GibImpulseLimit",
 		"GibWoundLimit",
 		"CollidesWithTerrainWhileAttached",
+		"LegacyCompatibilityRoundsAlwaysFireUnflipped",
 	}
 
 	local max_length_property_name_index = utils.max_fn(property_names, function(str1, str2)
@@ -100,9 +101,6 @@ function M:draw()
 	self.selected_properties = self.object_tree_manager:get_selected_properties()
 
 	self:_update_properties_height()
-
-	self:_draw_properties_background()
-	self:_draw_top_background()
 
 	if #self.selected_properties > 0 then
 		self:_draw_property_names_border()
@@ -168,50 +166,29 @@ function M:_get_wrapped_selected_property_index(index_change)
 end
 
 function M:_update_properties_height()
-	self.properties_height = self.window_manager.text_top_padding
-		+ self.window_manager.text_vertical_stride * #self.selected_properties
-		+ 1
+	self.properties_height = self.window_manager.text_vertical_stride * #self.selected_properties
+
+	if #self.selected_properties > 0 then
+		-- The + 1 is for the bottom property's underline
+		self.properties_height = self.properties_height + self.window_manager.text_top_padding + 1
+	end
 end
 
-function M:_draw_properties_background()
+function M:_draw_property_names_border()
 	self.window_manager:draw_border_fill(
-		Vector(self.window_manager.screen_width - self.properties_width, 0),
-		self.properties_width,
-		self.window_manager.screen_height,
+		Vector(self.window_manager.screen_width - self.properties_width, self.window_top_padding - 2),
+		self.property_names_width,
+		self.properties_height,
 		self.window_manager.background_color
 	)
 end
 
-function M:_draw_top_background()
-	self.window_manager:draw_border_fill(
-		Vector(self.window_manager.screen_width - self.properties_width, 0),
-		self.properties_width,
-		self.window_top_padding,
-		self.window_manager.unselected_color
-	)
-end
-
-function M:_draw_property_names_border()
-	local height = self.window_manager.text_top_padding
-		+ #self.selected_properties * self.window_manager.text_vertical_stride
-		+ 1
-
-	self.window_manager:draw_border(
-		Vector(self.window_manager.screen_width - self.properties_width, self.window_top_padding - 2),
-		self.property_names_width,
-		height
-	)
-end
-
 function M:_draw_property_values_border()
-	local height = self.window_manager.text_top_padding
-		+ #self.selected_properties * self.window_manager.text_vertical_stride
-		+ 1
-
-	self.window_manager:draw_border(
+	self.window_manager:draw_border_fill(
 		Vector(self.window_manager.screen_width - self.property_values_width - 2, self.window_top_padding - 2),
 		self.property_values_width + 2,
-		height
+		self.properties_height,
+		self.window_manager.background_color
 	)
 end
 
@@ -286,13 +263,21 @@ function M:_draw_property_values()
 end
 
 function M:_draw_bottom_background()
+	-- TODO: This is a way too ugly fix :(
+	local start_height
+	if self.properties_height > 0 then
+		start_height = self.window_top_padding + self.properties_height - 2
+	else
+		start_height = self.window_top_padding
+	end
+
 	self.window_manager:draw_border_fill(
 		Vector(
 			self.window_manager.screen_width - self.properties_width,
-			self.window_top_padding + self.properties_height - 4
+			start_height - 2
 		),
 		self.properties_width,
-		self.window_manager.screen_height - self.window_top_padding - self.properties_height + 4,
+		self.window_manager.screen_height - start_height + 2,
 		self.window_manager.unselected_color
 	)
 end

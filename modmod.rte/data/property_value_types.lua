@@ -362,4 +362,5 @@ return {
 	Stickiness = "number",
 	B = "number",
 	Scale = "number",
+	LegacyCompatibilityRoundsAlwaysFireUnflipped = "boolean",
 }

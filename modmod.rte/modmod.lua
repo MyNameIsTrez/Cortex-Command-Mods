@@ -4,6 +4,7 @@ local window_manager = dofile("modmod.rte/managers/window_manager.lua")
 local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
+local status_bar_manager = dofile("modmod.rte/managers/status_bar_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
@@ -40,15 +41,8 @@ function ModMod:UpdateScript()
 		return
 	end
 
-	-- TODO: Shouldn't this be done in line_editor_manager.lua where self.held_key_character is used?
-	if input_handler.any_key_pressed() then
-		self.held_key_character = input_handler.get_held_key_character()
-		-- print("Held key character: " .. tostring(self.held_key_character))
-		-- ConsoleMan:SaveAllText("LogConsole.txt")
-	end
-
-	self:_update()
-	self:_draw()
+	self:update()
+	self:draw()
 end
 
 -- FUNCTIONS -------------------------------------------------------------------
@@ -86,14 +80,28 @@ function ModMod:initialize()
 		self.autoscroll_manager,
 		self
 	)
+	self.status_bar_manager = status_bar_manager:init(
+		self.window_manager,
+		self.properties_manager.properties_width,
+		self.properties_manager.window_top_padding
+	)
 
+	-- This is used in order for keys to be registered somewhat consistently
+	-- TODO: Figure out and fix the C++ bug with Gacyr so this can be nuked
 	UInputMan:WhichKeyHeld()
 end
 
-function ModMod:_update()
+function ModMod:update()
+	-- TODO: Shouldn't this be done in line_editor_manager.lua where self.held_key_character is used?
+	if input_handler.any_key_pressed() then
+		self.held_key_character = input_handler.get_held_key_character()
+		-- print("Held key character: " .. tostring(self.held_key_character))
+		-- ConsoleMan:SaveAllText("LogConsole.txt")
+	end
+
 	self.window_manager:update()
 
-	local changed_selected_window = self:_update_selected_window()
+	local changed_selected_window = self:update_selected_window()
 
 	if not changed_selected_window then
 		if self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
@@ -102,9 +110,11 @@ function ModMod:_update()
 			self.object_tree_manager:update()
 		end
 	end
+
+	self.status_bar_manager:update()
 end
 
-function ModMod:_update_selected_window()
+function ModMod:update_selected_window()
 	if
 		UInputMan:KeyPressed(key_bindings.right)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
@@ -127,7 +137,8 @@ function ModMod:_update_selected_window()
 	return false
 end
 
-function ModMod:_draw()
+function ModMod:draw()
 	self.object_tree_manager:draw()
 	self.properties_manager:draw()
+	self.status_bar_manager:draw()
 end
