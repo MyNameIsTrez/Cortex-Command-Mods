@@ -64,6 +64,7 @@ end
 
 function M:update()
 	self:_update_screen_offset()
+	-- self:_update_screen_offset_with_prediction()
 end
 
 function M:draw_border_fill(top_left_pos, width, height, color)
@@ -137,87 +138,95 @@ function M:_draw_text(top_left_pos, text, text_is_small, alignment)
 end
 
 function M:_update_screen_offset()
-	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
-
-	-- Can't be done in init() since GetScrollTarget() always wrongly returns Vector(0, 0)
-	if self.previous_scroll_target == nil then
-		self.previous_scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
-	end
-
-	-- TODO: Not sure whether this scroll_target - self.previous_scroll_target is correct since it was originally targetCenter.m_X
-	if
-		(SceneMan.SceneWrapsX and math.abs(scroll_target.X - self.previous_scroll_target.X) > self.half_scene_width)
-		or (SceneMan.SceneWrapsY and math.abs(scroll_target.X - self.previous_scroll_target.Y) > self.half_scene_height)
-	then
-		self.target_wrapped = true
-		-- print("x")
-	end
-
-	-- TODO: Why doesn't copying the X and Y work?
-	-- self.previous_scroll_target.X = scroll_target.X
-	-- self.previous_scroll_target.Y = scroll_target.Y
-	self.previous_scroll_target = Vector(scroll_target.X, scroll_target.Y)
-
-	if TimerMan:DrawnSimUpdate() then
-		if self.target_wrapped then
-			if SceneMan.SceneWrapsX then
-				if scroll_target.X < self.half_scene_width then
-					-- print("a")
-					-- print(self.screen_offset.X)
-					-- print(self.scene_width)
-					self.screen_offset.X = self.screen_offset.X - self.scene_width
-					-- print(self.screen_offset.X)
-				else
-					-- print("b")
-					-- print(self.screen_offset.X)
-					-- print(self.scene_width)
-					self.screen_offset.X = self.screen_offset.X + self.scene_width
-					-- print(self.screen_offset.X)
-				end
-			end
-
-			if SceneMan.SceneWrapsY then
-				if scroll_target.Y < self.half_scene_height then
-					self.screen_offset.Y = self.screen_offset.Y - self.scene_height
-				else
-					self.screen_offset.Y = self.screen_offset.Y + self.scene_height
-				end
-			end
-		end
-
-		self.target_wrapped = false
-	end
-
-	-- TODO: See line 1331 of SceneEditorGUI.cpp
-	-- Can cursor_pos even be known?
-	-- cursor_wrapped = SceneMan:ForceBounds(self.cursor_pos)
-
-	local offset_target = scroll_target - self.half_screen_size
-
-	if offset_target.Floored == self.screen_offset.Floored then
-		return
-		-- else
-		-- 	print(offset_target.Floored - self.screen_offset.Floored)
-	end
-
-	local scroll_difference = offset_target - self.screen_offset
-	local scroll_progress = self.scroll_speed * self.window_scroll_timer.ElapsedRealTimeMS * 0.05
-	scroll_progress = math.min(1, scroll_progress)
-	local scroll_result = (scroll_difference * scroll_progress).Rounded
-	local new_screen_offset = self.screen_offset + scroll_result
-
-	local old_screen_offset = SceneMan:GetOffset(self.player_id)
-
-	-- TODO: Replace this with calling the clamp checking function that SetOffset() calls
-	SceneMan:SetOffset(new_screen_offset, self.player_id)
 	self.screen_offset = SceneMan:GetOffset(self.player_id)
 
-	-- self.screen_offset = new_screen_offset.Floored
-
-	SceneMan:SetOffset(old_screen_offset, self.player_id)
-
-	self.window_scroll_timer:Reset()
+	-- With this approach the screen offset is off by a lot when the cursor is near the bottom of the world
+	-- self.screen_offset = SceneMan:GetScrollTarget(self.screen_of_player) - self.half_screen_size
 end
+
+-- TODO: This function has some sort of bug causing it to often be a few pixels off
+-- function M:_update_screen_offset_with_prediction()
+-- 	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
+
+-- 	-- Can't be done in init() since GetScrollTarget() always wrongly returns Vector(0, 0)
+-- 	if self.previous_scroll_target == nil then
+-- 		self.previous_scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
+-- 	end
+
+-- 	-- TODO: Not sure whether this scroll_target - self.previous_scroll_target is correct since it was originally targetCenter.m_X
+-- 	if
+-- 		(SceneMan.SceneWrapsX and math.abs(scroll_target.X - self.previous_scroll_target.X) > self.half_scene_width)
+-- 		or (SceneMan.SceneWrapsY and math.abs(scroll_target.X - self.previous_scroll_target.Y) > self.half_scene_height)
+-- 	then
+-- 		self.target_wrapped = true
+-- 		-- print("x")
+-- 	end
+
+-- 	-- TODO: Why doesn't copying the X and Y work?
+-- 	-- self.previous_scroll_target.X = scroll_target.X
+-- 	-- self.previous_scroll_target.Y = scroll_target.Y
+-- 	self.previous_scroll_target = Vector(scroll_target.X, scroll_target.Y)
+
+-- 	if TimerMan:DrawnSimUpdate() then
+-- 		if self.target_wrapped then
+-- 			if SceneMan.SceneWrapsX then
+-- 				if scroll_target.X < self.half_scene_width then
+-- 					-- print("a")
+-- 					-- print(self.screen_offset.X)
+-- 					-- print(self.scene_width)
+-- 					self.screen_offset.X = self.screen_offset.X - self.scene_width
+-- 					-- print(self.screen_offset.X)
+-- 				else
+-- 					-- print("b")
+-- 					-- print(self.screen_offset.X)
+-- 					-- print(self.scene_width)
+-- 					self.screen_offset.X = self.screen_offset.X + self.scene_width
+-- 					-- print(self.screen_offset.X)
+-- 				end
+-- 			end
+
+-- 			if SceneMan.SceneWrapsY then
+-- 				if scroll_target.Y < self.half_scene_height then
+-- 					self.screen_offset.Y = self.screen_offset.Y - self.scene_height
+-- 				else
+-- 					self.screen_offset.Y = self.screen_offset.Y + self.scene_height
+-- 				end
+-- 			end
+-- 		end
+
+-- 		self.target_wrapped = false
+-- 	end
+
+-- 	-- TODO: See line 1331 of SceneEditorGUI.cpp
+-- 	-- Can cursor_pos even be known?
+-- 	-- cursor_wrapped = SceneMan:ForceBounds(self.cursor_pos)
+
+-- 	local offset_target = scroll_target - self.half_screen_size
+
+-- 	if offset_target.Floored == self.screen_offset.Floored then
+-- 		return
+-- 		-- else
+-- 		-- 	print(offset_target.Floored - self.screen_offset.Floored)
+-- 	end
+
+-- 	local scroll_difference = offset_target - self.screen_offset
+-- 	local scroll_progress = self.scroll_speed * self.window_scroll_timer.ElapsedRealTimeMS * 0.05
+-- 	scroll_progress = math.min(1, scroll_progress)
+-- 	local scroll_result = (scroll_difference * scroll_progress).Rounded
+-- 	local new_screen_offset = self.screen_offset + scroll_result
+
+-- 	local old_screen_offset = SceneMan:GetOffset(self.player_id)
+
+-- 	-- TODO: Replace this with calling the clamp checking function that SetOffset() calls
+-- 	SceneMan:SetOffset(new_screen_offset, self.player_id)
+-- 	self.screen_offset = SceneMan:GetOffset(self.player_id)
+
+-- 	-- self.screen_offset = new_screen_offset.Floored
+
+-- 	SceneMan:SetOffset(old_screen_offset, self.player_id)
+
+-- 	self.window_scroll_timer:Reset()
+-- end
 
 -- MODULE END ------------------------------------------------------------------
 
