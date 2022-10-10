@@ -86,6 +86,8 @@ function ModMod:initialize()
 		self.properties_manager.window_top_padding
 	)
 
+	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
+
 	-- This is used in order for keys to be registered somewhat consistently
 	-- TODO: Figure out and fix the C++ bug with Gacyr so this can be nuked
 	UInputMan:WhichKeyHeld()
@@ -121,6 +123,9 @@ function ModMod:update_selected_window()
 		and self.object_tree_manager:has_not_collapsed_properties_object_selected()
 	then
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
+
+		self.focus_change_sound:Play()
+
 		return true
 	end
 
@@ -131,6 +136,9 @@ function ModMod:update_selected_window()
 	then
 		self.properties_manager.selected_property_index = 1
 		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
+
+		self.focus_change_sound:Play()
+
 		return true
 	end
 

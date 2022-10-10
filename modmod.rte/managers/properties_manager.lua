@@ -76,6 +76,8 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 
 	self.is_editing_line = false
 
+	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
+
 	return self
 end
 
@@ -131,8 +133,10 @@ end
 function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
+		self.selection_change_sound:Play()
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
+		self.selection_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(self:get_selected_property())
@@ -263,13 +267,8 @@ function M:_draw_property_values()
 end
 
 function M:_draw_bottom_background()
-	-- TODO: This is a way too ugly fix :(
-	local start_height
-	if self.properties_height > 0 then
-		start_height = self.window_top_padding + self.properties_height - 2
-	else
-		start_height = self.window_top_padding
-	end
+	-- TODO: This is an ugly fix :(
+	local start_height = self.window_top_padding + math.max(self.properties_height - 2, 0)
 
 	self.window_manager:draw_border_fill(
 		Vector(

@@ -47,6 +47,7 @@ function M:init(window_manager, autoscroll_manager)
 	self.scrolling_line_offset = 0
 
 	self.item_change_sound = CreateSoundContainer("Item Change", "modmod.rte")
+	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
 
 	return self
 end
@@ -95,16 +96,14 @@ end
 function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
-		self.item_change_sound:Play()
+		self.selection_change_sound:Play()
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
-		self.item_change_sound:Play()
+		self.selection_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.left) then
 		self:_left()
-		self.item_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.right) then
 		self:_right()
-		self.item_change_sound:Play()
 	end
 end
 
@@ -228,8 +227,12 @@ function M:_left()
 				self:_get_selected_object_vertical_index() - self.max_scrolling_lines
 			)
 		end
+
+		self.item_change_sound:Play()
 	elseif #self.selected_object_indices > 1 then
 		table.remove(self.selected_object_indices)
+
+		self.selection_change_sound:Play()
 	end
 end
 
@@ -270,6 +273,8 @@ function M:_right()
 		if selected_object.children ~= nil then
 			selected_object.collapsed = false
 			self:_update_object_tree_strings()
+
+			self.item_change_sound:Play()
 		end
 	end
 end
