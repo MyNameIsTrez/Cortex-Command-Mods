@@ -78,7 +78,7 @@ function M:draw_border(top_left_pos, width, height)
 end
 
 function M:draw_selected_line_background(top_left_pos, width, height_index)
-	self:_draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, self.selected_color)
+	self:draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, self.selected_color)
 end
 
 function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
@@ -92,7 +92,7 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 	end
 
 	self:_draw_text(pos, text, self.text_is_small, alignment)
-	self:_draw_selection_lines(x, width, y_padding, height_index, self.unselected_color)
+	self:draw_selection_lines(x, width, y_padding, height_index, self.unselected_color)
 end
 
 function M:draw_line(top_left_pos, offset_x, offset_y, color)
@@ -103,9 +103,7 @@ function M:draw_line(top_left_pos, offset_x, offset_y, color)
 	)
 end
 
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-function M:_draw_selection_lines(x, width, y_padding, height_index, color)
+function M:draw_selection_lines(x, width, y_padding, height_index, color)
 	self:draw_line(
 		Vector(x + 4 - 1, y_padding + (height_index - 1) * self.text_vertical_stride),
 		width - 4 * 2 + 1,
@@ -119,6 +117,12 @@ function M:_draw_selection_lines(x, width, y_padding, height_index, color)
 		color
 	)
 end
+
+function M:draw_bitmap(start, entity, rot_angle, frame)
+	PrimitiveMan:DrawBitmapPrimitive(self.screen_offset + start, entity, rot_angle, frame)
+end
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 function M:_draw_box(top_left_pos, width, height, color)
 	PrimitiveMan:DrawBoxPrimitive(

@@ -60,6 +60,8 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
 	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
 
+	self.checkbox_sprite = CreateMOSRotating("Checkbox", "modmod.rte")
+
 	return self
 end
 
@@ -221,35 +223,49 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local selected_line = csts.get_value(selected_property)
+		local selected_property_property = csts.get_property(selected_property)
 
-		local str
-		if self.is_editing_line and height_index == self.selected_property_index then
-			str = utils.possibly_truncate(
-				selected_line:reverse(),
-				self.property_values_width - 29,
-				self.window_manager.text_is_small,
-				"..."
-			):reverse()
+		local selected_type = property_value_types[selected_property_property]
+
+		local selected_value = csts.get_value(selected_property)
+
+		if selected_type == "boolean" then
+			-- TODO: Calculate width and height in init()?
+			local mos = ToMOSprite(self.checkbox_sprite)
+			local bitmap_x = x + self.window_left_padding + mos:GetSpriteWidth() / 2
+			local bitmap_y = self.window_top_padding + self.window_manager.text_top_padding + (height_index - 1) * self.window_manager.text_vertical_stride + mos:GetSpriteHeight() / 2
+
+			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_sprite, 0, 0)
+			self.window_manager:draw_selection_lines(x, self.property_values_width, self.window_top_padding, height_index, self.window_manager.unselected_color)
 		else
-			str = utils.possibly_truncate(
-				selected_line,
-				self.property_values_width - 29,
-				self.window_manager.text_is_small,
-				"..."
-			)
-		end
+			local str
+			if self.is_editing_line and height_index == self.selected_property_index then
+				str = utils.possibly_truncate(
+					selected_value:reverse(),
+					self.property_values_width - 29,
+					self.window_manager.text_is_small,
+					"..."
+				):reverse()
+			else
+				str = utils.possibly_truncate(
+					selected_value,
+					self.property_values_width - 29,
+					self.window_manager.text_is_small,
+					"..."
+				)
+			end
 
-		if height_index > self.scrolling_line_offset then
-			self.window_manager:draw_text_line(
-				x,
-				self.property_values_width,
-				self.window_left_padding,
-				self.window_top_padding,
-				height_index - self.scrolling_line_offset,
-				str,
-				self.window_manager.alignment.left
-			)
+			if height_index > self.scrolling_line_offset then
+				self.window_manager:draw_text_line(
+					x,
+					self.property_values_width,
+					self.window_left_padding,
+					self.window_top_padding,
+					height_index - self.scrolling_line_offset,
+					str,
+					self.window_manager.alignment.left
+				)
+			end
 		end
 	end
 end
