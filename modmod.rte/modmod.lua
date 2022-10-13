@@ -75,10 +75,10 @@ function ModMod:initialize()
 	self.autoscroll_manager = autoscroll_manager:init()
 	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
 	self.properties_manager = properties_manager:init(
+		self,
 		self.window_manager,
 		self.object_tree_manager,
-		self.autoscroll_manager,
-		self
+		self.autoscroll_manager
 	)
 	self.status_bar_manager = status_bar_manager:init(
 		self.window_manager,

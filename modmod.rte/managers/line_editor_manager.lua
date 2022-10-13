@@ -23,7 +23,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(window_manager, properties_manager, modmod)
+function M:init(properties_manager, window_manager, modmod)
 	self.window_manager = window_manager
 	self.properties_manager = properties_manager
 	self.modmod = modmod

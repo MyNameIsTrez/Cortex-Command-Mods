@@ -2,6 +2,7 @@
 
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
+local settings = dofile("modmod.rte/data/settings.lua")
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
 
@@ -23,11 +24,11 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
+function M:init(modmod, window_manager, object_tree_manager, autoscroll_manager)
 	self.window_manager = window_manager
 	self.object_tree_manager = object_tree_manager
 	self.autoscroll_manager = autoscroll_manager
-	self.line_editor_manager = line_editor_manager:init(window_manager, self, modmod)
+	self.line_editor_manager = line_editor_manager:init(self, window_manager, modmod)
 
 	self.window_top_padding = 25
 	self.window_left_padding = 15
@@ -336,7 +337,10 @@ function M:_update_properties_live()
 end
 
 function M:_write_and_update_properties_live()
-	self.object_tree_manager:write_selected_file_cst()
+	if settings.save_to_disk then
+		self.object_tree_manager:write_selected_file_cst()
+	end
+
 	self:_update_properties_live()
 end
 
