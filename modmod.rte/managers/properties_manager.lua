@@ -31,7 +31,7 @@ function M:init(modmod, window_manager, settings_manager, object_tree_manager, a
 	self.autoscroll_manager = autoscroll_manager
 	self.line_editor_manager = line_editor_manager:init(self, window_manager, modmod)
 
-	self.window_top_padding = 25
+	self.window_top_padding = 32
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
