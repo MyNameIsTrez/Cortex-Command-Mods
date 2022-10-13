@@ -38,10 +38,8 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 			> FrameMan:CalculateTextWidth(key_1, self.window_manager.text_is_small)
 	end)
 
-	self.property_names_width = FrameMan:CalculateTextWidth(
-		longest_property_name,
-		self.window_manager.text_is_small
-	) + 37
+	self.property_names_width = FrameMan:CalculateTextWidth(longest_property_name, self.window_manager.text_is_small)
+		+ 37
 
 	self.property_values_width = 150
 	self.properties_width = self.property_names_width + self.property_values_width
@@ -61,6 +59,11 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
 
 	self.checkbox_sprite = CreateMOSRotating("Checkbox", "modmod.rte")
+
+	local checkbox_sprite_mo_sprite = ToMOSprite(self.checkbox_sprite)
+	self.checkbox_sprite_width = checkbox_sprite_mo_sprite:GetSpriteWidth()
+	self.checkbox_sprite_height = checkbox_sprite_mo_sprite:GetSpriteHeight()
+	self.checkbox_top_padding = 2
 
 	return self
 end
@@ -230,13 +233,20 @@ function M:_draw_property_values()
 		local selected_value = csts.get_value(selected_property)
 
 		if selected_type == "boolean" then
-			-- TODO: Calculate width and height in init()?
-			local mos = ToMOSprite(self.checkbox_sprite)
-			local bitmap_x = x + self.window_left_padding + mos:GetSpriteWidth() / 2
-			local bitmap_y = self.window_top_padding + self.window_manager.text_top_padding + (height_index - 1) * self.window_manager.text_vertical_stride + mos:GetSpriteHeight() / 2
+			local bitmap_x = x + self.window_left_padding + self.checkbox_sprite_width / 2
+			local bitmap_y = self.window_top_padding
+				+ self.checkbox_top_padding
+				+ (height_index - 1) * self.window_manager.text_vertical_stride
+				+ self.checkbox_sprite_height / 2
 
 			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_sprite, 0, 0)
-			self.window_manager:draw_selection_lines(x, self.property_values_width, self.window_top_padding, height_index, self.window_manager.unselected_color)
+			self.window_manager:draw_selection_lines(
+				x,
+				self.property_values_width,
+				self.window_top_padding,
+				height_index,
+				self.window_manager.unselected_color
+			)
 		else
 			local str
 			if self.is_editing_line and height_index == self.selected_property_index then
@@ -275,10 +285,7 @@ function M:_draw_bottom_background()
 	local start_height = self.window_top_padding + math.max(self.properties_height - 2, 0)
 
 	self.window_manager:draw_border_fill(
-		Vector(
-			self.window_manager.screen_width - self.properties_width,
-			start_height - 2
-		),
+		Vector(self.window_manager.screen_width - self.properties_width, start_height - 2),
 		self.properties_width,
 		self.window_manager.screen_height - start_height + 2,
 		self.window_manager.unselected_color
