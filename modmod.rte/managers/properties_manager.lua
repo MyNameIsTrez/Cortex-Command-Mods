@@ -76,8 +76,7 @@ function M:update()
 		if UInputMan:KeyPressed(key_bindings.enter) then
 			if self.line_editor_manager:is_value_correct_type() then
 				self.is_editing_line = false
-				self.object_tree_manager:write_selected_file_cst()
-				self:_update_properties_live()
+				self:_write_and_update_properties_live()
 			else
 				self.user_error_sound:Play()
 			end
@@ -122,6 +121,8 @@ end
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 function M:_key_pressed()
+	local selected_property = self:get_selected_property()
+
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
 
@@ -130,9 +131,22 @@ function M:_key_pressed()
 		self:_down()
 
 		self.selection_change_sound:Play()
+	elseif
+		UInputMan:KeyPressed(key_bindings.enter) and self:_get_property_value_type(selected_property) == "boolean"
+	then
+		local old_boolean_value = tonumber(csts.get_value(selected_property))
+		if old_boolean_value == 1 then
+			new_boolean_value = 0
+		else
+			new_boolean_value = 1
+		end
+
+		csts.set_value(selected_property, new_boolean_value)
+
+		self:_write_and_update_properties_live()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
-		self.old_line_value = csts.get_value(self:get_selected_property())
+		self.old_line_value = csts.get_value(selected_property)
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
 	end
 end
@@ -226,9 +240,7 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local selected_property_property = csts.get_property(selected_property)
-
-		local selected_type = property_value_types[selected_property_property]
+		local selected_type = self:_get_property_value_type(selected_property)
 
 		local selected_value = csts.get_value(selected_property)
 
@@ -239,7 +251,9 @@ function M:_draw_property_values()
 				+ (height_index - 1) * self.window_manager.text_vertical_stride
 				+ self.checkbox_sprite_height / 2
 
-			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_sprite, 0, 0)
+			local frame = tonumber(selected_value)
+			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_sprite, 0, frame)
+
 			self.window_manager:draw_selection_lines(
 				x,
 				self.property_values_width,
@@ -319,6 +333,15 @@ function M:_update_properties_live()
 			end
 		end
 	end
+end
+
+function M:_write_and_update_properties_live()
+	self.object_tree_manager:write_selected_file_cst()
+	self:_update_properties_live()
+end
+
+function M:_get_property_value_type(ast)
+	return property_value_types[csts.get_property(ast)]
 end
 
 -- MODULE END ------------------------------------------------------------------
