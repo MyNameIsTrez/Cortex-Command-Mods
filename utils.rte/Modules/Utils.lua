@@ -258,19 +258,14 @@ function M.sum(tab)
 	end)
 end
 
--- Source: https://stackoverflow.com/a/5180611/13279557
-function M.max_fn(tab, fn)
-	if #tab == 0 then
-		return nil, nil
-	end
+function M.max(tab, fn)
+	local key
+	local value
 
-	local key = 1
-	local value = tab[1]
-
-	for i = 2, #tab do
-		if fn(value, tab[i]) then
-			key = i
-			value = tab[i]
+	for k, v in pairs(tab) do
+		if key == nil or fn(key, value, k, v) then
+			key = k
+			value = v
 		end
 	end
 

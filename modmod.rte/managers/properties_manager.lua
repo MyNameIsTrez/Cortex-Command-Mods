@@ -3,6 +3,7 @@
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
+local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -32,33 +33,13 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	-- TODO: Load this from a file that is automatically kept up-to-date with the game instead
-	local property_names = {
-		"PresetName",
-		"Mass",
-		"AirResistance",
-		"HitsMOs",
-		"GetsHitByMOs",
-		"FrameCount",
-		"AngularVel",
-		"DeepCheck",
-		"DrawAfterParent",
-		"DeepCheck",
-		"JointStrength",
-		"JointStiffness",
-		"GibImpulseLimit",
-		"GibWoundLimit",
-		"CollidesWithTerrainWhileAttached",
-		"LegacyCompatibilityRoundsAlwaysFireUnflipped",
-	}
-
-	local max_length_property_name_index = utils.max_fn(property_names, function(str1, str2)
-		return FrameMan:CalculateTextWidth(str2, self.window_manager.text_is_small)
-			> FrameMan:CalculateTextWidth(str1, self.window_manager.text_is_small)
+	local longest_property_name = utils.max(property_value_types, function(key_1, value_1, key_2, value_2)
+		return FrameMan:CalculateTextWidth(key_2, self.window_manager.text_is_small)
+			> FrameMan:CalculateTextWidth(key_1, self.window_manager.text_is_small)
 	end)
 
 	self.property_names_width = FrameMan:CalculateTextWidth(
-		property_names[max_length_property_name_index],
+		longest_property_name,
 		self.window_manager.text_is_small
 	) + 37
 
