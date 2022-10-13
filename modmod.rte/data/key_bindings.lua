@@ -8,4 +8,5 @@ return {
 	right = keys.ArrowRight,
 	backspace = keys.Backspace,
 	enter = keys.Enter,
+	save_to_disk = keys.Tab,
 }

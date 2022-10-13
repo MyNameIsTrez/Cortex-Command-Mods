@@ -16,27 +16,30 @@ local M = {}
 
 --Converts a table to its string representation. Use loadstring() to convert it back to a table later
 --StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
-function M.SerializeTable(value, name, skipNewlines, depth)
+function M.SerializeTable(value, separator, skipNewlines, name, depth)
+	separator = separator or " "
 	skipNewlines = skipNewlines or false
 	depth = depth or 0
 
-	local serializedTableString = string.rep(" ", depth)
+	local serializedTableString = string.rep(separator, depth)
 
 	if name then
 		serializedTableString = serializedTableString .. name .. " = "
 	end
 
 	if type(value) == "table" then
-		serializedTableString = serializedTableString .. "{" .. (not skipNewlines and "\n" or "")
+		local possible_newline = skipNewlines and "" or "\n"
+
+		serializedTableString = serializedTableString .. "{" .. possible_newline
 
 		for k, v in pairs(value) do
 			serializedTableString = serializedTableString
-				.. M.SerializeTable(v, k, skipNewlines, depth + 1)
+				.. M.SerializeTable(v, separator, skipNewlines, k, depth + 1)
 				.. ","
-				.. (not skipNewlines and "\n" or "")
+				.. possible_newline
 		end
 
-		serializedTableString = serializedTableString .. string.rep(" ", depth) .. "}"
+		serializedTableString = serializedTableString .. string.rep(separator, depth) .. "}"
 	elseif type(value) == "number" then
 		serializedTableString = serializedTableString .. tostring(value)
 	elseif type(value) == "string" then
@@ -76,21 +79,6 @@ function M.ReadFile(filepath)
 	return table.concat(strTab)
 end
 
---Reads the contents of a file like it's a table and returns it
-function M.ReadFileAsTable(filepath)
-	local fileStr = M.ReadFile(filepath)
-	if fileStr == false then
-		return false
-	end --If the file doesn't exist
-
-	local func = loadstring("return " .. fileStr) --loadstring converts a string to a function, that's why there's a "return "
-	if func == nil then
-		return false
-	end --In case the file didn't contain a properly constructed table
-
-	return func() --Execute the function to return the fileStr table
-end
-
 --Beware, this overwrites whatever was already in the file!
 function M.WriteFile(filepath, str)
 	local fileID = LuaMan:FileOpen(filepath, "w")
@@ -100,8 +88,8 @@ end
 
 --Beware, this overwrites whatever was already in the file!
 function M.WriteTableToFile(filepath, tab)
-	local tabStr = M.SerializeTable(tab)
-	M.WriteFile(filepath, tabStr)
+	local tabStr = M.SerializeTable(tab, "\t")
+	M.WriteFile(filepath, "return " .. tabStr)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
