@@ -60,12 +60,12 @@ function M:init(modmod, window_manager, settings_manager, object_tree_manager, a
 	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
 	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
 
-	self.checkbox_sprite = CreateMOSRotating("Checkbox", "modmod.rte")
-
-	local checkbox_sprite_mo_sprite = ToMOSprite(self.checkbox_sprite)
-	self.checkbox_sprite_width = checkbox_sprite_mo_sprite:GetSpriteWidth()
-	self.checkbox_sprite_height = checkbox_sprite_mo_sprite:GetSpriteHeight()
+	self.checkbox_mosr = CreateMOSRotating("Checkbox", "modmod.rte")
 	self.checkbox_top_padding = 2
+
+	local checkbox_mos = ToMOSprite(self.checkbox_mosr)
+	self.checkbox_sprite_half_width = checkbox_mos:GetSpriteWidth() / 2
+	self.checkbox_sprite_half_height = checkbox_mos:GetSpriteHeight() / 2
 
 	return self
 end
@@ -247,14 +247,14 @@ function M:_draw_property_values()
 		local selected_value = csts.get_value(selected_property)
 
 		if selected_type == "boolean" then
-			local bitmap_x = x + self.window_left_padding + self.checkbox_sprite_width / 2
+			local bitmap_x = x + self.window_left_padding + self.checkbox_sprite_half_width
 			local bitmap_y = self.window_top_padding
 				+ self.checkbox_top_padding
 				+ (height_index - 1) * self.window_manager.text_vertical_stride
-				+ self.checkbox_sprite_height / 2
+				+ self.checkbox_sprite_half_height
 
 			local frame = tonumber(selected_value)
-			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_sprite, 0, frame)
+			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_mosr, 0, frame)
 
 			self.window_manager:draw_selection_lines(
 				x,
