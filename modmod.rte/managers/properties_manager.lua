@@ -58,6 +58,7 @@ function M:init(window_manager, object_tree_manager, autoscroll_manager, modmod)
 	self.is_editing_line = false
 
 	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
+	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
 
 	return self
 end
@@ -67,10 +68,14 @@ function M:update()
 		self.line_editor_manager:update()
 
 		-- TODO: Does this if-elseif belong here? It is weird having it inside of this update(), instead of _key_pressed()
-		if UInputMan:KeyPressed(key_bindings.enter) and self.line_editor_manager:is_value_correct_type() then
-			self.is_editing_line = false
-			self.object_tree_manager:write_selected_file_cst()
-			self:_update_properties_live()
+		if UInputMan:KeyPressed(key_bindings.enter) then
+			if self.line_editor_manager:is_value_correct_type() then
+				self.is_editing_line = false
+				self.object_tree_manager:write_selected_file_cst()
+				self:_update_properties_live()
+			else
+				self.user_error_sound:Play()
+			end
 		elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 			self.is_editing_line = false
 			csts.set_value(self:get_selected_property(), self.old_line_value)
@@ -114,9 +119,11 @@ end
 function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
+
 		self.selection_change_sound:Play()
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
+
 		self.selection_change_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
