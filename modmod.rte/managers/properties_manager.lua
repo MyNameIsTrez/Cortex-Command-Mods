@@ -59,6 +59,7 @@ function M:init(modmod, window_manager, settings_manager, object_tree_manager, a
 
 	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
 	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
+	self.slice_picked_sound = CreateSoundContainer("Slice Picked", "modmod.rte")
 
 	self.checkbox_mosr = CreateMOSRotating("Checkbox", "modmod.rte")
 	self.checkbox_top_padding = 2
@@ -79,6 +80,7 @@ function M:update()
 			if self.line_editor_manager:is_value_correct_type() then
 				self.is_editing_line = false
 				self:_write_and_update_properties_live()
+				self.slice_picked_sound:Play()
 			else
 				self.user_error_sound:Play()
 			end
@@ -146,10 +148,13 @@ function M:_key_pressed()
 		csts.set_value(selected_property, new_boolean_value)
 
 		self:_write_and_update_properties_live()
+
+		self.slice_picked_sound:Play()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(selected_property)
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
+		self.slice_picked_sound:Play()
 	end
 end
 

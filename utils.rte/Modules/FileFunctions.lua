@@ -17,7 +17,7 @@ local M = {}
 --Converts a table to its string representation. Use loadstring() to convert it back to a table later
 --StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
 function M.SerializeTable(value, separator, skipNewlines, name, depth)
-	separator = separator or " "
+	separator = separator or "\t"
 	skipNewlines = skipNewlines or false
 	depth = depth or 0
 
@@ -88,8 +88,8 @@ end
 
 --Beware, this overwrites whatever was already in the file!
 function M.WriteTableToFile(filepath, tab)
-	local tabStr = M.SerializeTable(tab, "\t")
-	M.WriteFile(filepath, "return " .. tabStr)
+	local tabStr = M.SerializeTable(tab)
+	M.WriteFile(filepath, "return " .. tabStr .. "\n")
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------

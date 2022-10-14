@@ -34,12 +34,16 @@ function M:init(window_manager, settings_manager, status_bar_width, status_bar_h
 
 	self.save_to_disk_sprite_top_left = self.status_bar_top_left + Vector(4, 4)
 
+	self.slice_picked_sound = CreateSoundContainer("Slice Picked", "modmod.rte")
+
 	return self
 end
 
 function M:key_pressed()
 	if UInputMan:KeyPressed(key_bindings.save_to_disk) then
 		self.settings_manager:invert("save_to_disk")
+
+		self.slice_picked_sound:Play()
 	end
 end
 
