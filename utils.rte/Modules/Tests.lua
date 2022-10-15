@@ -6,14 +6,6 @@ local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 function M.test(test_type, test_name, result, expected)

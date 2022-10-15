@@ -8,23 +8,15 @@ local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(window_manager, settings_manager, status_bar_width, status_bar_height)
-	self.window_manager = window_manager
-	self.settings_manager = settings_manager
+function M:init(modmod)
+	self.window_manager = modmod.window_manager
+	self.settings_manager = modmod.settings_manager
 
 	-- TODO: Write a proper HTML-like library so this width and height doesn't have to be jankily passed from the properties manager anymore
-	self.status_bar_width = status_bar_width
-	self.status_bar_height = status_bar_height
+	self.status_bar_width = modmod.properties_manager.properties_width
+	self.status_bar_height = modmod.properties_manager.window_top_padding
 
 	self.sprite_size = Vector(24, 24)
 
@@ -51,11 +43,26 @@ function M:draw()
 	self:_draw_status_bar_background()
 
 	local frame = self.settings_manager:get("save_to_disk") and 1 or 0
-	self.window_manager:draw_bitmap(self.save_to_disk_sprite_top_left + self.sprite_size / 2, self.save_to_disk_mosr, 0, frame)
+	self.window_manager:draw_bitmap(
+		self.save_to_disk_sprite_top_left + self.sprite_size / 2,
+		self.save_to_disk_mosr,
+		0,
+		frame
+	)
 
 	-- TODO: Is using draw_border() instead better or nah?
-	self.window_manager:draw_line(Vector(self.save_to_disk_sprite_top_left.X + self.sprite_size.X + 2, 0), 0, 31, self.window_manager.background_border_color)
-	self.window_manager:draw_line(Vector(self.save_to_disk_sprite_top_left.X + self.sprite_size.X + 3, 0), 0, 31, self.window_manager.background_border_color)
+	self.window_manager:draw_line(
+		Vector(self.save_to_disk_sprite_top_left.X + self.sprite_size.X + 2, 0),
+		0,
+		31,
+		self.window_manager.background_border_color
+	)
+	self.window_manager:draw_line(
+		Vector(self.save_to_disk_sprite_top_left.X + self.sprite_size.X + 3, 0),
+		0,
+		31,
+		self.window_manager.background_border_color
+	)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------

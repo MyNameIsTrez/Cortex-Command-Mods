@@ -13,23 +13,16 @@ local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(modmod, window_manager, settings_manager, object_tree_manager, autoscroll_manager)
+function M:init(modmod)
 	self.modmod = modmod
-	self.window_manager = window_manager
-	self.settings_manager = settings_manager
-	self.object_tree_manager = object_tree_manager
-	self.autoscroll_manager = autoscroll_manager
-	self.line_editor_manager = line_editor_manager:init(self, window_manager, modmod)
+
+	self.window_manager = modmod.window_manager
+	self.settings_manager = modmod.settings_manager
+	self.object_tree_manager = modmod.object_tree_manager
+	self.autoscroll_manager = modmod.autoscroll_manager
+	self.line_editor_manager = line_editor_manager:init(self)
 
 	self.window_top_padding = 32
 	self.window_left_padding = 15
@@ -60,6 +53,7 @@ function M:init(modmod, window_manager, settings_manager, object_tree_manager, a
 	self.selection_change_sound = CreateSoundContainer("Selection Change", "modmod.rte")
 	self.user_error_sound = CreateSoundContainer("User Error", "modmod.rte")
 	self.slice_picked_sound = CreateSoundContainer("Slice Picked", "modmod.rte")
+	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
 
 	self.checkbox_mosr = CreateMOSRotating("Checkbox", "modmod.rte")
 	self.checkbox_top_padding = 2
@@ -154,7 +148,7 @@ function M:_key_pressed()
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(selected_property)
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
-		self.slice_picked_sound:Play()
+		self.focus_change_sound:Play()
 	end
 end
 

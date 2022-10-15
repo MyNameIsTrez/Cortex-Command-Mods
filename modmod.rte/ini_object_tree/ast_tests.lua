@@ -11,14 +11,6 @@ local tests = dofile("utils.rte/Modules/Tests.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 function M.ast_tests()

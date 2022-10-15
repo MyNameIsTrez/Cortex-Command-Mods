@@ -4,14 +4,6 @@
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 --Converts a table to its string representation. Use loadstring() to convert it back to a table later

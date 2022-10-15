@@ -8,12 +8,6 @@ local Colors = dofile("utils.rte/Data/Colors.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
 -- INTERNAL PRIVATE VARIABLES --------------------------------------------------
 
 local data = {}

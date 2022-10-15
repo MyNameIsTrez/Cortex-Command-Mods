@@ -2,6 +2,7 @@
 
 local window_manager = dofile("modmod.rte/managers/window_manager.lua")
 local settings_manager = dofile("modmod.rte/managers/settings_manager.lua")
+local sounds_manager = dofile("modmod.rte/managers/sounds_manager.lua")
 local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
 local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
 local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
@@ -73,23 +74,14 @@ end
 
 function ModMod:initialize()
 	self.window_manager = window_manager:init()
+
 	self.settings_manager = settings_manager:init()
+	self.sounds_manager = sounds_manager:init()
 
 	self.autoscroll_manager = autoscroll_manager:init()
-	self.object_tree_manager = object_tree_manager:init(self.window_manager, self.autoscroll_manager)
-	self.properties_manager = properties_manager:init(
-		self,
-		self.window_manager,
-		self.settings_manager,
-		self.object_tree_manager,
-		self.autoscroll_manager
-	)
-	self.status_bar_manager = status_bar_manager:init(
-		self.window_manager,
-		self.settings_manager,
-		self.properties_manager.properties_width,
-		self.properties_manager.window_top_padding
-	)
+	self.object_tree_manager = object_tree_manager:init(self)
+	self.properties_manager = properties_manager:init(self)
+	self.status_bar_manager = status_bar_manager:init(self)
 
 	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
 
@@ -129,7 +121,7 @@ function ModMod:update_selected_window()
 	then
 		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
 
-		self.focus_change_sound:Play()
+		self.sounds_manager:play("switch_window")
 
 		return true
 	end
@@ -142,7 +134,7 @@ function ModMod:update_selected_window()
 		self.properties_manager.selected_property_index = 1
 		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
 
-		self.focus_change_sound:Play()
+		self.sounds_manager:play("switch_window")
 
 		return true
 	end

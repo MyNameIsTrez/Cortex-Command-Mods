@@ -13,20 +13,13 @@ local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(properties_manager, window_manager, modmod)
-	self.window_manager = window_manager
+function M:init(properties_manager)
 	self.properties_manager = properties_manager
-	self.modmod = modmod
+
+	self.window_manager = properties_manager.window_manager
+	self.modmod = properties_manager.modmod
 
 	self.cursor_color = 254
 

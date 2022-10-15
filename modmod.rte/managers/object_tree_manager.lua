@@ -13,19 +13,11 @@ local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local M = {}
 
--- CONFIGURABLE PUBLIC VARIABLES -----------------------------------------------
-
--- CONFIGURABLE PRIVATE VARIABLES ----------------------------------------------
-
--- INTERNAL PUBLIC VARIABLES ---------------------------------------------------
-
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
-
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init(window_manager, autoscroll_manager)
-	self.window_manager = window_manager
-	self.autoscroll_manager = autoscroll_manager
+function M:init(modmod)
+	self.window_manager = modmod.window_manager
+	self.autoscroll_manager = modmod.autoscroll_manager
 
 	self.pixels_of_indentation_per_depth = 15
 
@@ -54,14 +46,12 @@ end
 
 function M:update()
 	self:_key_pressed()
-	-- self.item_change_sound:Play()
 end
 
 function M:draw()
 	self:_draw_object_tree_background()
 	self:_draw_top_background()
 	self:_draw_object_tree_border()
-	-- self.object_tree_strings[5] = tostring(self.screen_offset)
 	self:_draw_object_tree_strings(self.object_tree_strings, { 0 })
 	self:_draw_selected_object_background()
 	self:_draw_bottom_background()
