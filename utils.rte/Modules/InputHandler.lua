@@ -53,27 +53,32 @@ function M.Update()
 	Held()
 end
 
-function M.any_key_pressed()
-	for key_code, _ in pairs(key_codes) do
+-- function M.any_key_pressed()
+-- 	return M.get_key_pressed() ~= nil
+-- end
+
+-- function M.get_key_pressed()
+-- 	for key_code, key in pairs(key_codes) do
+-- 		if UInputMan:KeyPressed(key_code) then
+-- 			return key
+-- 		end
+-- 	end
+-- 	return nil
+-- end
+
+function M.get_key_code_pressed()
+	for key_code, key in pairs(key_codes) do
 		if UInputMan:KeyPressed(key_code) then
-			return true
+			return key_code
 		end
 	end
-	return false
+	return nil
 end
 
-function M.try_get_held_key_character()
-	if M.any_key_pressed() then
-		return M.get_held_key_character()
-	else
-		return nil
-	end
-end
+function M.get_character_pressed()
+	local key_code = M.get_key_code_pressed()
 
-function M.get_held_key_character()
-	local key_code = UInputMan:WhichKeyHeld()
 	local key = key_characters[key_code]
-
 	if key == nil then
 		return nil
 	end
@@ -86,23 +91,6 @@ function M.get_held_key_character()
 
 	return key
 end
-
--- function M.get_held_key()
--- 	local key_code = UInputMan:WhichKeyHeld()
--- 	local key = key_codes[key_code]
-
--- 	local shift_held = UInputMan.FlagShiftState
-
--- 	if not shift_held and key_code >= 1 and key_code <= 26 then
--- 		return key:lower()
--- 	end
-
--- 	return key
--- end
-
--- function M.GetKeyNameHeld()
--- 	return key_codes[UInputMan:WhichKeyHeld()]
--- end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 

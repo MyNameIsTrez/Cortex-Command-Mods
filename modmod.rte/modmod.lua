@@ -10,6 +10,8 @@ local status_bar_manager = dofile("modmod.rte/managers/status_bar_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
+local utils = dofile("utils.rte/Modules/Utils.lua")
+
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 
 function ModMod:StartScript()
@@ -17,8 +19,6 @@ function ModMod:StartScript()
 
 	self.run_update_function = false
 	self.initialized = false
-
-	-- UInputMan:WhichKeyHeld()
 end
 
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
@@ -83,10 +83,6 @@ function ModMod:initialize()
 	self.status_bar_manager = status_bar_manager:init(self)
 
 	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
-
-	-- This is used in order for keys to be registered somewhat consistently
-	-- TODO: Figure out and fix the C++ bug with Gacyr so this can be nuked
-	UInputMan:WhichKeyHeld()
 end
 
 function ModMod:update()

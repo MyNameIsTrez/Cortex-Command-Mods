@@ -74,7 +74,7 @@ function M:key_pressed()
 		if UInputMan:KeyPressed(key_bindings.enter) then
 			if self.line_editor_manager:is_value_correct_type() then
 				self.is_editing_line = false
-				self:_write_and_update_properties_live()
+				self:write_and_update_properties_live()
 				self.sounds_manager:play("edited_value")
 			else
 				self.sounds_manager:play("user_error")
@@ -142,7 +142,7 @@ function M:_key_pressed()
 
 		csts.set_value(selected_property, boolean_value)
 
-		self:_write_and_update_properties_live()
+		self:write_and_update_properties_live()
 
 		self.sounds_manager:play("toggle_checkbox")
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
@@ -337,7 +337,7 @@ function M:_update_properties_live()
 	end
 end
 
-function M:_write_and_update_properties_live()
+function M:write_and_update_properties_live()
 	if self.settings_manager:get("save_to_disk") then
 		self.object_tree_manager:write_selected_file_cst()
 	end

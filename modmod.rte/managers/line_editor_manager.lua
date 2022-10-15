@@ -33,9 +33,9 @@ function M:key_pressed()
 		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
 		self.cursor_x = self.cursor_x - 1
 	else
-		local held_key_character = input_handler.try_get_held_key_character()
-		if held_key_character ~= nil then
-			csts.set_value(self.properties_manager:get_selected_property(), selected_line .. held_key_character)
+		local character_pressed = input_handler.get_character_pressed()
+		if character_pressed ~= nil then
+			csts.set_value(self.properties_manager:get_selected_property(), selected_line .. character_pressed)
 			self.cursor_x = self.cursor_x + 1
 		end
 	end
