@@ -133,7 +133,7 @@ function M:_key_pressed()
 	elseif
 		UInputMan:KeyPressed(key_bindings.enter) and self:_get_property_value_type(selected_property) == "boolean"
 	then
-        local boolean_value = tonumber(csts.get_value(selected_property))
+		local boolean_value = tonumber(csts.get_value(selected_property))
 		if boolean_value == 1 then
 			boolean_value = 0
 		else

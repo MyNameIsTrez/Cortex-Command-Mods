@@ -10,10 +10,6 @@ local status_bar_manager = dofile("modmod.rte/managers/status_bar_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
--- TODO: Remove
-local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
-local key_codes = dofile("utils.rte/Data/KeyCodes.lua")
-
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 
 function ModMod:StartScript()
@@ -57,9 +53,11 @@ function ModMod:update_controlled_actor()
 		if self.run_update_function then
 			controlled_actor.Status = Actor.INACTIVE
 		end
+
 		if not self.run_update_function then
 			controlled_actor.Status = Actor.STABLE
 		end
+
 		if
 			self.previous_frame_controlled_actor ~= nil
 			and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID
@@ -92,13 +90,6 @@ function ModMod:initialize()
 end
 
 function ModMod:update()
-	-- TODO: Shouldn't this be done in line_editor_manager.lua where self.held_key_character is used?
-	if input_handler.any_key_pressed() then
-		self.held_key_character = input_handler.get_held_key_character()
-		-- print("Held key character: " .. tostring(self.held_key_character))
-		-- ConsoleMan:SaveAllText("LogConsole.txt")
-	end
-
 	self.window_manager:update()
 end
 
@@ -106,21 +97,25 @@ function ModMod:key_pressed()
 	self.status_bar_manager:key_pressed()
 
 	if self:same_selected_window() then
-		if self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
+		local selectable_windows = self.window_manager.selectable_windows
+
+		if self.window_manager.selected_window == selectable_windows.properties then
 			self.properties_manager:key_pressed()
-		elseif self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree then
+		elseif self.window_manager.selected_window == selectable_windows.object_tree then
 			self.object_tree_manager:key_pressed()
 		end
 	end
 end
 
 function ModMod:same_selected_window()
+	local selectable_windows = self.window_manager.selectable_windows
+
 	if
 		UInputMan:KeyPressed(key_bindings.right)
-		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
+		and self.window_manager.selected_window == selectable_windows.object_tree
 		and self.object_tree_manager:has_not_collapsed_properties_object_selected()
 	then
-		self.window_manager.selected_window = self.window_manager.selectable_windows.properties
+		self.window_manager.selected_window = selectable_windows.properties
 
 		self.sounds_manager:play("switch_window")
 
@@ -129,11 +124,11 @@ function ModMod:same_selected_window()
 
 	if
 		UInputMan:KeyPressed(key_bindings.left)
-		and self.window_manager.selected_window == self.window_manager.selectable_windows.properties
+		and self.window_manager.selected_window == selectable_windows.properties
 		and not self.properties_manager.is_editing_line
 	then
 		self.properties_manager.selected_property_index = 1
-		self.window_manager.selected_window = self.window_manager.selectable_windows.object_tree
+		self.window_manager.selected_window = selectable_windows.object_tree
 
 		self.sounds_manager:play("switch_window")
 

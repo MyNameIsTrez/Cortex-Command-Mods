@@ -32,10 +32,12 @@ function M:key_pressed()
 	if UInputMan:KeyPressed(key_bindings.backspace) and #selected_line > 0 then
 		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
 		self.cursor_x = self.cursor_x - 1
-	elseif input_handler.any_key_pressed() and self.modmod.held_key_character ~= nil then
-		-- elseif self.modmod.held_key_character ~= nil then
-		csts.set_value(self.properties_manager:get_selected_property(), selected_line .. self.modmod.held_key_character)
-		self.cursor_x = self.cursor_x + 1
+	else
+		local held_key_character = input_handler.try_get_held_key_character()
+		if held_key_character ~= nil then
+			csts.set_value(self.properties_manager:get_selected_property(), selected_line .. held_key_character)
+			self.cursor_x = self.cursor_x + 1
+		end
 	end
 end
 

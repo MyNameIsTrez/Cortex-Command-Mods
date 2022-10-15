@@ -25,7 +25,7 @@ function M:init()
 end
 
 function M:play(sound_key)
-    local sound = self.sounds[sound_key]
+	local sound = self.sounds[sound_key]
 	sound:Play()
 end
 

@@ -62,6 +62,14 @@ function M.any_key_pressed()
 	return false
 end
 
+function M.try_get_held_key_character()
+	if M.any_key_pressed() then
+		return M.get_held_key_character()
+	else
+		return nil
+	end
+end
+
 function M.get_held_key_character()
 	local key_code = UInputMan:WhichKeyHeld()
 	local key = key_characters[key_code]
