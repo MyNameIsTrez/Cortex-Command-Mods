@@ -69,20 +69,6 @@ end
 function M:key_pressed()
 	if self.is_editing_line then
 		self.line_editor_manager:key_pressed()
-
-		-- TODO: Does this if-elseif belong here? It is weird having it inside of this update(), instead of _key_pressed()
-		if UInputMan:KeyPressed(key_bindings.enter) then
-			if self.line_editor_manager:is_value_correct_type() then
-				self.is_editing_line = false
-				self:write_and_update_properties_live()
-				self.sounds_manager:play("edited_value")
-			else
-				self.sounds_manager:play("user_error")
-			end
-		elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
-			self.is_editing_line = false
-			csts.set_value(self:get_selected_property(), self.old_line_value)
-		end
 	else
 		self:_key_pressed()
 	end
@@ -115,6 +101,14 @@ end
 
 function M:get_selected_property()
 	return self.selected_properties[self.selected_property_index]
+end
+
+function M:write_and_update_properties_live()
+	if self.settings_manager:get("save_to_disk") then
+		self.object_tree_manager:write_selected_file_cst()
+	end
+
+	self:_update_properties_live()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
@@ -335,14 +329,6 @@ function M:_update_properties_live()
 			end
 		end
 	end
-end
-
-function M:write_and_update_properties_live()
-	if self.settings_manager:get("save_to_disk") then
-		self.object_tree_manager:write_selected_file_cst()
-	end
-
-	self:_update_properties_live()
 end
 
 function M:_get_property_value_type(ast)

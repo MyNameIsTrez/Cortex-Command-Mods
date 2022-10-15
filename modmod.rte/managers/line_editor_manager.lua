@@ -18,8 +18,9 @@ local M = {}
 function M:init(properties_manager)
 	self.properties_manager = properties_manager
 
-	self.window_manager = properties_manager.window_manager
 	self.modmod = properties_manager.modmod
+	self.window_manager = properties_manager.window_manager
+	self.sounds_manager = self.modmod.sounds_manager
 
 	self.cursor_color = 254
 
@@ -30,14 +31,25 @@ function M:key_pressed()
 	local selected_line = self:_get_selected_line()
 
 	if UInputMan:KeyPressed(key_bindings.backspace) and #selected_line > 0 then
-		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
+		local selected_property = self.properties_manager:get_selected_property()
+		csts.set_value(selected_property, selected_line:sub(1, #selected_line - 1))
 		self.cursor_x = self.cursor_x - 1
-	else
-		local character_pressed = input_handler.get_character_pressed()
-		if character_pressed ~= nil then
-			csts.set_value(self.properties_manager:get_selected_property(), selected_line .. character_pressed)
-			self.cursor_x = self.cursor_x + 1
+	elseif input_handler.get_character_pressed() ~= nil then
+		local selected_property = self.properties_manager:get_selected_property()
+		csts.set_value(selected_property, selected_line .. input_handler.get_character_pressed())
+		self.cursor_x = self.cursor_x + 1
+	elseif UInputMan:KeyPressed(key_bindings.enter) then
+		if self:_is_value_correct_type() then
+			self.properties_manager.is_editing_line = false
+			self.properties_manager:write_and_update_properties_live()
+			self.sounds_manager:play("edited_value")
+		else
+			self.sounds_manager:play("user_error")
 		end
+	elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
+		self.properties_manager.is_editing_line = false
+		local selected_property = self.properties_manager:get_selected_property()
+		csts.set_value(selected_property, self.old_line_value)
 	end
 end
 
@@ -76,7 +88,13 @@ function M:move_cursor_to_end_of_selected_line()
 	self.cursor_x = #selected_line + 1
 end
 
-function M:is_value_correct_type()
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+function M:_get_selected_line()
+	return csts.get_value(self.properties_manager:get_selected_property())
+end
+
+function M:_is_value_correct_type()
 	local selected_property = self.properties_manager:get_selected_property()
 	local property = csts.get_property(selected_property)
 	local value_string = csts.get_value(selected_property)
@@ -89,12 +107,6 @@ function M:is_value_correct_type()
 	end
 
 	return true
-end
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-function M:_get_selected_line()
-	return csts.get_value(self.properties_manager:get_selected_property())
 end
 
 -- MODULE END ------------------------------------------------------------------
