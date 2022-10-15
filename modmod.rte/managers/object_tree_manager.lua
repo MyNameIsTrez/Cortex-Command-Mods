@@ -45,8 +45,18 @@ function M:init(modmod)
 	return self
 end
 
-function M:update()
-	self:_key_pressed()
+function M:key_pressed()
+	if self.autoscroll_manager:move(key_bindings.up) then
+		self:_up()
+		self.sounds_manager:play("up")
+	elseif self.autoscroll_manager:move(key_bindings.down) then
+		self:_down()
+		self.sounds_manager:play("down")
+	elseif UInputMan:KeyPressed(key_bindings.left) then
+		self:_left()
+	elseif UInputMan:KeyPressed(key_bindings.right) then
+		self:_right()
+	end
 end
 
 function M:draw()
@@ -83,20 +93,6 @@ function M:get_selected_preset_name()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-function M:_key_pressed()
-	if self.autoscroll_manager:move(key_bindings.up) then
-		self:_up()
-		self.sounds_manager:play("up")
-	elseif self.autoscroll_manager:move(key_bindings.down) then
-		self:_down()
-		self.sounds_manager:play("down")
-	elseif UInputMan:KeyPressed(key_bindings.left) then
-		self:_left()
-	elseif UInputMan:KeyPressed(key_bindings.right) then
-		self:_right()
-	end
-end
 
 function M:_up()
 	if

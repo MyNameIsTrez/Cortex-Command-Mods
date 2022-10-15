@@ -26,8 +26,17 @@ function M:init(properties_manager)
 	return self
 end
 
-function M:update()
-	self:_key_pressed()
+function M:key_pressed()
+	local selected_line = self:_get_selected_line()
+
+	if UInputMan:KeyPressed(key_bindings.backspace) and #selected_line > 0 then
+		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
+		self.cursor_x = self.cursor_x - 1
+	elseif input_handler.any_key_pressed() and self.modmod.held_key_character ~= nil then
+		-- elseif self.modmod.held_key_character ~= nil then
+		csts.set_value(self.properties_manager:get_selected_property(), selected_line .. self.modmod.held_key_character)
+		self.cursor_x = self.cursor_x + 1
+	end
 end
 
 function M:draw()
@@ -81,19 +90,6 @@ function M:is_value_correct_type()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-function M:_key_pressed()
-	local selected_line = self:_get_selected_line()
-
-	if UInputMan:KeyPressed(key_bindings.backspace) and #selected_line > 0 then
-		csts.set_value(self.properties_manager:get_selected_property(), selected_line:sub(1, #selected_line - 1))
-		self.cursor_x = self.cursor_x - 1
-	elseif input_handler.any_key_pressed() and self.modmod.held_key_character ~= nil then
-		-- elseif self.modmod.held_key_character ~= nil then
-		csts.set_value(self.properties_manager:get_selected_property(), selected_line .. self.modmod.held_key_character)
-		self.cursor_x = self.cursor_x + 1
-	end
-end
 
 function M:_get_selected_line()
 	return csts.get_value(self.properties_manager:get_selected_property())

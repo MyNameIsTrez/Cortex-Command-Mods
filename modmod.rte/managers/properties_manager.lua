@@ -66,9 +66,9 @@ function M:init(modmod)
 	return self
 end
 
-function M:update()
+function M:key_pressed()
 	if self.is_editing_line then
-		self.line_editor_manager:update()
+		self.line_editor_manager:key_pressed()
 
 		-- TODO: Does this if-elseif belong here? It is weird having it inside of this update(), instead of _key_pressed()
 		if UInputMan:KeyPressed(key_bindings.enter) then
@@ -133,14 +133,14 @@ function M:_key_pressed()
 	elseif
 		UInputMan:KeyPressed(key_bindings.enter) and self:_get_property_value_type(selected_property) == "boolean"
 	then
-		local old_boolean_value = tonumber(csts.get_value(selected_property))
-		if old_boolean_value == 1 then
-			new_boolean_value = 0
+        local boolean_value = tonumber(csts.get_value(selected_property))
+		if boolean_value == 1 then
+			boolean_value = 0
 		else
-			new_boolean_value = 1
+			boolean_value = 1
 		end
 
-		csts.set_value(selected_property, new_boolean_value)
+		csts.set_value(selected_property, boolean_value)
 
 		self:_write_and_update_properties_live()
 

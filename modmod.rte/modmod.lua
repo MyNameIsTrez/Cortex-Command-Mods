@@ -44,6 +44,7 @@ function ModMod:UpdateScript()
 	end
 
 	self:update()
+	self:key_pressed()
 	self:draw()
 end
 
@@ -99,21 +100,21 @@ function ModMod:update()
 	end
 
 	self.window_manager:update()
+end
 
+function ModMod:key_pressed()
 	self.status_bar_manager:key_pressed()
 
-	local changed_selected_window = self:update_selected_window()
-
-	if not changed_selected_window then
+	if self:same_selected_window() then
 		if self.window_manager.selected_window == self.window_manager.selectable_windows.properties then
-			self.properties_manager:update()
+			self.properties_manager:key_pressed()
 		elseif self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree then
-			self.object_tree_manager:update()
+			self.object_tree_manager:key_pressed()
 		end
 	end
 end
 
-function ModMod:update_selected_window()
+function ModMod:same_selected_window()
 	if
 		UInputMan:KeyPressed(key_bindings.right)
 		and self.window_manager.selected_window == self.window_manager.selectable_windows.object_tree
@@ -123,7 +124,7 @@ function ModMod:update_selected_window()
 
 		self.sounds_manager:play("switch_window")
 
-		return true
+		return false
 	end
 
 	if
@@ -136,10 +137,10 @@ function ModMod:update_selected_window()
 
 		self.sounds_manager:play("switch_window")
 
-		return true
+		return false
 	end
 
-	return false
+	return true
 end
 
 function ModMod:draw()
