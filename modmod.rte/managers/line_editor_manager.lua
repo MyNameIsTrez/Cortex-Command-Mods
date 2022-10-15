@@ -49,7 +49,7 @@ function M:key_pressed()
 	elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 		self.properties_manager.is_editing_line = false
 		local selected_property = self.properties_manager:get_selected_property()
-		csts.set_value(selected_property, self.old_line_value)
+		csts.set_value(selected_property, self.properties_manager.old_line_value)
 	end
 end
 
