@@ -20,6 +20,7 @@ function M:init(modmod)
 
 	self.window_manager = modmod.window_manager
 	self.settings_manager = modmod.settings_manager
+	self.sounds_manager = modmod.sounds_manager
 	self.object_tree_manager = modmod.object_tree_manager
 	self.autoscroll_manager = modmod.autoscroll_manager
 	self.line_editor_manager = line_editor_manager:init(self)
@@ -74,9 +75,9 @@ function M:update()
 			if self.line_editor_manager:is_value_correct_type() then
 				self.is_editing_line = false
 				self:_write_and_update_properties_live()
-				self.slice_picked_sound:Play()
+				self.sounds_manager:play("edited_value")
 			else
-				self.user_error_sound:Play()
+				self.sounds_manager:play("user_error")
 			end
 		elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 			self.is_editing_line = false
@@ -124,11 +125,11 @@ function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
 
-		self.selection_change_sound:Play()
+		self.sounds_manager:play("up")
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
 
-		self.selection_change_sound:Play()
+		self.sounds_manager:play("down")
 	elseif
 		UInputMan:KeyPressed(key_bindings.enter) and self:_get_property_value_type(selected_property) == "boolean"
 	then
@@ -143,12 +144,12 @@ function M:_key_pressed()
 
 		self:_write_and_update_properties_live()
 
-		self.slice_picked_sound:Play()
+		self.sounds_manager:play("toggle_checkbox")
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(selected_property)
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
-		self.focus_change_sound:Play()
+		self.sounds_manager:play("start_editing_value")
 	end
 end
 

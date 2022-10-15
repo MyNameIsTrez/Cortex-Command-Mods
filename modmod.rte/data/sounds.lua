@@ -3,7 +3,7 @@ return {
 	up = "Selection Change",
 	down = "Selection Change",
 	collapse = "Item Change",
-	uncollapse = "Item Change",
+	expand = "Item Change",
 	up_object_tree_layer = "Selection Change",
 	start_editing_value = "Focus Change",
 	edited_value = "Slice Picked",

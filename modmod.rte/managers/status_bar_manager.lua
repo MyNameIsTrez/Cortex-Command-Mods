@@ -13,6 +13,7 @@ local M = {}
 function M:init(modmod)
 	self.window_manager = modmod.window_manager
 	self.settings_manager = modmod.settings_manager
+	self.sounds_manager = modmod.sounds_manager
 
 	-- TODO: Write a proper HTML-like library so this width and height doesn't have to be jankily passed from the properties manager anymore
 	self.status_bar_width = modmod.properties_manager.properties_width
@@ -35,7 +36,7 @@ function M:key_pressed()
 	if UInputMan:KeyPressed(key_bindings.save_to_disk) then
 		self.settings_manager:invert("save_to_disk")
 
-		self.slice_picked_sound:Play()
+		self.sounds_manager:play("toggle_status")
 	end
 end
 

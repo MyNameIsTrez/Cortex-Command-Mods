@@ -17,6 +17,7 @@ local M = {}
 
 function M:init(modmod)
 	self.window_manager = modmod.window_manager
+	self.sounds_manager = modmod.sounds_manager
 	self.autoscroll_manager = modmod.autoscroll_manager
 
 	self.pixels_of_indentation_per_depth = 15
@@ -86,10 +87,10 @@ end
 function M:_key_pressed()
 	if self.autoscroll_manager:move(key_bindings.up) then
 		self:_up()
-		self.selection_change_sound:Play()
+		self.sounds_manager:play("up")
 	elseif self.autoscroll_manager:move(key_bindings.down) then
 		self:_down()
-		self.selection_change_sound:Play()
+		self.sounds_manager:play("down")
 	elseif UInputMan:KeyPressed(key_bindings.left) then
 		self:_left()
 	elseif UInputMan:KeyPressed(key_bindings.right) then
@@ -218,11 +219,11 @@ function M:_left()
 			)
 		end
 
-		self.item_change_sound:Play()
+		self.sounds_manager:play("collapse")
 	elseif #self.selected_object_indices > 1 then
 		table.remove(self.selected_object_indices)
 
-		self.selection_change_sound:Play()
+		self.sounds_manager:play("up_object_tree_layer")
 	end
 end
 
@@ -264,7 +265,7 @@ function M:_right()
 			selected_object.collapsed = false
 			self:_update_object_tree_strings()
 
-			self.item_change_sound:Play()
+			self.sounds_manager:play("expand")
 		end
 	end
 end
