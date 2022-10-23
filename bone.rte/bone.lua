@@ -11,7 +11,9 @@ function Bone:StartScript()
 	local screen_size = tostring(FrameMan.PlayerScreenWidth) .. "x" .. tostring(FrameMan.PlayerScreenHeight)
 
 	if supported_resolutions[screen_size] == nil then
-		error("Your resolution setting has boned you! Change it in the settings menu to 1920x1080 or 1280x720 or 960x540")
+		error(
+			"Your resolution setting has boned you! Change it in the settings menu to 1920x1080 or 1280x720 or 960x540"
+		)
 	end
 
 	self.bone_sound = CreateSoundContainer("Bone", "bone.rte")
