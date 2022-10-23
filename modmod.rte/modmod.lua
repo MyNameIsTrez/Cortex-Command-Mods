@@ -19,6 +19,8 @@ function ModMod:StartScript()
 
 	self.run_update_function = false
 	self.initialized = false
+
+	self.sounds_manager = sounds_manager:init()
 end
 
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
@@ -28,6 +30,12 @@ function ModMod:UpdateScript()
 
 	if UInputMan:KeyPressed(key_bindings.show_modmod) then
 		self.run_update_function = not self.run_update_function
+
+		if self.run_update_function then
+			self.sounds_manager:play("show_modmod")
+		else
+			self.sounds_manager:play("hide_modmod")
+		end
 
 		if not self.initialized then
 			self.initialized = true
@@ -75,7 +83,6 @@ function ModMod:initialize()
 	self.window_manager = window_manager:init()
 
 	self.settings_manager = settings_manager:init()
-	self.sounds_manager = sounds_manager:init()
 
 	self.autoscroll_manager = autoscroll_manager:init()
 	self.object_tree_manager = object_tree_manager:init(self)

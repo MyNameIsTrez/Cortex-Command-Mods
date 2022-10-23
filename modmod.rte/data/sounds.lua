@@ -10,4 +10,6 @@ return {
 	user_error = "User Error",
 	toggle_checkbox = "Slice Picked",
 	toggle_status = "Slice Picked",
+	show_modmod = "Menu Enter",
+	hide_modmod = "Menu Exit",
 }
