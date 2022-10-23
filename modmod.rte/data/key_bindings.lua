@@ -1,7 +1,7 @@
 local keys = dofile("utils.rte/Data/Keys.lua")
 
 return {
-	show_modmod = keys.N,
+	show_modmod = keys.M,
 	up = keys.ArrowUp,
 	down = keys.ArrowDown,
 	left = keys.ArrowLeft,
