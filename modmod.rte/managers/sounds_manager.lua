@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local sounds = dofile("modmod.rte/data/sounds.lua")
+local sounds = dofile("modmod.rte/data/sounds/sounds.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
