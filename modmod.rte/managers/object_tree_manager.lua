@@ -7,6 +7,8 @@ local writer = dofile("modmod.rte/ini_object_tree/writer.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
+local colors = dofile("modmod.rte/data/colors.lua")
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -25,6 +27,9 @@ function M:init(modmod)
 	self.window_top_padding = 16
 	self.window_left_padding = 15
 	self.window_right_padding = 40
+
+	self.background_color = colors.object_tree_manager.background_color
+	self.unselected_color = colors.object_tree_manager.unselected_color
 
 	self.object_tree = object_tree_generator.get_starting_object_tree()
 
@@ -301,9 +306,9 @@ function M:_get_selected_object_path()
 		selected_object = selected_object.children[selected_object_index]
 
 		if selected_object.file_name ~= nil then
-			return file_path .. "/" .. selected_object.file_name
+			return utils.path_join(file_path, selected_object.file_name)
 		else
-			file_path = file_path .. "/" .. selected_object.directory_name
+			file_path = utils.path_join(file_path, selected_object.directory_name)
 		end
 	end
 
@@ -462,7 +467,7 @@ function M:_draw_object_tree_background()
 		Vector(0, 0),
 		self.object_tree_width,
 		self.window_manager.screen_height,
-		self.window_manager.background_color
+		self.background_color
 	)
 end
 
@@ -471,7 +476,7 @@ function M:_draw_top_background()
 		Vector(0, 0),
 		self.object_tree_width,
 		self.window_top_padding,
-		self.window_manager.unselected_color
+		self.unselected_color
 	)
 end
 
@@ -493,7 +498,7 @@ function M:_draw_bottom_background()
 		Vector(0, self.window_top_padding + self.tree_height - 4),
 		self.object_tree_width,
 		self.window_manager.screen_height - self.window_top_padding - self.tree_height + 4,
-		self.window_manager.unselected_color
+		self.unselected_color
 	)
 end
 

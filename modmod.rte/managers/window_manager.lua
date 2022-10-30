@@ -1,8 +1,8 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local colors = dofile("modmod.rte/data/colors.lua")
 
-local colors = dofile("utils.rte/Data/Colors.lua")
+local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -31,10 +31,9 @@ function M:init()
 	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
 	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
 
-	self.background_color = 146
-	self.background_border_color = 71
-	self.selected_color = 117
-	self.unselected_color = 144
+	self.background_border_color = colors.window_manager.background_border_color
+	self.selected_color = colors.window_manager.selected_color
+	self.unselected_color = colors.window_manager.unselected_color
 
 	self.player_id = utils.get_first_human_player_id()
 	SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?

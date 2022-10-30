@@ -5,6 +5,8 @@ local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua"
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
 
+local colors = dofile("modmod.rte/data/colors.lua")
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
@@ -28,6 +30,9 @@ function M:init(modmod)
 	self.window_top_padding = 32
 	self.window_left_padding = 15
 	self.window_right_padding = 40
+
+	self.background_color = colors.properties_manager.background_color
+	self.unselected_color = colors.properties_manager.unselected_color
 
 	local longest_property_name = utils.max(property_value_types, function(key_1, value_1, key_2, value_2)
 		return FrameMan:CalculateTextWidth(key_2, self.window_manager.text_is_small)
@@ -186,7 +191,7 @@ function M:_draw_property_names_border()
 		Vector(self.window_manager.screen_width - self.properties_width, self.window_top_padding - 2),
 		self.property_names_width,
 		self.properties_height,
-		self.window_manager.background_color
+		self.background_color
 	)
 end
 
@@ -195,7 +200,7 @@ function M:_draw_property_values_border()
 		Vector(self.window_manager.screen_width - self.property_values_width - 2, self.window_top_padding - 2),
 		self.property_values_width + 2,
 		self.properties_height,
-		self.window_manager.background_color
+		self.background_color
 	)
 end
 
@@ -255,7 +260,7 @@ function M:_draw_property_values()
 				self.property_values_width,
 				self.window_top_padding,
 				height_index,
-				self.window_manager.unselected_color
+				self.unselected_color
 			)
 		else
 			local str
@@ -298,10 +303,14 @@ function M:_draw_bottom_background()
 		Vector(self.window_manager.screen_width - self.properties_width, start_height - 2),
 		self.properties_width,
 		self.window_manager.screen_height - start_height + 2,
-		self.window_manager.unselected_color
+		self.unselected_color
 	)
 end
 
+--[[
+that'll take some doing. In essence, you iterate through everything in MovableMan.Actors (for actors that have that item equipped) and MovableMan.Items. For particle stuff, MovableMan.Particles
+I don't think Lua has any way to update presets directly, but you can look through the Added versions of these things (AddedActors, AddedItems, AddedParicles) to apply changes to things that are newly spawend
+--]]
 function M:_update_properties_live()
 	local selected_preset_name = self.object_tree_manager:get_selected_preset_name()
 
@@ -310,9 +319,14 @@ function M:_update_properties_live()
 			local a_human = ToAHuman(actor)
 
 			local equipped_item = a_human.EquippedItem
+			-- utils.print({ equipped_item.PresetName, selected_preset_name})
 
-			if equipped_item ~= nil and equipped_item.PresetName == selected_preset_name then
+			-- if equipped_item ~= nil and equipped_item.PresetName == selected_preset_name then
+			if equipped_item ~= nil and equipped_item.PresetName == "IN-02 Backblast" then
 				local hd_firearm = ToHDFirearm(equipped_item)
+				utils.print(hd_firearm.Magazine)
+
+				hd_firearm.Magazine.Mass = 2000
 
 				local selected_property = self:get_selected_property()
 				local property = csts.get_property(selected_property)

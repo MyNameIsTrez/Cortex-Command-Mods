@@ -7,6 +7,8 @@ local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 
+local colors = dofile("modmod.rte/data/colors.lua")
+
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -22,7 +24,7 @@ function M:init(properties_manager)
 	self.window_manager = properties_manager.window_manager
 	self.sounds_manager = self.modmod.sounds_manager
 
-	self.cursor_color = 254
+	self.cursor_color = colors.line_editor_manager.cursor_color
 
 	return self
 end
