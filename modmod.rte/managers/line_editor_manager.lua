@@ -3,7 +3,7 @@
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
-local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
+local property_value_types = dofile("modmod.rte/data/properties/property_value_types.lua")
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 

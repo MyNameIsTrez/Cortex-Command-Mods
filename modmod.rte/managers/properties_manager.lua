@@ -3,7 +3,7 @@
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
-local property_value_types = dofile("modmod.rte/data/property_value_types.lua")
+local property_value_types = dofile("modmod.rte/data/properties/property_value_types.lua")
 
 local colors = dofile("modmod.rte/data/colors.lua")
 
