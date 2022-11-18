@@ -1,4 +1,153 @@
 return {
+	ActorEditor = nil,
+	AreaEditor = nil,
+	AssemblyEditor = nil,
+	BaseEditor = nil,
+	EditorActivity = nil,
+	GameActivity = {
+		CPUTeam = "number",
+	},
+	GAScripted = {
+	},
+	GATutorial = nil,
+	GibEditor = nil,
+	MultiplayerGame = nil,
+	MultiplayerServerLobby = nil,
+	SceneEditor = nil,
+	ACDropShip = {
+	},
+	ACrab = {
+	},
+	ACraft = {
+	},
+	ACRocket = {
+	},
+	Activity = {
+	},
+	Actor = {
+	},
+	ADoor = {
+	},
+	ADSensor = {
+	},
+	AEmitter = {
+	},
+	AHuman = {
+	},
+	Arm = {
+	},
+	AtomGroup = {
+	},
+	Attachable = {
+	},
+	BunkerAssembly = {
+	},
+	BunkerAssemblyScheme = {
+	},
+	Deployment = {
+	},
+	Emission = {
+	},
+	Gib = {
+	},
+	GlobalScript = {
+	},
+	HDFirearm = {
+	},
+	HeldDevice = {
+	},
+	Icon = {
+	},
+	Leg = {
+	},
+	LimbPath = {
+	},
+	Loadout = {
+	},
+	Magazine = {
+	},
+	Material = {
+	},
+	MetaPlayer = {
+	},
+	MetaSave = {
+	},
+	MOPixel = {
+	},
+	MOSParticle = {
+	},
+	MOSprite = {
+	},
+	MOSRotating = {
+	},
+	MovableObject = {
+	},
+	PEmitter = {
+	},
+	PieMenu = {
+	},
+	PieSlice = {
+	},
+	Round = {
+	},
+	Scene = {
+	},
+	SceneLayer = {
+	},
+	SceneObject = {
+	},
+	SLBackground = {
+	},
+	SLTerrain = {
+	},
+	SoundContainer = {
+	},
+	SoundSet = {
+	},
+	TDExplosive = {
+	},
+	TerrainDebris = {
+	},
+	TerrainFrosting = {
+	},
+	TerrainObject = {
+	},
+	ThrownDevice = {
+	},
+	Turret = {
+	},
+	MetaMan = {
+	},
+	MovableMan = {
+	},
+	SceneMan = {
+	},
+	SettingsMan = {
+	},
+	MetagameGUI = {
+	},
+	Atom = {
+	},
+	Box = {
+	},
+	Color = {
+	},
+	ContentFile = {
+	},
+	DataModule = {
+	},
+	Entity = {
+	},
+	InputMapping = {
+	},
+	InputScheme = {
+	},
+	Matrix = {
+	},
+	Serializable = nil,
+	Vector = {
+	}
+
 	MissionCritical = "boolean",
 	FireVelocity = "number",
 	AimDistance = "number",
@@ -59,7 +208,6 @@ return {
 	MinimumDistanceForPanning = "number",
 	Buyable = "boolean",
 	AimRange = "number",
-	CPUTeam = "number",
 	JoystickDeadzoneType = "number",
 	IgnoreAutoScaling = "boolean",
 	AutoDesigned = "boolean",
