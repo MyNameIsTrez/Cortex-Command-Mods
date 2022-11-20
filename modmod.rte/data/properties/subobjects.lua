@@ -92,7 +92,6 @@ return {
 		"LoweredGearLimbPath",
 		"LoweringGearLimbPath",
 		"RaisingGearLimbPath",
-		"",
 	},
 	Activity = {
 		"Team1Icon",
