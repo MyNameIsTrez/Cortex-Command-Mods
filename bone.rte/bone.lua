@@ -18,9 +18,9 @@ function Bone:StartScript()
 
 	self.bone_sound = CreateSoundContainer("Bone", "bone.rte")
 
-	self.bone_mosr = CreateMOSRotating("Bone " .. screen_size, "bone.rte")
+	self.bone_mosparticle = CreateMOSParticle("Bone " .. screen_size, "bone.rte")
 
-	local bone_mos = ToMOSprite(self.bone_mosr)
+	local bone_mos = ToMOSprite(self.bone_mosparticle)
 	self.bone_size = Vector(bone_mos:GetSpriteWidth(), bone_mos:GetSpriteHeight())
 end
 
@@ -33,7 +33,7 @@ function Bone:UpdateScript()
 		local screen_offset = SceneMan:GetOffset(0)
 		local center_position = screen_offset + self.bone_size / 2
 		local rotation_angle = 0
-		PrimitiveMan:DrawBitmapPrimitive(center_position, self.bone_mosr, rotation_angle, self.frame_index)
+		PrimitiveMan:DrawBitmapPrimitive(center_position, self.bone_mosparticle, rotation_angle, self.frame_index)
 
 		self.ticks_playing_frame = self.ticks_playing_frame + 1
 

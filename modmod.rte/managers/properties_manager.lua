@@ -61,10 +61,10 @@ function M:init(modmod)
 	self.slice_picked_sound = CreateSoundContainer("Slice Picked", "modmod.rte")
 	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
 
-	self.checkbox_mosr = CreateMOSRotating("Checkbox", "modmod.rte")
+	self.checkbox_mosparticle = CreateMOSParticle("Checkbox", "modmod.rte")
 	self.checkbox_top_padding = 2
 
-	local checkbox_mos = ToMOSprite(self.checkbox_mosr)
+	local checkbox_mos = ToMOSprite(self.checkbox_mosparticle)
 	self.checkbox_sprite_half_width = checkbox_mos:GetSpriteWidth() / 2
 	self.checkbox_sprite_half_height = checkbox_mos:GetSpriteHeight() / 2
 
@@ -253,7 +253,7 @@ function M:_draw_property_values()
 				+ self.checkbox_sprite_half_height
 
 			local frame = tonumber(selected_value)
-			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_mosr, 0, frame)
+			self.window_manager:draw_bitmap(Vector(bitmap_x, bitmap_y), self.checkbox_mosparticle, 0, frame)
 
 			self.window_manager:draw_selection_lines(
 				x,

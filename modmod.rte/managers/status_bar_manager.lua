@@ -28,7 +28,7 @@ function M:init(modmod)
 
 	self.status_bar_top_left = Vector(self.window_manager.screen_width - self.status_bar_width, 0)
 
-	self.save_to_disk_mosr = CreateMOSRotating("Save to Disk", "modmod.rte")
+	self.save_to_disk_mosparticle = CreateMOSParticle("Save to Disk", "modmod.rte")
 
 	self.save_to_disk_sprite_top_left = self.status_bar_top_left + Vector(4, 4)
 
@@ -51,7 +51,7 @@ function M:draw()
 	local frame = self.settings_manager:get("save_to_disk") and 1 or 0
 	self.window_manager:draw_bitmap(
 		self.save_to_disk_sprite_top_left + self.sprite_size / 2,
-		self.save_to_disk_mosr,
+		self.save_to_disk_mosparticle,
 		0,
 		frame
 	)
