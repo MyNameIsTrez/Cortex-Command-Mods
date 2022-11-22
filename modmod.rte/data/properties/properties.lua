@@ -303,7 +303,6 @@ return {
 		-- "SpawnMaterial",
 		"TransformsInto",
 		"IsScrap",
-		"Color",
 		"UseOwnColor",
 	},
 	MetaPlayer = {
@@ -350,7 +349,6 @@ return {
 		"GibBlastStrength",
 		"WoundCountAffectsImpulseLimitRatio",
 		"GibAtEndOfLifetime",
-		"EffectOnGib",
 		"EffectOnGib",
 		"LoudnessOnGib",
 		"DamageMultiplier",

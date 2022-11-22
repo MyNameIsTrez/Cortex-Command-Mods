@@ -251,6 +251,7 @@ return {
 		"TracerRound",
 	},
 	Material = {
+		"Color",
 		"FGTextureFile",
 		"BGTextureFile",
 	},
