@@ -26,6 +26,31 @@ end
 -- GLOBAL SCRIPT UPDATE --------------------------------------------------------
 
 function ModMod:UpdateScript()
+-- for actor in MovableMan.Actors do
+-- 	utils.print(actor)
+-- 	-- utils.print(actor.RightEngine)
+-- 	-- utils.print(ToACDropShip(actor))
+-- 	-- utils.print(ToACDropShip(actor).RightEngine)
+-- 	-- utils.print(ToACDropShip(actor).RightThruster)
+-- end
+-- for item in MovableMan.Items do
+-- 	utils.print(item)
+-- end
+-- for particle in MovableMan.Particles do
+-- 	utils.print(particle)
+-- end
+-- utils.print("--")
+
+-- for actor in MovableMan.AddedActors do
+-- 	utils.print(actor)
+-- end
+-- for item in MovableMan.AddedItems do
+-- 	utils.print(item)
+-- end
+-- for particle in MovableMan.AddedParticles do
+-- 	utils.print(particle)
+-- end
+
 	self:update_controlled_actor()
 
 	if UInputMan:KeyPressed(key_bindings.show_modmod) then

@@ -3,6 +3,9 @@
 local line_editor_manager = dofile("modmod.rte/managers/line_editor_manager.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
+
+local parent_classes = dofile("modmod.rte/data/properties/parent_classes.lua")
+local properties = dofile("modmod.rte/data/properties/properties.lua")
 local property_value_types = dofile("modmod.rte/data/properties/property_value_types.lua")
 
 local colors = dofile("modmod.rte/data/colors.lua")
@@ -34,11 +37,7 @@ function M:init(modmod)
 	self.background_color = colors.properties_manager.background_color
 	self.unselected_color = colors.properties_manager.unselected_color
 
-	local longest_property_name = utils.max(property_value_types, function(key_1, value_1, key_2, value_2)
-		return FrameMan:CalculateTextWidth(key_2, self.window_manager.text_is_small)
-			> FrameMan:CalculateTextWidth(key_1, self.window_manager.text_is_small)
-	end)
-
+	local longest_property_name = self:_get_longest_property_name(properties)
 	self.property_names_width = FrameMan:CalculateTextWidth(longest_property_name, self.window_manager.text_is_small)
 		+ 37
 
@@ -108,6 +107,14 @@ function M:get_selected_property()
 	return self.selected_properties[self.selected_property_index]
 end
 
+function M:get_selected_property_value_type()
+	local property_name = csts.get_property(self:get_selected_property())
+	-- utils.print("property name:")
+	-- utils.print(property_name)
+
+	return self:_get_property_value_type(property_name)
+end
+
 function M:write_and_update_properties_live()
 	if self.settings_manager:get("save_to_disk") then
 		self.object_tree_manager:write_selected_file_cst()
@@ -117,6 +124,28 @@ function M:write_and_update_properties_live()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+function M:_get_longest_property_name(subproperties)
+	local longest_property_name = ""
+
+	for _, value in pairs(subproperties) do
+		if type(value) == "table" or type(value) == "string" then
+			if type(value) == "table" then
+				value = self:_get_longest_property_name(value)
+			end
+
+			if
+				type(value) == "string"
+				and FrameMan:CalculateTextWidth(value, self.window_manager.text_is_small)
+					> FrameMan:CalculateTextWidth(longest_property_name, self.window_manager.text_is_small)
+			then
+				longest_property_name = value
+			end
+		end
+	end
+
+	return longest_property_name
+end
 
 function M:_key_pressed()
 	local selected_property = self:get_selected_property()
@@ -129,9 +158,7 @@ function M:_key_pressed()
 		self:_down()
 
 		self.sounds_manager:play("down")
-	elseif
-		UInputMan:KeyPressed(key_bindings.enter) and self:_get_property_value_type(selected_property) == "boolean"
-	then
+	elseif UInputMan:KeyPressed(key_bindings.enter) and self:get_selected_property_value_type() == "boolean" then
 		local boolean_value = tonumber(csts.get_value(selected_property))
 		if boolean_value == 1 then
 			boolean_value = 0
@@ -241,7 +268,8 @@ function M:_draw_property_values()
 	local x = self.window_manager.screen_width - self.property_values_width - 1
 
 	for height_index, selected_property in ipairs(self.selected_properties) do
-		local selected_type = self:_get_property_value_type(selected_property)
+		local property = csts.get_property(selected_property)
+		local selected_type = self:_get_property_value_type(property)
 
 		local selected_value = csts.get_value(selected_property)
 
@@ -307,10 +335,6 @@ function M:_draw_bottom_background()
 	)
 end
 
---[[
-that'll take some doing. In essence, you iterate through everything in MovableMan.Actors (for actors that have that item equipped) and MovableMan.Items. For particle stuff, MovableMan.Particles
-I don't think Lua has any way to update presets directly, but you can look through the Added versions of these things (AddedActors, AddedItems, AddedParicles) to apply changes to things that are newly spawend
---]]
 function M:_update_properties_live()
 	local selected_preset_name = self.object_tree_manager:get_selected_preset_name()
 
@@ -345,8 +369,22 @@ function M:_update_properties_live()
 	end
 end
 
-function M:_get_property_value_type(ast)
-	return property_value_types[csts.get_property(ast)]
+function M:_get_property_value_type(property_name, object_type)
+	if object_type == nil then
+		object_type = self.object_tree_manager:get_selected_object_type()
+	end
+	-- utils.print("object type:")
+	-- utils.print(object_type)
+
+	local property_value_type = property_value_types[object_type][property_name]
+	-- utils.print("property value type:")
+	-- utils.print(property_value_type)
+
+	if property_value_type ~= nil then
+		return property_value_type
+	else
+		return self:_get_property_value_type(property_name, parent_classes[object_type])
+	end
 end
 
 -- MODULE END ------------------------------------------------------------------

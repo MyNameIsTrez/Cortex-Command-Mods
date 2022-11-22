@@ -258,19 +258,19 @@ function M.sum(tab)
 	end)
 end
 
-function M.max(tab, fn)
-	local key
-	local value
+-- function M.max(tab, fn)
+-- 	local key
+-- 	local value
 
-	for k, v in pairs(tab) do
-		if key == nil or fn(key, value, k, v) then
-			key = k
-			value = v
-		end
-	end
+-- 	for k, v in pairs(tab) do
+-- 		if key == nil or fn(key, value, k, v) then
+-- 			key = k
+-- 			value = v
+-- 		end
+-- 	end
 
-	return key, value
-end
+-- 	return key, value
+-- end
 
 function M.get_wrapped_index(i, max)
 	return (i - 1) % max + 1

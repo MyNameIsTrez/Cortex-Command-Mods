@@ -97,6 +97,16 @@ function M:get_selected_preset_name()
 	end
 end
 
+function M:get_selected_object_type()
+	local object_type = self:_get_selected_object().value_pointer
+
+	if object_type ~= nil then
+		return object_type.content
+	else
+		return nil
+	end
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 function M:_up()
