@@ -96,11 +96,9 @@ function M:_get_selected_line()
 end
 
 function M:_is_value_correct_type()
-	local selected_property_value_type = self.properties_manager:get_selected_property_value_type()
-	-- utils.print(selected_property_value_type)
+	local property_value_type = self.properties_manager:get_selected_property_value_type()
 
-	local selected_property = self.properties_manager:get_selected_property()
-	local value_string = csts.get_value(selected_property)
+	local value_string = csts.get_value(self.properties_manager:get_selected_property())
 
 	-- In the case a property name isn't in the table yet, this function assumes the value type is valid
 	if (property_value_type == "number" or property_value_type == "boolean") and tonumber(value_string) == nil then
