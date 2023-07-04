@@ -447,6 +447,7 @@ return {
 		Revealed = "boolean",
 		MetasceneParent = "string",
 		MetagameInternal = "boolean",
+		ScriptSave = "boolean",
 		OwnedByTeam = "number",
 		RoundIncome = "number",
 		P1BuildBudget = "number",

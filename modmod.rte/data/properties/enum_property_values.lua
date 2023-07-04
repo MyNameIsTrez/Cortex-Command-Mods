@@ -447,6 +447,7 @@ return {
 		Revealed = ,
 		MetasceneParent = ,
 		MetagameInternal = ,
+		ScriptSave = ,
 		OwnedByTeam = ,
 		RoundIncome = ,
 		P1BuildBudget = ,
