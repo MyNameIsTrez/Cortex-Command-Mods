@@ -73,6 +73,7 @@ return {
 	ContentFile = "Serializable",
 	DataModule = "SceneMan",
 	Entity = "Serializable",
+	GenericSavedData = "Serializable",
 	InputMapping = "Serializable",
 	InputScheme = "Serializable",
 	Matrix = "Serializable",

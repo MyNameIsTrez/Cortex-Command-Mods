@@ -688,6 +688,10 @@ return {
 		RandomWeight = "The weight of this item when an item gets randomly picked. From 0 to 100. 0 means this item won't ever be picked.",
 		AddToGroup = "The group to add this to.",
 	},
+	GenericSavedData = {
+		StringValues = "Strings to store.",
+		NumberValues = "Numbers to store.",
+	},
 	InputMapping = {
 		KeyMap = "The keyboard key mapping.",
 		MouseButtonMap = "The mouse button mapping.",

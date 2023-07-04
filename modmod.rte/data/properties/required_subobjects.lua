@@ -448,6 +448,7 @@ return {
 		AddMaterial = ,
 	},
 	Entity = nil,
+	GenericSavedData = nil,
 	InputMapping = nil,
 	InputScheme = {
 		LeftUp = ,

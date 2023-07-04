@@ -688,6 +688,10 @@ return {
 		RandomWeight = "number",
 		AddToGroup = "string",
 	},
+	GenericSavedData = {
+		StringValues = "string",
+		NumberValues = "string",
+	},
 	InputMapping = {
 		KeyMap = "number",
 		MouseButtonMap = "number",
