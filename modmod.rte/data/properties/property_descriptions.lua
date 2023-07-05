@@ -158,7 +158,7 @@ return {
 		-- JumpAngleRange = "",
 		JetAngleRange = "Ratio at which the jetpack angle follows aim angle",
 		FGArmFlailScalar = "The rate at which this AHuman's FG Arm follows the the bodily rotation. Best to keep this at 0 so it doesn't complicate aiming.",
-		BGArmFlailScalar = "The rate at which this AHuman's BG Arm follows the the bodily rotation. Set to a negative value for a "counterweight" effect.",
+		BGArmFlailScalar = "The rate at which this AHuman's BG Arm follows the the bodily rotation. Set to a negative value for a 'counterweight' effect.",
 		ArmSwingRate = "Controls the rate at which this AHuman's arms follow the movement of its legs.",
 		StandRotAngleTarget = "Rotation angle target for the STAND state.",
 		WalkRotAngleTarget = "Rotation angle target for the WALK state.",
@@ -174,7 +174,7 @@ return {
 	},
 	AtomGroup = {
 		AutoGenerate = "Whether the Atoms in this AtomGroup were automatically generated based on a sprite, or manually defined.",
-		Resolution = "The density of Atoms in this AtomGroup along the outline of the owning MOSR's graphical representation. Higher values mean more pixels are skipped along the outline when placing Atoms. For example: a box that is 20x20px will have an outline of 80px, with a resolution value of 10 an Atom will be placed every 10 pixels on this outline, resulting in an AtomGroup that consists of 8 Atoms total with 2 Atoms on each plane. Note that the outline isn't actually "unwrapped" and higher values may result in slightly less accurate Atom placement on complex sprites. 0 means the Atoms in this AtomGroup were defined manually. 1 means the whole outline will be populated with Atoms, resulting in the most accurate physical representation.",
+		Resolution = "The density of Atoms in this AtomGroup along the outline of the owning MOSR's graphical representation. Higher values mean more pixels are skipped along the outline when placing Atoms. For example: a box that is 20x20px will have an outline of 80px, with a resolution value of 10 an Atom will be placed every 10 pixels on this outline, resulting in an AtomGroup that consists of 8 Atoms total with 2 Atoms on each plane. Note that the outline isn't actually 'unwrapped' and higher values may result in slightly less accurate Atom placement on complex sprites. 0 means the Atoms in this AtomGroup were defined manually. 1 means the whole outline will be populated with Atoms, resulting in the most accurate physical representation.",
 		Depth = "The depth Atoms in this AtomGroup are placed off the edge of the owning MOSR's graphical representation outline towards it's center, in pixels.",
 	},
 	Attachable = {
@@ -288,7 +288,7 @@ return {
 	Material = {
 		Index = "Index of this in the material palette. 0 - 255.",
 		Priority = "The priority that a pixel of this material has to be displayed. The higher the number, the higher chances that a pixel of this material will be drawn on top of others.",
-		Piling = "The amount of times a dislodged pixel of this Material will attempt to relocate upwards, when intersecting a terrain pixel of the same Material. TODO: Better property name?",
+		Piling = "The amount of times a dislodged pixel of this Material will attempt to relocate upwards, when intersecting a terrain pixel of the same Material.",
 		-- Integrity = "",
 		StructuralIntegrity = "The impulse force that a particle needs to knock loose a terrain pixel of this material. In kg * m/s.",
 		-- Restitution = "",
