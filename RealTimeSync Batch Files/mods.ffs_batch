@@ -28,15 +28,15 @@
     <FolderPairs>
         <Pair>
             <Left>I:\Programming\Cortex-Command-Mods\bone.rte</Left>
-            <Right>I:\Programming\Cortex-Command-Community-Project-Data\bone.rte</Right>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\Mods\bone.rte</Right>
         </Pair>
         <Pair>
             <Left>I:\Programming\Cortex-Command-Mods\utils.rte</Left>
-            <Right>I:\Programming\Cortex-Command-Community-Project-Data\utils.rte</Right>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\Mods\utils.rte</Right>
         </Pair>
         <Pair>
             <Left>I:\Programming\Cortex-Command-Mods\modmod.rte</Left>
-            <Right>I:\Programming\Cortex-Command-Community-Project-Data\modmod.rte</Right>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\Mods\modmod.rte</Right>
         </Pair>
     </FolderPairs>
     <Errors Ignore="false" Retry="0" Delay="5"/>

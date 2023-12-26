@@ -2,9 +2,9 @@
 <FreeFileSync XmlType="REAL" XmlFormat="2">
     <Directories>
         <Item>I:\Programming\Cortex-Command-Mods\bone.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\bone.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\modmod.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\utils.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\bone.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\modmod.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\utils.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\modmod.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\utils.rte</Item>
     </Directories>
