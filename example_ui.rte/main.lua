@@ -1,13 +1,10 @@
-local ui = require("ui")
+-- TODO: Use this once the issue of require()d modules not being reloaded on F2 is fixed
+-- local ui = require("ui")
 
--- TODO: Do this instead
--- local screen_scale = FrameMan.PlayerScreenScale
-local screen_scale = 2
+local ui = dofile("utils.rte/Modules/ui.lua")
 
 function ExampleUI:StartScript()
 	print("In ExampleUI:StartScript()")
-
-	ui.screen_scale = 2
 
 	self.menu_is_open = false
 
@@ -15,7 +12,6 @@ function ExampleUI:StartScript()
 	self.gameActivity = ToGameActivity(self.activity)
 
 	self.cursor_mosparticle = CreateMOSParticle("Cursor", "example_ui.rte")
-
 	local cursor_mos = ToMOSprite(self.cursor_mosparticle)
 	self.cursor_size = Vector(cursor_mos:GetSpriteWidth(), cursor_mos:GetSpriteHeight())
 
@@ -28,10 +24,9 @@ function ExampleUI:UpdateScript()
 	if UInputMan:KeyPressed(Key.M) then
 		self.menu_is_open = not self.menu_is_open
 
-		local lock = self.menu_is_open
-
 		-- CIM stands for ControllerInputMode
-		self.gameActivity:LockControlledActor(Activity.PLAYER_1, lock, Controller.CIM_DISABLED)
+		local lock = self.menu_is_open
+		self.gameActivity:LockControlledActor(Activity.PLAYER_1, lock, Controller.CIM_AI)
 	end
 
 	if self.menu_is_open then
@@ -46,10 +41,9 @@ function ExampleUI:UpdateScript()
 			self.funds_changed_sound:Play()
 		end
 
-		local mouse_pos = UInputMan:GetMousePos() / screen_scale
+		local mouse_pos = UInputMan:GetMousePos() / ui.screen_scale
 
-		local screen_id = 0
-		local world_pos = mouse_pos + CameraMan:GetOffset(screen_id)
+		local world_pos = mouse_pos + CameraMan:GetOffset(Activity.PLAYER_1)
 
 		local cursor_center_pos = world_pos + self.cursor_size / 2
 
