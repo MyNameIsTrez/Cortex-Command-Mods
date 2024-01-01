@@ -1,6 +1,7 @@
 local ui = require("ui")
 
--- TODO: Add a Lua binding to get this from C++
+-- TODO: Do this instead
+-- local screen_scale = FrameMan.PlayerScreenScale
 local screen_scale = 2
 
 function ExampleUI:StartScript()
