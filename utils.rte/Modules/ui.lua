@@ -95,9 +95,11 @@ function ui:object_tree_buttons(object_tree_strings, object_tree_width, height, 
 				end
 				self:_text(pos, text, self.text_is_small, alignment)
 
-				self:_selection_lines(x, width, y_padding, height_index, self.dark_green)
+				local selection_line_x = x
+				local selection_line_y = y_padding + (height_index - 1) * self.text_vertical_stride
+				self:_selection_lines(selection_line_x, selection_line_y, width, self.dark_green)
 
-				-- self:_button(text, pos, size)
+				-- self:_button(text, pos, size, x, width, y_padding, alignment)
 			end
 		end
 	end
@@ -124,11 +126,11 @@ function ui:_text(pos, text, text_is_small, alignment)
 	PrimitiveMan:DrawTextPrimitive(world_pos, text, text_is_small, alignment)
 end
 
-function ui:_selection_lines(x, width, y_padding, height_index, color)
+function ui:_selection_lines(x, y, width, color)
 	local start_x = x + 4 - 1
 	local offset = Vector(width - 4 * 2 + 1, 0)
-	self:_line(Vector(start_x, y_padding + (height_index - 1) * self.text_vertical_stride), offset, color)
-	self:_line(Vector(start_x, y_padding + height_index * self.text_vertical_stride - 1), offset, color)
+	self:_line(Vector(start_x, y), offset, color)
+	self:_line(Vector(start_x, y + self.text_vertical_stride - 1), offset, color)
 end
 
 function ui:_line(pos, offset, color)
