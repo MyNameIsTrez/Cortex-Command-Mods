@@ -118,7 +118,7 @@ function ModMod:UpdateScript()
 		ui.orange
 	)
 
-	ui:object_tree_strings(object_tree_strings, object_tree_width, { 0 }, 0)
+	ui:object_tree_buttons(object_tree_strings, object_tree_width, { 0 }, 0)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 
