@@ -17,6 +17,8 @@ ui.screen_height = FrameMan.PlayerScreenHeight
 
 ui.object_tree_line_scroll_offset = 0
 
+ui.text_is_small = true
+
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
 
 ui.light_green = 146
@@ -30,8 +32,6 @@ ui.pixels_of_indentation_per_depth = 15
 ui.window_top_padding = 16
 ui.window_left_padding = 15
 ui.window_right_padding = 40
-
-ui.text_is_small = true
 
 ui.text_top_padding = 3
 
@@ -140,9 +140,7 @@ function ui:_object_tree_button(text, pos, width, text_x)
 	end
 
 	local text_pos = Vector(text_x, pos.Y + self.text_top_padding)
-	local text_is_small = true
-	local alignment = ui.alignments.left
-	self:_text(text_pos, text, text_is_small, alignment)
+	self:_text(text_pos, text, ui.alignments.left)
 
 	self:_selection_lines(pos, width, self.dark_green)
 
@@ -170,9 +168,9 @@ function ui:_cursor_inside(el_pos, size)
 	return (mouse_x > el_x) and (mouse_x < el_x + el_width) and (mouse_y > el_y) and (mouse_y < el_y + el_height)
 end
 
-function ui:_text(pos, text, text_is_small, alignment)
+function ui:_text(pos, text, alignment)
 	local world_pos = self.screen_offset + pos
-	PrimitiveMan:DrawTextPrimitive(world_pos, text, text_is_small, alignment)
+	PrimitiveMan:DrawTextPrimitive(world_pos, text, ui.text_is_small, alignment)
 end
 
 function ui:_selection_lines(pos, width, color)
