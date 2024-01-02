@@ -89,6 +89,7 @@ function ModMod:UpdateScript()
 		return
 	end
 
+	-- TODO: An optional optimization is to only call this when text is edited
 	self:update_object_tree_text(self.object_tree)
 
 	local depth = 0
@@ -165,7 +166,7 @@ function ModMod:update_object_tree_text(object_tree)
 end
 
 function ModMod:get_object_tree_width(object_tree, depth)
-	local width = 0
+	local width = 106
 
 	local padding = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth + ui.window_right_padding
 
