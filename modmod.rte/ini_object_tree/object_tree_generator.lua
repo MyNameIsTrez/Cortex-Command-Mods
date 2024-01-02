@@ -13,27 +13,6 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.get_starting_object_tree()
-	local object_tree = {}
-	object_tree.children = {}
-
-	for data_module in PresetMan.Modules do
-		local data_module_file_name = data_module.FileName
-
-		local data_module_object = {}
-		data_module_object.directory_name = data_module_file_name
-		data_module_object.collapsed = true
-
-		table.insert(object_tree.children, data_module_object)
-	end
-
-	table.sort(object_tree.children, function(a, b)
-		return a.directory_name < b.directory_name
-	end)
-
-	return object_tree
-end
-
 function M.get_file_object_tree(file_path)
 	local parent_directory, file_name = file_path:match("(.*)/(.*%.ini)")
 

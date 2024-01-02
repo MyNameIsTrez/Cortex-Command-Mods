@@ -7,8 +7,6 @@ local writer = dofile("modmod.rte/ini_object_tree/writer.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
-local colors = dofile("modmod.rte/data/colors.lua")
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -19,8 +17,6 @@ local M = {}
 
 function M:init(modmod)
 	self.window_manager = modmod.window_manager
-	self.sounds_manager = modmod.sounds_manager
-	self.autoscroll_manager = modmod.autoscroll_manager
 
 	self.pixels_of_indentation_per_depth = 15
 
@@ -28,16 +24,13 @@ function M:init(modmod)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	self.background_color = colors.object_tree_manager.background_color
-	self.unselected_color = colors.object_tree_manager.unselected_color
-
 	self.object_tree = object_tree_generator.get_starting_object_tree()
 
 	self:_update_object_tree_strings()
 
 	self.selected_object_indices = { 1 }
 
-	local lines_height = self.window_manager.screen_height
+	local lines_height = ui.screen_height
 		- self.window_top_padding
 		- self.window_manager.text_top_padding
 	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
@@ -51,12 +44,12 @@ function M:init(modmod)
 end
 
 function M:key_pressed()
-	if self.autoscroll_manager:move(key_bindings.up) then
+	if self:can_move(key_bindings.up) then
 		self:_up()
-		self.sounds_manager:play("up")
-	elseif self.autoscroll_manager:move(key_bindings.down) then
+		self.up:Play()
+	elseif self:can_move(key_bindings.down) then
 		self:_down()
-		self.sounds_manager:play("down")
+		self.down:Play()
 	elseif UInputMan:KeyPressed(key_bindings.left) then
 		self:_left()
 	elseif UInputMan:KeyPressed(key_bindings.right) then
@@ -230,11 +223,11 @@ function M:_left()
 			)
 		end
 
-		self.sounds_manager:play("collapse")
+		self.collapse:Play()
 	elseif #self.selected_object_indices > 1 then
 		table.remove(self.selected_object_indices)
 
-		self.sounds_manager:play("up_object_tree_layer")
+		self.up_object_tree_layer:Play()
 	end
 end
 
@@ -276,7 +269,7 @@ function M:_right()
 			selected_object.collapsed = false
 			self:_update_object_tree_strings()
 
-			self.sounds_manager:play("expand")
+			self.expand:Play()
 		end
 	end
 end
@@ -410,7 +403,9 @@ function M:_get_object_tree_strings_recursively(object_tree, depth)
 		elseif v.collapsed == false then
 			str = str .. ">"
 		else
-			str = str .. "  " -- TODO: It's jank how this only works because two spaces are the same width as a v and >
+			-- TODO: It's jank how this relies on two spaces
+			-- being the same width as a "v" or a ">"
+			str = str .. "  "
 		end
 
 		str = str .. " "
@@ -476,8 +471,8 @@ function M:_draw_object_tree_background()
 	self.window_manager:draw_border_fill(
 		Vector(0, 0),
 		self.object_tree_width,
-		self.window_manager.screen_height,
-		self.background_color
+		ui.screen_height,
+		ui.light_green
 	)
 end
 
@@ -486,7 +481,7 @@ function M:_draw_top_background()
 		Vector(0, 0),
 		self.object_tree_width,
 		self.window_top_padding,
-		self.unselected_color
+		ui.dark_green
 	)
 end
 
@@ -507,8 +502,8 @@ function M:_draw_bottom_background()
 	self.window_manager:draw_border_fill(
 		Vector(0, self.window_top_padding + self.tree_height - 4),
 		self.object_tree_width,
-		self.window_manager.screen_height - self.window_top_padding - self.tree_height + 4,
-		self.unselected_color
+		ui.screen_height - self.window_top_padding - self.tree_height + 4,
+		ui.dark_green
 	)
 end
 

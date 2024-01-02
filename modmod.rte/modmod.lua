@@ -1,173 +1,221 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local window_manager = dofile("modmod.rte/managers/window_manager.lua")
-local settings_manager = dofile("modmod.rte/managers/settings_manager.lua")
-local sounds_manager = dofile("modmod.rte/managers/sounds_manager.lua")
-local autoscroll_manager = dofile("modmod.rte/managers/autoscroll_manager.lua")
-local object_tree_manager = dofile("modmod.rte/managers/object_tree_manager.lua")
-local properties_manager = dofile("modmod.rte/managers/properties_manager.lua")
-local status_bar_manager = dofile("modmod.rte/managers/status_bar_manager.lua")
+-- TODO: Use require() in all files instead of dofile(),
+-- once the issue of require()d modules not being reloaded on F2 is fixed
+
+local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+-- TODO: Get rid of loading csts.lua here, since it's an implementation detail?
+local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
+local ui = dofile("utils.rte/Modules/ui.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
--- GLOBAL SCRIPT START ---------------------------------------------------------
+-- GLOBAL SCRIPT ---------------------------------------------------------------
 
 function ModMod:StartScript()
-	self.activity = ActivityMan:GetActivity()
+	print("In ModMod:StartScript()")
 
-	self.run_update_function = false
+	self.showing_modmod = false
 	self.initialized = false
 
-	self.sounds_manager = sounds_manager:init()
+	self.pixels_of_indentation_per_depth = 15
+
+	self.window_top_padding = 16
+	self.window_left_padding = 15
+	self.window_right_padding = 40
+
+	self.text_is_small = true
+
+	self.text_top_padding = 3
+
+	local no_maximum_width = 0
+	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
+	local text_bottom_padding = 3
+	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
+
+	self.activity = ActivityMan:GetActivity()
+	self.gameActivity = ToGameActivity(self.activity)
+
+	self.object_tree = {
+		children = {
+			{
+				directory_name = "Data",
+				collapsed = true
+			},
+			{
+				directory_name = "Mods",
+				collapsed = true
+			}
+		}
+	}
+	utils.print(self.object_tree)
+
+	self.cursor_mosparticle = CreateMOSParticle("Cursor", "modmod.rte")
+	local cursor_mos = ToMOSprite(self.cursor_mosparticle)
+	self.cursor_size = Vector(cursor_mos:GetSpriteWidth(), cursor_mos:GetSpriteHeight())
+
+	self.show_modmod = CreateSoundContainer("Menu Enter", "modmod.rte")
+	self.hide_modmod = CreateSoundContainer("Menu Exit", "modmod.rte")
+	-- self.switch_window = CreateSoundContainer("Focus Change", "modmod.rte")
+	-- self.up = CreateSoundContainer("Selection Change", "modmod.rte")
+	-- self.down = CreateSoundContainer("Selection Change", "modmod.rte")
+	-- self.collapse = CreateSoundContainer("Item Change", "modmod.rte")
+	-- self.expand = CreateSoundContainer("Item Change", "modmod.rte")
+	-- self.up_object_tree_layer = CreateSoundContainer("Selection Change", "modmod.rte")
+	-- self.start_editing_value = CreateSoundContainer("Focus Change", "modmod.rte")
+	-- self.edited_value = CreateSoundContainer("Slice Picked", "modmod.rte")
+	-- self.user_error = CreateSoundContainer("User Error", "modmod.rte")
+	-- self.toggle_checkbox = CreateSoundContainer("Slice Picked", "modmod.rte")
+	-- self.toggle_status = CreateSoundContainer("Slice Picked", "modmod.rte")
 end
 
--- GLOBAL SCRIPT UPDATE --------------------------------------------------------
-
 function ModMod:UpdateScript()
-	-- for actor in MovableMan.Actors do
-	-- 	utils.print(actor)
-	-- 	-- utils.print(actor.RightEngine)
-	-- 	-- utils.print(ToACDropShip(actor))
-	-- 	-- utils.print(ToACDropShip(actor).RightEngine)
-	-- 	-- utils.print(ToACDropShip(actor).RightThruster)
-	-- end
-	-- for item in MovableMan.Items do
-	-- 	utils.print(item)
-	-- end
-	-- for particle in MovableMan.Particles do
-	-- 	utils.print(particle)
-	-- end
-	-- utils.print("--")
-
-	-- for actor in MovableMan.AddedActors do
-	-- 	utils.print(actor)
-	-- end
-	-- for item in MovableMan.AddedItems do
-	-- 	utils.print(item)
-	-- end
-	-- for particle in MovableMan.AddedParticles do
-	-- 	utils.print(particle)
-	-- end
-
-	self:update_controlled_actor()
+	ui:update()
 
 	if UInputMan:KeyPressed(key_bindings.show_modmod) then
-		self.run_update_function = not self.run_update_function
+		self.showing_modmod = not self.showing_modmod
 
-		if self.run_update_function then
-			self.sounds_manager:play("show_modmod")
+		if self.showing_modmod then
+			self.show_modmod:Play()
+
+			-- TODO: Why does this not seem to do anything?
+			-- UInputMan:SetMousePos(Vector(500, 500), Activity.PLAYER_1)
 		else
-			self.sounds_manager:play("hide_modmod")
+			self.hide_modmod:Play()
 		end
 
 		if not self.initialized then
 			self.initialized = true
-			self:initialize()
+
+			-- self.window_manager = window_manager:init()
+			-- self.object_tree_manager = object_tree_manager:init(self)
+			-- self.properties_manager = properties_manager:init(self)
+			-- self.status_bar_manager = status_bar_manager:init(self)
 		end
+
+		-- CIM stands for ControllerInputMode
+		local lock = self.showing_modmod
+		self.gameActivity:LockControlledActor(Activity.PLAYER_1, lock, Controller.CIM_AI)
 	end
 
-	if not self.run_update_function then
+	if not self.showing_modmod then
 		return
 	end
 
-	self:update()
-	self:key_pressed()
-	self:draw()
+	local object_tree_strings = self:get_object_tree_strings(self.object_tree)
+	-- utils.print(object_tree_strings)
+
+	local depth = 0
+	local object_tree_width = self:get_object_tree_width(object_tree_strings, depth)
+	-- utils.print{object_tree_width = object_tree_width}
+
+	local object_tree_height = self:get_object_tree_height(object_tree_strings)
+	-- utils.print{object_tree_height = object_tree_height}
+
+	-- Draw empty area above object tree
+	ui:filled_box_with_border(Vector(0, 0), Vector(object_tree_width, self.window_top_padding), ui.dark_green, ui.orange)
+
+	-- Draw object tree box
+	ui:filled_box_with_border(Vector(0, self.window_top_padding - 2), Vector(object_tree_width, object_tree_height), ui.light_green, ui.orange)
+
+	-- Draw empty area below object tree
+	ui:filled_box_with_border(
+		Vector(0, self.window_top_padding + object_tree_height - 4),
+		Vector(object_tree_width,
+		ui.screen_height - self.window_top_padding - object_tree_height + 4),
+		ui.dark_green,
+		ui.orange
+	)
+
+	local world_pos = ui.screen_offset + ui.mouse_pos
+
+	local cursor_center_pos = world_pos + self.cursor_size / 2
+
+	local rotation_angle = 0
+	local frame_index = 0
+	PrimitiveMan:DrawBitmapPrimitive(cursor_center_pos, self.cursor_mosparticle, rotation_angle, frame_index)
 end
 
--- FUNCTIONS -------------------------------------------------------------------
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-function ModMod:update_controlled_actor()
-	local controlled_actor = self.activity:GetControlledActor(Activity.PLAYER_1)
+function ModMod:get_object_tree_strings(object_tree)
+	local object_tree_strings = {}
 
-	if controlled_actor ~= nil then
-		if self.run_update_function then
-			controlled_actor.Status = Actor.INACTIVE
+	for _, v in ipairs(object_tree.children) do
+		local str = ""
+
+		if v.collapsed then
+			str = str .. "v"
+		elseif v.collapsed == false then
+			str = str .. ">"
+		else
+			-- TODO: It's jank how this relies on two spaces
+			-- being the same width as a "v" or a ">"
+			str = str .. "  "
 		end
 
-		if not self.run_update_function then
-			controlled_actor.Status = Actor.STABLE
+		str = str .. " "
+
+		if v.preset_name_pointer ~= nil then
+			str = string.format("%s%s (%s)", str, v.preset_name_pointer.content, csts.get_property(v))
+		elseif v.file_name ~= nil then
+			str = str .. v.file_name
+		elseif v.directory_name ~= nil then
+			str = str .. v.directory_name .. "/"
+		else
+			str = str .. csts.get_property(v)
 		end
 
-		if
-			self.previous_frame_controlled_actor ~= nil
-			and controlled_actor.UniqueID ~= self.previous_frame_controlled_actor.UniqueID
-		then
-			self.previous_frame_controlled_actor.Status = Actor.STABLE
-		end
-	elseif self.previous_frame_controlled_actor ~= nil then
-		self.previous_frame_controlled_actor.Status = Actor.STABLE
-	end
+		table.insert(object_tree_strings, str)
 
-	self.previous_frame_controlled_actor = controlled_actor
-end
-
-function ModMod:initialize()
-	self.window_manager = window_manager:init()
-
-	self.settings_manager = settings_manager:init()
-
-	self.autoscroll_manager = autoscroll_manager:init()
-	self.object_tree_manager = object_tree_manager:init(self)
-	self.properties_manager = properties_manager:init(self)
-	self.status_bar_manager = status_bar_manager:init(self)
-
-	self.focus_change_sound = CreateSoundContainer("Focus Change", "modmod.rte")
-end
-
-function ModMod:update()
-	self.window_manager:update()
-end
-
-function ModMod:key_pressed()
-	self.status_bar_manager:key_pressed()
-
-	if self:same_selected_window() then
-		local selectable_windows = self.window_manager.selectable_windows
-
-		if self.window_manager.selected_window == selectable_windows.properties then
-			self.properties_manager:key_pressed()
-		elseif self.window_manager.selected_window == selectable_windows.object_tree then
-			self.object_tree_manager:key_pressed()
+		if v.children ~= nil and not v.collapsed then
+			table.insert(object_tree_strings, self:get_object_tree_strings(v))
 		end
 	end
+
+	return object_tree_strings
 end
 
-function ModMod:same_selected_window()
-	local selectable_windows = self.window_manager.selectable_windows
+function ModMod:get_object_tree_width(object_tree_strings, depth)
+	local width = 0
 
-	if
-		UInputMan:KeyPressed(key_bindings.right)
-		and self.window_manager.selected_window == selectable_windows.object_tree
-		and self.object_tree_manager:has_not_collapsed_properties_object_selected()
-	then
-		self.window_manager.selected_window = selectable_windows.properties
+	local padding = self.window_left_padding
+		+ depth * self.pixels_of_indentation_per_depth
+		+ self.window_right_padding
 
-		self.sounds_manager:play("switch_window")
-
-		return false
+	for _, v in ipairs(object_tree_strings) do
+		if type(v) == "table" then
+			width = math.max(
+				width,
+				self:get_object_tree_width{v, depth + 1}
+			)
+		else
+			width = math.max(
+				width,
+				FrameMan:CalculateTextWidth(v, self.text_is_small) + padding
+			)
+		end
 	end
 
-	if
-		UInputMan:KeyPressed(key_bindings.left)
-		and self.window_manager.selected_window == selectable_windows.properties
-		and not self.properties_manager.is_editing_line
-	then
-		self.properties_manager.selected_property_index = 1
-		self.window_manager.selected_window = selectable_windows.object_tree
-
-		self.sounds_manager:play("switch_window")
-
-		return false
-	end
-
-	return true
+	return width
 end
 
-function ModMod:draw()
-	self.object_tree_manager:draw()
-	self.properties_manager:draw()
-	self.status_bar_manager:draw()
+function ModMod:get_object_tree_height(object_tree_strings)
+	return self.text_top_padding + 1 + self.text_vertical_stride * self:get_object_tree_string_count(object_tree_strings)
+end
+
+function ModMod:get_object_tree_string_count(object_tree_strings)
+	local count = 0
+
+	for _, v in ipairs(object_tree_strings) do
+		if type(v) == "table" then
+			count = count + self:get_object_tree_string_count(v)
+		else
+			count = count + 1
+		end
+	end
+
+	return count
 end

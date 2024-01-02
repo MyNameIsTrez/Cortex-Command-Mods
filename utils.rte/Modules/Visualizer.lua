@@ -1,12 +1,13 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local colors = dofile("utils.rte/Data/Colors.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
 
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
+
+local red = 13
+local yellow = 122
 
 -- INTERNAL VARIABLES ----------------------------------------------------------
 
@@ -96,11 +97,11 @@ function Visualizer:UpdateScript(self)
 	local radius = 10
 
 	for actor in MovableMan.Actors do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.red)
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, red)
 	end
 
 	for actor in MovableMan.Particles do
-		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, colors.yellow)
+		PrimitiveMan:DrawCirclePrimitive(actor.Pos, radius, yellow)
 	end
 end
 

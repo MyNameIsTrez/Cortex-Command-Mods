@@ -6,8 +6,6 @@ local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 
-local colors = dofile("modmod.rte/data/colors.lua")
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -21,9 +19,6 @@ function M:init(properties_manager)
 
 	self.modmod = properties_manager.modmod
 	self.window_manager = properties_manager.window_manager
-	self.sounds_manager = self.modmod.sounds_manager
-
-	self.cursor_color = colors.line_editor_manager.cursor_color
 
 	return self
 end
@@ -43,9 +38,9 @@ function M:key_pressed()
 		if self:_is_value_correct_type() then
 			self.properties_manager.is_editing_line = false
 			self.properties_manager:write_and_update_properties_live()
-			self.sounds_manager:play("edited_value")
+			self.edited_value:Play()
 		else
-			self.sounds_manager:play("user_error")
+			self.user_error:Play()
 		end
 	elseif UInputMan:KeyPressed(key_bindings.up) or UInputMan:KeyPressed(key_bindings.down) then
 		self.properties_manager.is_editing_line = false
@@ -81,7 +76,7 @@ function M:draw()
 	local x_offset = 4
 	local y_offset = 0
 
-	self.window_manager:draw_line(Vector(x, y), x_offset, y_offset, self.cursor_color)
+	self.window_manager:draw_line(Vector(x, y), x_offset, y_offset, ui.white)
 end
 
 function M:move_cursor_to_end_of_selected_line()

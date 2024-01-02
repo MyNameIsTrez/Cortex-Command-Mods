@@ -10,10 +10,6 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M:init()
-	return self
-end
-
 function M:invert(settings_key)
 	local current_value = not self:get(settings_key)
 

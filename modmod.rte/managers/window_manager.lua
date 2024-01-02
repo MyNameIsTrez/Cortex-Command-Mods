@@ -1,7 +1,5 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local colors = dofile("modmod.rte/data/colors.lua")
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -19,8 +17,7 @@ function M:init()
 	self.half_scene_height = self.scene_height / 2
 
 	self.screen_width = FrameMan.PlayerScreenWidth
-	self.screen_height = FrameMan.PlayerScreenHeight
-	self.half_screen_size = Vector(self.screen_width, self.screen_height) / 2
+	self.half_screen_size = Vector(self.screen_width, ui.screen_height) / 2
 
 	self.text_top_padding = 3
 	local text_bottom_padding = 3
@@ -31,17 +28,12 @@ function M:init()
 	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
 	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
 
-	self.background_border_color = colors.window_manager.background_border_color
-	self.selected_color = colors.window_manager.selected_color
-	self.unselected_color = colors.window_manager.unselected_color
-
-	self.player_id = utils.get_first_human_player_id()
-	SceneMan:SetOffset(Vector(0, 0), self.player_id) -- TODO: Necessary?
-	-- SceneMan:SetOffset(Vector(10, 10), self.player_id)
-	self.screen_offset = SceneMan:GetOffset(self.player_id)
+	CameraMan:SetOffset(Vector(0, 0), Activity.PLAYER_1) -- TODO: Necessary?
+	-- CameraMan:SetOffset(Vector(10, 10), Activity.PLAYER_1)
+	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 	-- self.screen_offset = Vector(0, 0)
 
-	self.screen_of_player = ActivityMan:GetActivity():ScreenOfPlayer(self.player_id)
+	self.screen_of_player = ActivityMan:GetActivity():ScreenOfPlayer(Activity.PLAYER_1)
 	self.scroll_speed = 0.3 -- TODO: This needs to be dynamic
 	self.window_scroll_timer = Timer()
 
@@ -64,12 +56,12 @@ function M:draw_border_fill(top_left_pos, width, height, color)
 end
 
 function M:draw_border(top_left_pos, width, height)
-	self:_draw_box(top_left_pos, width, height, self.background_border_color)
-	self:_draw_box(top_left_pos + Vector(1, 1), width - 2, height - 2, self.background_border_color)
+	self:_draw_box(top_left_pos, width, height, ui.orange)
+	self:_draw_box(top_left_pos + Vector(1, 1), width - 2, height - 2, ui.orange)
 end
 
 function M:draw_selected_line_background(top_left_pos, width, height_index)
-	self:draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, self.selected_color)
+	self:draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, ui.yellow)
 end
 
 function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
@@ -83,7 +75,7 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 	end
 
 	self:_draw_text(pos, text, self.text_is_small, alignment)
-	self:draw_selection_lines(x, width, y_padding, height_index, self.unselected_color)
+	self:draw_selection_lines(x, width, y_padding, height_index, ui.dark_green)
 end
 
 function M:draw_line(top_left_pos, offset_x, offset_y, color)
@@ -133,19 +125,19 @@ function M:_draw_text(top_left_pos, text, text_is_small, alignment)
 end
 
 function M:_update_screen_offset()
-	self.screen_offset = SceneMan:GetOffset(self.player_id)
+	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 
 	-- With this approach the screen offset is off by a lot when the cursor is near the bottom of the world
-	-- self.screen_offset = SceneMan:GetScrollTarget(self.screen_of_player) - self.half_screen_size
+	-- self.screen_offset = CameraMan:GetScrollTarget(self.screen_of_player) - self.half_screen_size
 end
 
 -- TODO: This function has some sort of bug causing it to often be a few pixels off
 -- function M:_update_screen_offset_with_prediction()
--- 	local scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
+-- 	local scroll_target = CameraMan:GetScrollTarget(self.screen_of_player)
 
 -- 	-- Can't be done in init() since GetScrollTarget() always wrongly returns Vector(0, 0)
 -- 	if self.previous_scroll_target == nil then
--- 		self.previous_scroll_target = SceneMan:GetScrollTarget(self.screen_of_player)
+-- 		self.previous_scroll_target = CameraMan:GetScrollTarget(self.screen_of_player)
 -- 	end
 
 -- 	-- TODO: Not sure whether this scroll_target - self.previous_scroll_target is correct since it was originally targetCenter.m_X
@@ -210,15 +202,15 @@ end
 -- 	local scroll_result = (scroll_difference * scroll_progress).Rounded
 -- 	local new_screen_offset = self.screen_offset + scroll_result
 
--- 	local old_screen_offset = SceneMan:GetOffset(self.player_id)
+-- 	local old_screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 
 -- 	-- TODO: Replace this with calling the clamp checking function that SetOffset() calls
--- 	SceneMan:SetOffset(new_screen_offset, self.player_id)
--- 	self.screen_offset = SceneMan:GetOffset(self.player_id)
+-- 	CameraMan:SetOffset(new_screen_offset, Activity.PLAYER_1)
+-- 	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 
 -- 	-- self.screen_offset = new_screen_offset.Floored
 
--- 	SceneMan:SetOffset(old_screen_offset, self.player_id)
+-- 	CameraMan:SetOffset(old_screen_offset, Activity.PLAYER_1)
 
 -- 	self.window_scroll_timer:Reset()
 -- end

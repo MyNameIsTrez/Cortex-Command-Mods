@@ -2,13 +2,15 @@
 
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
-local Colors = dofile("utils.rte/Data/Colors.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
 
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
+-- CONFIGURABLE VARIABLES ------------------------------------------------------
+
+local orange = 47
+
+-- INTERNAL VARIABLES ----------------------------------------------------------
 
 local data = {}
 local dataIndex = 1
@@ -36,7 +38,7 @@ function M.Draw()
 		local topLeft, bottomRight, color = unpack(mergedDatum)
 
 		PrimitiveMan:DrawBoxFillPrimitive(topLeft, bottomRight, color)
-		PrimitiveMan:DrawBoxPrimitive(topLeft, bottomRight, Colors.orange)
+		PrimitiveMan:DrawBoxPrimitive(topLeft, bottomRight, orange)
 	end
 end
 

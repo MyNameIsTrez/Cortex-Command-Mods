@@ -8,8 +8,6 @@ local parent_classes = dofile("modmod.rte/data/properties/parent_classes.lua")
 local properties = dofile("modmod.rte/data/properties/properties.lua")
 local property_value_types = dofile("modmod.rte/data/properties/property_value_types.lua")
 
-local colors = dofile("modmod.rte/data/colors.lua")
-
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
@@ -25,17 +23,12 @@ function M:init(modmod)
 
 	self.window_manager = modmod.window_manager
 	self.settings_manager = modmod.settings_manager
-	self.sounds_manager = modmod.sounds_manager
 	self.object_tree_manager = modmod.object_tree_manager
-	self.autoscroll_manager = modmod.autoscroll_manager
 	self.line_editor_manager = line_editor_manager:init(self)
 
 	self.window_top_padding = 32
 	self.window_left_padding = 15
 	self.window_right_padding = 40
-
-	self.background_color = colors.properties_manager.background_color
-	self.unselected_color = colors.properties_manager.unselected_color
 
 	local longest_property_name = self:_get_longest_property_name(properties)
 	self.property_names_width = FrameMan:CalculateTextWidth(longest_property_name, self.window_manager.text_is_small)
@@ -46,7 +39,7 @@ function M:init(modmod)
 
 	self.selected_property_index = 1
 
-	local lines_height = self.window_manager.screen_height
+	local lines_height = ui.screen_height
 		- self.window_top_padding
 		- self.window_manager.text_top_padding
 	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
@@ -150,14 +143,14 @@ end
 function M:_key_pressed()
 	local selected_property = self:get_selected_property()
 
-	if self.autoscroll_manager:move(key_bindings.up) then
+	if self:can_move(key_bindings.up) then
 		self:_up()
 
-		self.sounds_manager:play("up")
-	elseif self.autoscroll_manager:move(key_bindings.down) then
+		self.up:Play()
+	elseif self:can_move(key_bindings.down) then
 		self:_down()
 
-		self.sounds_manager:play("down")
+		self.down:Play()
 	elseif UInputMan:KeyPressed(key_bindings.enter) and self:get_selected_property_value_type() == "boolean" then
 		local boolean_value = tonumber(csts.get_value(selected_property))
 		if boolean_value == 1 then
@@ -170,12 +163,12 @@ function M:_key_pressed()
 
 		self:write_and_update_properties_live()
 
-		self.sounds_manager:play("toggle_checkbox")
+		self.toggle_checkbox:Play()
 	elseif UInputMan:KeyPressed(key_bindings.enter) then
 		self.is_editing_line = true
 		self.old_line_value = csts.get_value(selected_property)
 		self.line_editor_manager:move_cursor_to_end_of_selected_line()
-		self.sounds_manager:play("start_editing_value")
+		self.start_editing_value:Play()
 	end
 end
 
@@ -218,7 +211,7 @@ function M:_draw_property_names_border()
 		Vector(self.window_manager.screen_width - self.properties_width, self.window_top_padding - 2),
 		self.property_names_width,
 		self.properties_height,
-		self.background_color
+		ui.light_green
 	)
 end
 
@@ -227,7 +220,7 @@ function M:_draw_property_values_border()
 		Vector(self.window_manager.screen_width - self.property_values_width - 2, self.window_top_padding - 2),
 		self.property_values_width + 2,
 		self.properties_height,
-		self.background_color
+		ui.light_green
 	)
 end
 
@@ -288,7 +281,7 @@ function M:_draw_property_values()
 				self.property_values_width,
 				self.window_top_padding,
 				height_index,
-				self.unselected_color
+				ui.dark_green
 			)
 		else
 			local str
@@ -330,8 +323,8 @@ function M:_draw_bottom_background()
 	self.window_manager:draw_border_fill(
 		Vector(self.window_manager.screen_width - self.properties_width, start_height - 2),
 		self.properties_width,
-		self.window_manager.screen_height - start_height + 2,
-		self.unselected_color
+		ui.screen_height - start_height + 2,
+		ui.dark_green
 	)
 end
 

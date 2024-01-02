@@ -9,7 +9,7 @@ local l = dofile("utils.rte/Modules/lulpeg.lua")
 
 local M = {}
 
--- INTERNAL PRIVATE VARIABLES --------------------------------------------------
+-- INTERNAL VARIABLES ----------------------------------------------------------
 
 local P = l.P
 local C = l.C

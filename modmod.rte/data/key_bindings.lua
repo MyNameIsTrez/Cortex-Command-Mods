@@ -1,12 +1,6 @@
-local keys = dofile("utils.rte/Data/Keys.lua")
-
 return {
-	show_modmod = keys.M,
-	up = keys.ArrowUp,
-	down = keys.ArrowDown,
-	left = keys.ArrowLeft,
-	right = keys.ArrowRight,
-	backspace = keys.Backspace,
-	enter = keys.Enter,
-	save_to_disk = keys.Tab,
+	show_modmod = Key.M,
+	-- backspace = Key.BACKSPACE,
+	-- enter = Key.RETURN,
+	-- save_to_disk = Key.TAB,
 }
