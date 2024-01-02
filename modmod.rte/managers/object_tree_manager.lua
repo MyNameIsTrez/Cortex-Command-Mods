@@ -229,49 +229,6 @@ function M:_left()
 	end
 end
 
-function M:_right()
-	local selected_object = self:_get_selected_object()
-
-	if selected_object.collapsed then
-		if selected_object.children == nil then
-			selected_object.children = {}
-
-			local selected_object_path = self:_get_selected_object_path()
-
-			for directory_name in LuaMan:DirectoryList(selected_object_path) do
-				local directory_object = {}
-				directory_object.directory_name = directory_name
-				directory_object.collapsed = true
-
-				table.insert(selected_object.children, directory_object)
-			end
-
-			for file_name in LuaMan:FileList(selected_object_path) do
-				if utils.path_extension(file_name) == ".ini" then
-					-- local file_path = utils.path_join(selected_object_path, file_name)
-					-- local file_object = object_tree_generator.get_file_object_tree(file_path)
-
-					local file_object = {}
-					file_object.file_name = file_name
-
-					table.insert(selected_object.children, file_object)
-				end
-			end
-
-			if #selected_object.children == 0 then
-				selected_object.children = nil
-			end
-		end
-
-		if selected_object.children ~= nil then
-			selected_object.collapsed = false
-			self:_update_object_tree_strings()
-
-			self.expand:Play()
-		end
-	end
-end
-
 function M:_get_last_selected_object_index()
 	return self.selected_object_indices[#self.selected_object_indices]
 end

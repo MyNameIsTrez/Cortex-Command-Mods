@@ -58,49 +58,7 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
-function ui:object_tree_buttons(object_tree, object_tree_width, height, depth)
-	local text_x = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth
-
-	for _, v in ipairs(object_tree.children) do
-		if v.children ~= nil and not v.collapsed then
-			self:object_tree_buttons(v, object_tree_width, height, depth + 1)
-		else
-			-- Using a table as a pointer
-			height[1] = height[1] + 1
-
-			-- TODO: An optional optimization is to return when height goes past the max height
-			if height[1] > self.object_tree_line_scroll_offset then
-				local height_index = height[1] - ui.object_tree_line_scroll_offset
-				local text_vertical_stride = (height_index - 1) * self.text_vertical_stride
-				local y = ui.window_top_padding + text_vertical_stride
-				local pos = Vector(2, y)
-				local width = object_tree_width - 4
-
-				if self:_object_tree_button(v.text, pos, width, text_x) then
-					print("foo")
-				end
-			end
-		end
-	end
-end
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
-function ui:_filled_box(pos, size, color)
-	local world_pos = self.screen_offset + pos
-	-- TODO: Is the -1 on width and height really necessary?
-	-- TODO: Is it *really* not the caller's responsibility?
-	PrimitiveMan:DrawBoxFillPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
-end
-
-function ui:_box(pos, size, color)
-	local world_pos = self.screen_offset + pos
-	-- TODO: Is the -1 on width and height really necessary?
-	-- TODO: Is it *really* not the caller's responsibility?
-	PrimitiveMan:DrawBoxPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
-end
-
-function ui:_object_tree_button(text, pos, width, text_x)
+function ui:object_tree_button(text, pos, width, text_x)
 	local clicked = false
 
 	if self.active == text then
@@ -146,6 +104,22 @@ function ui:_object_tree_button(text, pos, width, text_x)
 	self:_selection_lines(pos, width, self.dark_green)
 
 	return clicked
+end
+
+-- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+function ui:_filled_box(pos, size, color)
+	local world_pos = self.screen_offset + pos
+	-- TODO: Is the -1 on width and height really necessary?
+	-- TODO: Is it *really* not the caller's responsibility?
+	PrimitiveMan:DrawBoxFillPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
+end
+
+function ui:_box(pos, size, color)
+	local world_pos = self.screen_offset + pos
+	-- TODO: Is the -1 on width and height really necessary?
+	-- TODO: Is it *really* not the caller's responsibility?
+	PrimitiveMan:DrawBoxPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
 end
 
 function ui:_left_mouse_went_up()

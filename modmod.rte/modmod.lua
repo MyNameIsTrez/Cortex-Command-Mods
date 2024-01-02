@@ -35,7 +35,9 @@ function ModMod:StartScript()
 			},
 		},
 	}
-	utils.print(self.object_tree)
+	-- utils.print(self.object_tree)
+
+	self:update_object_tree_text(self.object_tree)
 
 	self.cursor_mosparticle = CreateMOSParticle("Cursor", "modmod.rte")
 	local cursor_mos = ToMOSprite(self.cursor_mosparticle)
@@ -43,11 +45,11 @@ function ModMod:StartScript()
 
 	self.show_modmod = CreateSoundContainer("Menu Enter", "modmod.rte")
 	self.hide_modmod = CreateSoundContainer("Menu Exit", "modmod.rte")
+	self.expand = CreateSoundContainer("Item Change", "modmod.rte")
+	self.collapse = CreateSoundContainer("Item Change", "modmod.rte")
 	-- self.switch_window = CreateSoundContainer("Focus Change", "modmod.rte")
 	-- self.up = CreateSoundContainer("Selection Change", "modmod.rte")
 	-- self.down = CreateSoundContainer("Selection Change", "modmod.rte")
-	-- self.collapse = CreateSoundContainer("Item Change", "modmod.rte")
-	-- self.expand = CreateSoundContainer("Item Change", "modmod.rte")
 	-- self.up_object_tree_layer = CreateSoundContainer("Selection Change", "modmod.rte")
 	-- self.start_editing_value = CreateSoundContainer("Focus Change", "modmod.rte")
 	-- self.edited_value = CreateSoundContainer("Slice Picked", "modmod.rte")
@@ -89,9 +91,6 @@ function ModMod:UpdateScript()
 		return
 	end
 
-	-- TODO: An optional optimization is to only call this when text is edited
-	self:update_object_tree_text(self.object_tree)
-
 	local depth = 0
 	local object_tree_width = self:get_object_tree_width(self.object_tree, depth)
 	-- utils.print{object_tree_width = object_tree_width}
@@ -118,7 +117,10 @@ function ModMod:UpdateScript()
 		ui.orange
 	)
 
-	ui:object_tree_buttons(self.object_tree, object_tree_width, { 0 }, 0)
+	local height_ptr = { 0 }
+	local depth = 0
+	local selected_object_path = "."
+	self:object_tree_buttons(self.object_tree, object_tree_width, height_ptr, depth, selected_object_path)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 
@@ -172,7 +174,7 @@ function ModMod:get_object_tree_width(object_tree, depth)
 
 	for _, v in ipairs(object_tree.children) do
 		if v.children ~= nil and not v.collapsed then
-			width = math.max(width, self:get_object_tree_width({ v, depth + 1 }))
+			width = math.max(width, self:get_object_tree_width(v, depth + 1))
 		else
 			width = math.max(width, FrameMan:CalculateTextWidth(v.text, ui.text_is_small) + padding)
 		end
@@ -197,4 +199,84 @@ function ModMod:get_object_tree_line_count(object_tree)
 	end
 
 	return count
+end
+
+function ModMod:object_tree_buttons(object_tree, object_tree_width, height_ptr, depth, selected_object_path)
+	local text_x = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth
+
+	for _, selected_object in ipairs(object_tree.children) do
+		height_ptr[1] = height_ptr[1] + 1
+
+		-- TODO: An optional optimization is to return when height goes past the max height
+		if height_ptr[1] > ui.object_tree_line_scroll_offset then
+			local height_index = height_ptr[1] - ui.object_tree_line_scroll_offset
+			local text_vertical_stride = (height_index - 1) * ui.text_vertical_stride
+			local y = ui.window_top_padding + text_vertical_stride
+			local pos = Vector(2, y)
+			local width = object_tree_width - 4
+
+			if ui:object_tree_button(selected_object.text, pos, width, text_x) then
+				if selected_object.directory_name == nil then
+					local path = utils.path_join(selected_object_path, selected_object.file_name)
+					self:object_tree_subobject_pressed(selected_object, path)
+				else
+					local path = utils.path_join(selected_object_path, selected_object.directory_name)
+					self:object_tree_directory_pressed(selected_object, path)
+				end
+			end
+		end
+
+		-- If this is an expanded directory, recurse
+		if selected_object.children ~= nil and not selected_object.collapsed then
+			local path = utils.path_join(selected_object_path, selected_object.directory_name)
+
+			self:object_tree_buttons(selected_object, object_tree_width, height_ptr, depth + 1, path)
+		end
+	end
+end
+
+function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
+	-- TODO: Show object in properties tab
+end
+
+function ModMod:object_tree_directory_pressed(directory, selected_object_path)
+	if directory.collapsed then
+		if directory.children == nil then
+			local children = {}
+
+			for directory_name in LuaMan:GetDirectoryList(selected_object_path) do
+				table.insert(children, {
+					directory_name = directory_name,
+					collapsed = true,
+				})
+			end
+
+			for file_name in LuaMan:GetFileList(selected_object_path) do
+				if utils.path_extension(file_name) == ".ini" then
+					-- TODO: Remove?
+					-- local file_path = utils.path_join(selected_object_path, file_name)
+					-- local file_object = object_tree_generator.get_file_object_tree(file_path)
+					-- table.insert(children, file_object)
+
+					table.insert(children, {
+						file_name = file_name,
+					})
+				end
+			end
+
+			if #children > 0 then
+				directory.children = children
+			end
+		end
+
+		if directory.children ~= nil then
+			directory.collapsed = false
+			self:update_object_tree_text(self.object_tree)
+			self.expand:Play()
+		end
+	else
+		directory.collapsed = true
+		self:update_object_tree_text(self.object_tree)
+		self.collapse:Play()
+	end
 end
