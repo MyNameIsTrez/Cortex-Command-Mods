@@ -79,7 +79,6 @@ function ui:object_tree_buttons(object_tree_strings, object_tree_width, height, 
 
 			-- TODO: An optional optimization is to return when height goes past the max height
 			if height[1] > self.object_tree_line_scroll_offset then
-				local x = 1
 				local width = object_tree_width - 2
 				local y_padding = ui.window_top_padding
 				local height_index = height[1] - ui.object_tree_line_scroll_offset
@@ -89,15 +88,15 @@ function ui:object_tree_buttons(object_tree_strings, object_tree_width, height, 
 				local y = y_padding + self.text_top_padding + (height_index - 1) * self.text_vertical_stride
 				local pos
 				if alignment == self.alignments.left then
-					pos = Vector(x + x_padding, y)
+					pos = Vector(x_padding, y)
 				else
-					pos = Vector(x + width / 2, y)
+					pos = Vector(width / 2, y)
 				end
 				self:_text(pos, text, self.text_is_small, alignment)
 
-				local selection_line_x = x
-				local selection_line_y = y_padding + (height_index - 1) * self.text_vertical_stride
-				self:_selection_lines(selection_line_x, selection_line_y, width, self.dark_green)
+				local selection_lines_x = 0
+				local selection_lines_y = y_padding + (height_index - 1) * self.text_vertical_stride
+				self:_selection_lines(selection_lines_x, selection_lines_y, width, self.dark_green)
 
 				-- self:_button(text, pos, size, x, width, y_padding, alignment)
 			end
@@ -127,7 +126,7 @@ function ui:_text(pos, text, text_is_small, alignment)
 end
 
 function ui:_selection_lines(x, y, width, color)
-	local start_x = x + 4 - 1
+	local start_x = x + 4
 	local offset = Vector(width - 4 * 2 + 1, 0)
 	self:_line(Vector(start_x, y), offset, color)
 	self:_line(Vector(start_x, y + self.text_vertical_stride - 1), offset, color)
