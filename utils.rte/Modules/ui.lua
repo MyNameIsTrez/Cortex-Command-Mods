@@ -5,7 +5,7 @@
 
 local ui = {}
 
--- INTERNAL VARIABLES ----------------------------------------------------------
+-- INTERNAL VARIABLES 1 --------------------------------------------------------
 
 ui.alignments = { left = 0, center = 1, right = 2 }
 
@@ -14,6 +14,8 @@ ui.alignments = { left = 0, center = 1, right = 2 }
 ui.screen_scale = 2
 
 ui.screen_height = FrameMan.PlayerScreenHeight
+
+ui.object_tree_line_scroll_offset = 0
 
 -- CONFIGURABLE VARIABLES ------------------------------------------------------
 
@@ -32,6 +34,24 @@ ui.dark_green = 144
 ui.orange = 71
 -- ui.yellow = 117
 -- ui.white = 254
+
+ui.pixels_of_indentation_per_depth = 15
+
+ui.window_top_padding = 16
+ui.window_left_padding = 15
+ui.window_right_padding = 40
+
+ui.text_is_small = true
+
+ui.text_top_padding = 3
+
+local no_max_width = 0
+local text_bottom_padding = 3
+
+-- INTERNAL VARIABLES 2 --------------------------------------------------------
+
+ui.font_height = FrameMan:CalculateTextHeight("foo", no_max_width, ui.text_is_small)
+ui.text_vertical_stride = ui.text_top_padding + ui.font_height + text_bottom_padding
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
@@ -90,6 +110,38 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
+function ui:object_tree_strings(object_tree_strings, object_tree_width, height, depth)
+	local x_padding = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth
+
+	for _, v in ipairs(object_tree_strings) do
+		if type(v) == "table" then
+			self:object_tree_strings(v, object_tree_width, height, depth + 1)
+		else
+			-- Using a table as a pointer
+			height[1] = height[1] + 1
+
+			if height[1] > self.object_tree_line_scroll_offset then
+				local x = 1
+				local width = object_tree_width - 2
+				local y_padding = ui.window_top_padding
+				local height_index = height[1] - ui.object_tree_line_scroll_offset
+				local text = v
+				local alignment = ui.alignments.left
+
+				self:_text_line(
+					x,
+					width,
+					x_padding,
+					y_padding,
+					height_index,
+					text,
+					alignment
+				)
+			end
+		end
+	end
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 function ui:_left_mouse_went_up()
@@ -125,6 +177,36 @@ function ui:_box(pos, size, color)
 	-- TODO: Is the -1 on width and height really necessary?
 	-- TODO: Is it *really* not the caller's responsibility?
 	PrimitiveMan:DrawBoxPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
+end
+
+function ui:_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
+	local y = y_padding + self.text_top_padding + (height_index - 1) * self.text_vertical_stride
+
+	local pos
+	if alignment == self.alignments.left then
+		pos = Vector(x + x_padding, y)
+	else
+		pos = Vector(x + width / 2, y)
+	end
+
+	self:_text(pos, text, self.text_is_small, alignment)
+	self:_selection_lines(x, width, y_padding, height_index, self.dark_green)
+end
+
+function ui:_text(pos, text, text_is_small, alignment)
+	PrimitiveMan:DrawTextPrimitive(self.screen_offset + pos, text, text_is_small, alignment)
+end
+
+function ui:_selection_lines(x, width, y_padding, height_index, color)
+	local start_x = x + 4 - 1
+	local offset = Vector(width - 4 * 2 + 1, 0)
+	self:_line(Vector(start_x, y_padding + (height_index - 1) * self.text_vertical_stride), offset, color)
+	self:_line(Vector(start_x, y_padding + height_index * self.text_vertical_stride - 1), offset, color)
+end
+
+function ui:_line(pos, offset, color)
+	local world_pos = self.screen_offset + pos
+	PrimitiveMan:DrawLinePrimitive(world_pos, world_pos + offset, color)
 end
 
 -- MODULE END ------------------------------------------------------------------

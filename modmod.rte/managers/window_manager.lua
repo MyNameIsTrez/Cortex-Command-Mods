@@ -24,8 +24,8 @@ function M:init()
 
 	self.text_is_small = true
 
-	local no_maximum_width = 0
-	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
+	local no_max_width = 0
+	self.font_height = FrameMan:CalculateTextHeight("foo", no_max_width, self.text_is_small)
 	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
 
 	CameraMan:SetOffset(Vector(0, 0), Activity.PLAYER_1) -- TODO: Necessary?
@@ -37,7 +37,7 @@ function M:init()
 	self.scroll_speed = 0.3 -- TODO: This needs to be dynamic
 	self.window_scroll_timer = Timer()
 
-	self.alignment = { left = 0, center = 1, right = 2 }
+	self.alignments = { left = 0, center = 1, right = 2 }
 
 	self.selectable_windows = { object_tree = 0, properties = 1 }
 	self.selected_window = self.selectable_windows.object_tree
@@ -50,25 +50,25 @@ function M:update()
 	-- self:_update_screen_offset_with_prediction()
 end
 
-function M:draw_border_fill(top_left_pos, width, height, color)
-	self:_draw_box_fill(top_left_pos, width, height, color)
-	self:draw_border(top_left_pos, width, height)
+function M:draw_border_fill(pos, width, height, color)
+	self:_draw_box_fill(pos, width, height, color)
+	self:draw_border(pos, width, height)
 end
 
-function M:draw_border(top_left_pos, width, height)
-	self:_draw_box(top_left_pos, width, height, ui.orange)
-	self:_draw_box(top_left_pos + Vector(1, 1), width - 2, height - 2, ui.orange)
+function M:draw_border(pos, width, height)
+	self:_draw_box(pos, width, height, ui.orange)
+	self:_draw_box(pos + Vector(1, 1), width - 2, height - 2, ui.orange)
 end
 
-function M:draw_selected_line_background(top_left_pos, width, height_index)
-	self:draw_selection_lines(top_left_pos.X, width, top_left_pos.Y, height_index, ui.yellow)
+function M:draw_selected_line_background(pos, width, height_index)
+	self:draw_selection_lines(pos.X, width, pos.Y, height_index, ui.yellow)
 end
 
 function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, alignment)
 	local y = y_padding + self.text_top_padding + (height_index - 1) * self.text_vertical_stride
 
 	local pos
-	if alignment == self.alignment.left then
+	if alignment == self.alignments.left then
 		pos = Vector(x + x_padding, y)
 	else
 		pos = Vector(x + width / 2, y)
@@ -78,10 +78,10 @@ function M:draw_text_line(x, width, x_padding, y_padding, height_index, text, al
 	self:draw_selection_lines(x, width, y_padding, height_index, ui.dark_green)
 end
 
-function M:draw_line(top_left_pos, offset_x, offset_y, color)
+function M:draw_line(pos, offset_x, offset_y, color)
 	PrimitiveMan:DrawLinePrimitive(
-		self.screen_offset + top_left_pos,
-		self.screen_offset + top_left_pos + Vector(offset_x, offset_y),
+		self.screen_offset + pos,
+		self.screen_offset + pos + Vector(offset_x, offset_y),
 		color
 	)
 end
@@ -107,21 +107,21 @@ end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-function M:_draw_box(top_left_pos, width, height, color)
+function M:_draw_box(pos, width, height, color)
 	PrimitiveMan:DrawBoxPrimitive(
-		self.screen_offset + top_left_pos,
-		self.screen_offset + top_left_pos + Vector(width - 1, height - 1),
+		self.screen_offset + pos,
+		self.screen_offset + pos + Vector(width - 1, height - 1),
 		color
 	)
 end
 
-function M:_draw_box_fill(top_left_pos, width, height, color)
-	local screen_top_left_pos = self.screen_offset + top_left_pos
-	PrimitiveMan:DrawBoxFillPrimitive(screen_top_left_pos, screen_top_left_pos + Vector(width - 1, height - 1), color)
+function M:_draw_box_fill(pos, width, height, color)
+	local world_pos = self.screen_offset + pos
+	PrimitiveMan:DrawBoxFillPrimitive(world_pos, world_pos + Vector(width - 1, height - 1), color)
 end
 
-function M:_draw_text(top_left_pos, text, text_is_small, alignment)
-	PrimitiveMan:DrawTextPrimitive(self.screen_offset + top_left_pos, text, text_is_small, alignment)
+function M:_draw_text(pos, text, text_is_small, alignment)
+	PrimitiveMan:DrawTextPrimitive(self.screen_offset + pos, text, text_is_small, alignment)
 end
 
 function M:_update_screen_offset()

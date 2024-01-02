@@ -250,7 +250,7 @@ function M:_draw_property_names()
 			self.window_top_padding,
 			height_index,
 			str,
-			self.window_manager.alignment.center
+			ui.alignments.center
 		)
 	end
 end
@@ -307,7 +307,7 @@ function M:_draw_property_values()
 					self.window_top_padding,
 					height_index - self.scrolling_line_offset,
 					str,
-					self.window_manager.alignment.left
+					ui.alignments.left
 				)
 			end
 		end

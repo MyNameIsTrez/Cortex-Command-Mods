@@ -553,7 +553,7 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 					self.window_top_padding,
 					height[1] - self.scrolling_line_offset,
 					v,
-					self.window_manager.alignment.left
+					ui.alignments.left
 				)
 			end
 		end

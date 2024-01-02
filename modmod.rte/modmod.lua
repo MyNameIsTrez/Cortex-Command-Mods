@@ -20,21 +20,6 @@ function ModMod:StartScript()
 	self.showing_modmod = false
 	self.initialized = false
 
-	self.pixels_of_indentation_per_depth = 15
-
-	self.window_top_padding = 16
-	self.window_left_padding = 15
-	self.window_right_padding = 40
-
-	self.text_is_small = true
-
-	self.text_top_padding = 3
-
-	local no_maximum_width = 0
-	self.font_height = FrameMan:CalculateTextHeight("foo", no_maximum_width, self.text_is_small)
-	local text_bottom_padding = 3
-	self.text_vertical_stride = self.text_top_padding + self.font_height + text_bottom_padding
-
 	self.activity = ActivityMan:GetActivity()
 	self.gameActivity = ToGameActivity(self.activity)
 
@@ -114,29 +99,26 @@ function ModMod:UpdateScript()
 	local object_tree_height = self:get_object_tree_height(object_tree_strings)
 	-- utils.print{object_tree_height = object_tree_height}
 
-	-- Draw empty area above object tree
-	ui:filled_box_with_border(
-		Vector(0, 0),
-		Vector(object_tree_width, self.window_top_padding),
-		ui.dark_green,
-		ui.orange
-	)
+	-- Draw empty area box above object tree
+	ui:filled_box_with_border(Vector(0, 0), Vector(object_tree_width, ui.window_top_padding), ui.dark_green, ui.orange)
 
 	-- Draw object tree box
 	ui:filled_box_with_border(
-		Vector(0, self.window_top_padding - 2),
+		Vector(0, ui.window_top_padding - 2),
 		Vector(object_tree_width, object_tree_height),
 		ui.light_green,
 		ui.orange
 	)
 
-	-- Draw empty area below object tree
+	-- Draw empty area box below object tree
 	ui:filled_box_with_border(
-		Vector(0, self.window_top_padding + object_tree_height - 4),
-		Vector(object_tree_width, ui.screen_height - self.window_top_padding - object_tree_height + 4),
+		Vector(0, ui.window_top_padding + object_tree_height - 4),
+		Vector(object_tree_width, ui.screen_height - ui.window_top_padding - object_tree_height + 4),
 		ui.dark_green,
 		ui.orange
 	)
+
+	ui:object_tree_strings(object_tree_strings, object_tree_width, { 0 }, 0)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 
@@ -190,13 +172,13 @@ end
 function ModMod:get_object_tree_width(object_tree_strings, depth)
 	local width = 0
 
-	local padding = self.window_left_padding + depth * self.pixels_of_indentation_per_depth + self.window_right_padding
+	local padding = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth + ui.window_right_padding
 
 	for _, v in ipairs(object_tree_strings) do
 		if type(v) == "table" then
 			width = math.max(width, self:get_object_tree_width({ v, depth + 1 }))
 		else
-			width = math.max(width, FrameMan:CalculateTextWidth(v, self.text_is_small) + padding)
+			width = math.max(width, FrameMan:CalculateTextWidth(v, ui.text_is_small) + padding)
 		end
 	end
 
@@ -204,9 +186,7 @@ function ModMod:get_object_tree_width(object_tree_strings, depth)
 end
 
 function ModMod:get_object_tree_height(object_tree_strings)
-	return self.text_top_padding
-		+ 1
-		+ self.text_vertical_stride * self:get_object_tree_string_count(object_tree_strings)
+	return ui.text_top_padding + 1 + ui.text_vertical_stride * self:get_object_tree_string_count(object_tree_strings)
 end
 
 function ModMod:get_object_tree_string_count(object_tree_strings)
