@@ -124,11 +124,7 @@ function ui:_box(pos, size, color)
 	local world_pos = self.screen_offset + pos
 	-- TODO: Is the -1 on width and height really necessary?
 	-- TODO: Is it *really* not the caller's responsibility?
-	PrimitiveMan:DrawBoxPrimitive(
-		world_pos,
-		world_pos + size - Vector(1, 1),
-		color
-	)
+	PrimitiveMan:DrawBoxPrimitive(world_pos, world_pos + size - Vector(1, 1), color)
 end
 
 -- MODULE END ------------------------------------------------------------------

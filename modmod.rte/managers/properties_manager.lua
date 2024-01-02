@@ -39,9 +39,7 @@ function M:init(modmod)
 
 	self.selected_property_index = 1
 
-	local lines_height = ui.screen_height
-		- self.window_top_padding
-		- self.window_manager.text_top_padding
+	local lines_height = ui.screen_height - self.window_top_padding - self.window_manager.text_top_padding
 	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
 
 	self.scrolling_line_offset = 0

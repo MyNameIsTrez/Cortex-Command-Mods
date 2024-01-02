@@ -30,9 +30,7 @@ function M:init(modmod)
 
 	self.selected_object_indices = { 1 }
 
-	local lines_height = ui.screen_height
-		- self.window_top_padding
-		- self.window_manager.text_top_padding
+	local lines_height = ui.screen_height - self.window_top_padding - self.window_manager.text_top_padding
 	self.max_scrolling_lines = math.floor(lines_height / self.window_manager.text_vertical_stride)
 
 	self.scrolling_line_offset = 0
@@ -468,21 +466,11 @@ function M:_update_tree_height_recursively(object_tree_strings)
 end
 
 function M:_draw_object_tree_background()
-	self.window_manager:draw_border_fill(
-		Vector(0, 0),
-		self.object_tree_width,
-		ui.screen_height,
-		ui.light_green
-	)
+	self.window_manager:draw_border_fill(Vector(0, 0), self.object_tree_width, ui.screen_height, ui.light_green)
 end
 
 function M:_draw_top_background()
-	self.window_manager:draw_border_fill(
-		Vector(0, 0),
-		self.object_tree_width,
-		self.window_top_padding,
-		ui.dark_green
-	)
+	self.window_manager:draw_border_fill(Vector(0, 0), self.object_tree_width, self.window_top_padding, ui.dark_green)
 end
 
 function M:_draw_object_tree_border()
