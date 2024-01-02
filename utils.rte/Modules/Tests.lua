@@ -11,9 +11,9 @@ local M = {}
 function M.test(test_type, test_name, result, expected)
 	if not utils.deepequals(result, expected) then
 		print("Result:")
-		utils.RecursivelyPrint(result)
+		utils.print(result)
 		print("Expected:")
-		utils.RecursivelyPrint(expected)
+		utils.print(expected)
 		error(string.format("The '%s' test '%s' failed, report it to MyNameIsTrez#1585!", test_type, test_name))
 	end
 end

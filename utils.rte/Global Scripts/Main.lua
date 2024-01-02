@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local inputHandler = dofile("utils.rte/Modules/InputHandler.lua")
+-- local inputHandler = dofile("utils.rte/Modules/InputHandler.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 

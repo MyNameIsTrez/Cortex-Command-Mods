@@ -30,7 +30,7 @@ function Bone:UpdateScript()
 		self.frame_index = 0
 		self.bone_sound:Play()
 	elseif self.playing and self.frame_index <= 47 then
-		local screen_offset = SceneMan:GetOffset(0)
+		local screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 		local center_position = screen_offset + self.bone_size / 2
 		local rotation_angle = 0
 		PrimitiveMan:DrawBitmapPrimitive(center_position, self.bone_mosparticle, rotation_angle, self.frame_index)

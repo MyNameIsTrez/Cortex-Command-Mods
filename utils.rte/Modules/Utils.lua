@@ -38,51 +38,6 @@ function M.MOIterator()
 	end
 end
 
----Prints the content of a table recursively so it can easily be inspected in a console.
----@param tab table
----@param recursive boolean
----@param depth number
-function M.RecursivelyPrint(tab, recursive, depth)
-	local recursive = not (recursive == false) -- True by default.
-	local depth = depth or 0 -- The depth starts at 0.
-
-	-- Getting the longest key of this (sub)table, so all printed values will line up.
-	local longestKey = 1
-	for key, _ in pairs(tab) do
-		local keyLength = #tostring(key)
-		if keyLength > longestKey then
-			longestKey = keyLength
-		end
-	end
-
-	if depth == 0 then
-		print("")
-	end
-
-	-- Print the keys and values, with extra spaces so the values line up.
-	for key, value in pairs(tab) do
-		local spacingCount = longestKey - #tostring(key) -- How many spaces are added between the key and value.
-
-		print(
-			string.rep(string.rep(" ", 4), depth) -- Tabulate tables that are deep inside the original table.
-				.. string.rep(" ", spacingCount)
-				.. tostring(key)
-				.. " | "
-				.. GetValueString(value)
-		)
-
-		local isTable = type(value) == "table"
-		local valueIsTable = (value == tab)
-		if recursive and isTable and not valueIsTable then
-			M.RecursivelyPrint(value, recursive, depth + 1) -- Go into the table.
-		end
-	end
-
-	if depth == 0 then
-		print("")
-	end
-end
-
 ---Re-maps a number from one range to another.
 ---
 ---If you are mapping a lot with the same slope you should use MapUsingSlope() with GetMapSlope() instead to save performance.
@@ -224,15 +179,6 @@ end
 --   return lpeg.match(p, s)
 -- end
 
-function M.get_first_human_player_id()
-	local activity = ActivityMan:GetActivity()
-	for player_id = 0, activity.PlayerCount do
-		if activity:PlayerActive(player_id) and activity:PlayerHuman(player_id) then
-			return player_id
-		end
-	end
-end
-
 -- function M.round(n)
 -- 	return math.floor(n + 0.5)
 -- end
@@ -322,14 +268,60 @@ end
 
 function M.print(str, recursive)
 	if type(str) == "table" then
-		M.RecursivelyPrint(str, recursive)
+		RecursivelyPrint(str, recursive)
 	else
 		print(str)
 	end
+	-- TODO: Try commenting this out
 	M.flush_log()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+---Prints the content of a table recursively so it can easily be inspected in a console.
+---@param tab table
+---@param recursive boolean
+---@param depth number
+function RecursivelyPrint(tab, recursive, depth)
+	local recursive = not (recursive == false) -- True by default.
+	local depth = depth or 0 -- The depth starts at 0.
+
+	-- Getting the longest key of this (sub)table, so all printed values will line up.
+	local longestKey = 1
+	for key, _ in pairs(tab) do
+		local keyLength = #tostring(key)
+		if keyLength > longestKey then
+			longestKey = keyLength
+		end
+	end
+
+	if depth == 0 then
+		print("")
+	end
+
+	-- Print the keys and values, with extra spaces so the values line up.
+	for key, value in pairs(tab) do
+		local spacingCount = longestKey - #tostring(key) -- How many spaces are added between the key and value.
+
+		print(
+			string.rep(string.rep(" ", 4), depth) -- Tabulate tables that are deep inside the original table.
+				.. string.rep(" ", spacingCount)
+				.. tostring(key)
+				.. " | "
+				.. GetValueString(value)
+		)
+
+		local isTable = type(value) == "table"
+		local valueIsTable = (value == tab)
+		if recursive and isTable and not valueIsTable then
+			RecursivelyPrint(value, recursive, depth + 1) -- Go into the table.
+		end
+	end
+
+	if depth == 0 then
+		print("")
+	end
+end
 
 ---Used by M.RecursivelyPrint() to turn any type of value into a string.
 ---@param value any
