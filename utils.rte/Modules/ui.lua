@@ -58,11 +58,11 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
-function ui:object_tree_buttons(object_tree_strings, object_tree_width, height, depth)
+function ui:object_tree_buttons(object_tree, object_tree_width, height, depth)
 	local text_x = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth
 
-	for _, v in ipairs(object_tree_strings) do
-		if type(v) == "table" then
+	for _, v in ipairs(object_tree.children) do
+		if v.children ~= nil and not v.collapsed then
 			self:object_tree_buttons(v, object_tree_width, height, depth + 1)
 		else
 			-- Using a table as a pointer
@@ -70,14 +70,15 @@ function ui:object_tree_buttons(object_tree_strings, object_tree_width, height, 
 
 			-- TODO: An optional optimization is to return when height goes past the max height
 			if height[1] > self.object_tree_line_scroll_offset then
-				local text = v
 				local height_index = height[1] - ui.object_tree_line_scroll_offset
 				local text_vertical_stride = (height_index - 1) * self.text_vertical_stride
 				local y = ui.window_top_padding + text_vertical_stride
 				local pos = Vector(2, y)
 				local width = object_tree_width - 4
 
-				self:_object_tree_button(text, pos, width, text_x)
+				if self:_object_tree_button(v.text, pos, width, text_x) then
+					print("foo")
+				end
 			end
 		end
 	end

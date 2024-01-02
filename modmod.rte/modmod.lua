@@ -89,14 +89,13 @@ function ModMod:UpdateScript()
 		return
 	end
 
-	local object_tree_strings = self:get_object_tree_strings(self.object_tree)
-	-- utils.print(object_tree_strings)
+	self:update_object_tree_text(self.object_tree)
 
 	local depth = 0
-	local object_tree_width = self:get_object_tree_width(object_tree_strings, depth)
+	local object_tree_width = self:get_object_tree_width(self.object_tree, depth)
 	-- utils.print{object_tree_width = object_tree_width}
 
-	local object_tree_height = self:get_object_tree_height(object_tree_strings)
+	local object_tree_height = self:get_object_tree_height(self.object_tree)
 	-- utils.print{object_tree_height = object_tree_height}
 
 	-- Draw empty area box above object tree
@@ -118,7 +117,7 @@ function ModMod:UpdateScript()
 		ui.orange
 	)
 
-	ui:object_tree_buttons(object_tree_strings, object_tree_width, { 0 }, 0)
+	ui:object_tree_buttons(self.object_tree, object_tree_width, { 0 }, 0)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 
@@ -131,9 +130,7 @@ end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-function ModMod:get_object_tree_strings(object_tree)
-	local object_tree_strings = {}
-
+function ModMod:update_object_tree_text(object_tree)
 	for _, v in ipairs(object_tree.children) do
 		local str = ""
 
@@ -159,42 +156,40 @@ function ModMod:get_object_tree_strings(object_tree)
 			str = str .. csts.get_property(v)
 		end
 
-		table.insert(object_tree_strings, str)
+		v.text = str
 
 		if v.children ~= nil and not v.collapsed then
-			table.insert(object_tree_strings, self:get_object_tree_strings(v))
+			self:update_object_tree_text(v)
 		end
 	end
-
-	return object_tree_strings
 end
 
-function ModMod:get_object_tree_width(object_tree_strings, depth)
+function ModMod:get_object_tree_width(object_tree, depth)
 	local width = 0
 
 	local padding = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth + ui.window_right_padding
 
-	for _, v in ipairs(object_tree_strings) do
-		if type(v) == "table" then
+	for _, v in ipairs(object_tree.children) do
+		if v.children ~= nil and not v.collapsed then
 			width = math.max(width, self:get_object_tree_width({ v, depth + 1 }))
 		else
-			width = math.max(width, FrameMan:CalculateTextWidth(v, ui.text_is_small) + padding)
+			width = math.max(width, FrameMan:CalculateTextWidth(v.text, ui.text_is_small) + padding)
 		end
 	end
 
 	return width
 end
 
-function ModMod:get_object_tree_height(object_tree_strings)
-	return ui.text_top_padding + 1 + ui.text_vertical_stride * self:get_object_tree_string_count(object_tree_strings)
+function ModMod:get_object_tree_height(object_tree)
+	return ui.text_top_padding + 1 + ui.text_vertical_stride * self:get_object_tree_line_count(object_tree)
 end
 
-function ModMod:get_object_tree_string_count(object_tree_strings)
+function ModMod:get_object_tree_line_count(object_tree)
 	local count = 0
 
-	for _, v in ipairs(object_tree_strings) do
-		if type(v) == "table" then
-			count = count + self:get_object_tree_string_count(v)
+	for _, v in ipairs(object_tree.children) do
+		if v.children ~= nil and not v.collapsed then
+			count = count + self:get_object_tree_line_count(v)
 		else
 			count = count + 1
 		end
