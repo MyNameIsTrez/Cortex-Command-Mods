@@ -31,7 +31,7 @@ return {
 		"HatchDoorSwingRange",
 	},
 	ACrab = {
-		"Turret",
+		"Actors - Turret",
 		"Jetpack",
 		-- "LFGLeg",
 		"LeftFGLeg",
