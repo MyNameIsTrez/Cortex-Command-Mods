@@ -27,6 +27,10 @@
     </Filter>
     <FolderPairs>
         <Pair>
+            <Left>I:\Programming\Cortex-Command-Mods\example_ui.rte</Left>
+            <Right>I:\Programming\Cortex-Command-Community-Project-Data\Mods\example_ui.rte</Right>
+        </Pair>
+        <Pair>
             <Left>I:\Programming\Cortex-Command-Mods\bone.rte</Left>
             <Right>I:\Programming\Cortex-Command-Community-Project-Data\Mods\bone.rte</Right>
         </Pair>
