@@ -21,6 +21,8 @@ end
 function ExampleUI:UpdateScript()
 	-- print("In ExampleUI:UpdateScript()")
 
+	ui:update()
+
 	if UInputMan:KeyPressed(Key.M) then
 		self.menu_is_open = not self.menu_is_open
 
@@ -41,9 +43,7 @@ function ExampleUI:UpdateScript()
 			self.funds_changed_sound:Play()
 		end
 
-		local mouse_pos = UInputMan:GetMousePos() / ui.screen_scale
-
-		local world_pos = mouse_pos + CameraMan:GetOffset(Activity.PLAYER_1)
+		local world_pos = ui.screen_offset + ui.mouse_pos
 
 		local cursor_center_pos = world_pos + self.cursor_size / 2
 
