@@ -20,6 +20,15 @@ function ModMod:StartScript()
 	self.showing_modmod = false
 	self.initialized = false
 
+	-- self.min_object_tree_width = 106 -- TODO: Use
+	-- self.max_object_tree_width = 300 -- TODO: Use
+	self.object_tree_width = 200
+
+	-- self.min_object_tree_height = ? -- TODO: Use
+	-- self.max_object_tree_height = ? -- TODO: Use
+	-- With a value of 20, max_visible_object_tree_lines will be 1, and with 36 it will be 2
+	self.object_tree_height = 164 -- max_visible_object_tree_lines will be 10
+
 	self.activity = ActivityMan:GetActivity()
 	self.gameActivity = ToGameActivity(self.activity)
 
@@ -93,8 +102,9 @@ function ModMod:UpdateScript()
 
 	local object_tree_line_count = self:get_object_tree_line_count(self.object_tree)
 
-	-- TODO: Calculate this, somehow
-	local max_visible_object_tree_lines = 10
+	local max_visible_object_tree_lines = (self.object_tree_height - ui.text_top_padding - 1) / ui.button_height
+	-- TODO: Check if the printed value is an exact integer and exactly right
+	-- print(max_visible_object_tree_lines)
 
 	local mouse_wheel_movement = UInputMan:MouseWheelMoved()
 	if mouse_wheel_movement > 0 then -- if scrolling up
@@ -114,42 +124,40 @@ function ModMod:UpdateScript()
 		-- TODO: Draw scrollbar on the right of the object tree
 	end
 
-	local depth = 0
-	local object_tree_width = self:get_object_tree_width(self.object_tree, depth)
-	-- utils.print{object_tree_width = object_tree_width}
-
 	local visible_object_tree_line_count = math.min(
 		max_visible_object_tree_lines,
 		object_tree_line_count - ui.object_tree_line_scroll_offset
 	)
-	local object_tree_height = ui.text_top_padding + 1 + ui.text_vertical_stride * visible_object_tree_line_count
+	local object_tree_height = ui.text_top_padding + 1 + ui.button_height * visible_object_tree_line_count
 	-- utils.print{object_tree_height = object_tree_height}
 
 	-- Draw empty area box above object tree
-	ui:filled_box_with_border(Vector(0, 0), Vector(object_tree_width, ui.window_top_padding), ui.dark_green, ui.orange)
+	ui:filled_box_with_border(Vector(0, 0), Vector(self.object_tree_width, ui.window_top_padding), ui.dark_green, ui.orange)
 
 	-- Draw object tree box
 	ui:filled_box_with_border(
 		Vector(0, ui.window_top_padding - 2),
-		Vector(object_tree_width, object_tree_height),
+		Vector(self.object_tree_width, object_tree_height),
 		ui.light_green,
 		ui.orange
 	)
 
+	-- TODO: Draw a little handle on the bottom-right of the object tree for adjusting self.object_tree_width and self.object_tree_height
+	-- utils.print{object_tree_width = self.object_tree_width}
+
 	-- Draw empty area box below object tree
-	ui:filled_box_with_border(
-		Vector(0, ui.window_top_padding + object_tree_height - 4),
-		Vector(object_tree_width, ui.screen_height - ui.window_top_padding - object_tree_height + 4),
-		ui.dark_green,
-		ui.orange
-	)
+	local pos = Vector(0, ui.window_top_padding + object_tree_height - 4)
+	local size = Vector(self.object_tree_width, self.object_tree_height - object_tree_height + 2)
+	if size.Y > 2 then
+		ui:filled_box_with_border(pos, size, ui.dark_green, ui.orange)
+	end
 
 	local height_ptr = { 0 }
 	local depth = 0
 	local selected_object_path = "."
 	self:object_tree_buttons(
 		self.object_tree,
-		object_tree_width,
+		self.object_tree_width,
 		height_ptr,
 		ui.object_tree_line_scroll_offset,
 		max_visible_object_tree_lines,
@@ -200,22 +208,6 @@ function ModMod:update_object_tree_text(object_tree)
 	end
 end
 
-function ModMod:get_object_tree_width(object_tree, depth)
-	local width = 106
-
-	local padding = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth + ui.window_right_padding
-
-	for _, v in ipairs(object_tree.children) do
-		if v.children ~= nil and not v.collapsed then
-			width = math.max(width, self:get_object_tree_width(v, depth + 1))
-		else
-			width = math.max(width, FrameMan:CalculateTextWidth(v.text, ui.text_is_small) + padding)
-		end
-	end
-
-	return width
-end
-
 function ModMod:get_object_tree_line_count(object_tree)
 	local count = 0
 
@@ -250,8 +242,7 @@ function ModMod:object_tree_buttons(
 
 		if height_ptr[1] > ui.object_tree_line_scroll_offset then
 			local height_index = height_ptr[1] - ui.object_tree_line_scroll_offset
-			local text_vertical_stride = (height_index - 1) * ui.text_vertical_stride
-			local y = ui.window_top_padding + text_vertical_stride
+			local y = ui.window_top_padding + (height_index - 1) * ui.button_height
 			local pos = Vector(2, y)
 			local width = object_tree_width - 4
 			local is_directory = selected_object.directory_name ~= nil

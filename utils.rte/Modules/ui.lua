@@ -13,8 +13,6 @@ ui.alignments = { left = 0, center = 1, right = 2 }
 -- ui.screen_scale = FrameMan.PlayerScreenScale
 ui.screen_scale = 2
 
-ui.screen_height = FrameMan.PlayerScreenHeight
-
 ui.object_tree_line_scroll_offset = 0
 
 ui.text_is_small = true
@@ -41,7 +39,7 @@ local text_bottom_padding = 3
 -- INTERNAL VARIABLES 2 --------------------------------------------------------
 
 ui.font_height = FrameMan:CalculateTextHeight("foo", no_max_width, ui.text_is_small)
-ui.text_vertical_stride = ui.text_top_padding + ui.font_height + text_bottom_padding
+ui.button_height = ui.text_top_padding + ui.font_height + text_bottom_padding
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
@@ -75,7 +73,7 @@ function ui:object_tree_button(text, pos, width, text_x, is_directory)
 		end
 	end
 
-	local size = Vector(width, self.text_vertical_stride)
+	local size = Vector(width, self.button_height)
 
 	local is_active = self.active == text
 	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
@@ -169,7 +167,7 @@ function ui:_selection_lines(pos, width, color)
 	local offset = Vector(width - padding * 2 + 1 - pos.X, 0)
 
 	self:_line(Vector(start_x, pos.Y), offset, color)
-	self:_line(Vector(start_x, pos.Y + self.text_vertical_stride - 1), offset, color)
+	self:_line(Vector(start_x, pos.Y + self.button_height - 1), offset, color)
 end
 
 function ui:_line(pos, offset, color)
