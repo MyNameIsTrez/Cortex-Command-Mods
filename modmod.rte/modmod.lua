@@ -91,11 +91,28 @@ function ModMod:UpdateScript()
 		return
 	end
 
+	local mouse_wheel_movement = UInputMan:MouseWheelMoved()
+	-- print(mouse_wheel_movement)
+	-- print(ui.object_tree_line_scroll_offset)
+	if mouse_wheel_movement > 0 then -- if scrolling up
+		ui.object_tree_line_scroll_offset = math.max(0, ui.object_tree_line_scroll_offset - mouse_wheel_movement)
+	elseif mouse_wheel_movement < 0 then -- elseif scrolling down
+		-- TODO: Calculate this the same way the old program did
+		local max_object_tree_line_scroll_offset = 5
+
+		-- Substracting mouse_wheel_movement is like adding, since it's negative
+		ui.object_tree_line_scroll_offset = math.min(
+			max_object_tree_line_scroll_offset,
+			ui.object_tree_line_scroll_offset - mouse_wheel_movement
+		)
+	end
+
 	local depth = 0
 	local object_tree_width = self:get_object_tree_width(self.object_tree, depth)
 	-- utils.print{object_tree_width = object_tree_width}
 
-	local object_tree_height = self:get_object_tree_height(self.object_tree)
+	local object_tree_line_count = self:get_object_tree_line_count(self.object_tree)
+	local object_tree_height = self:get_object_tree_height(self.object_tree, object_tree_line_count)
 	-- utils.print{object_tree_height = object_tree_height}
 
 	-- Draw empty area box above object tree
@@ -121,6 +138,12 @@ function ModMod:UpdateScript()
 	local depth = 0
 	local selected_object_path = "."
 	self:object_tree_buttons(self.object_tree, object_tree_width, height_ptr, depth, selected_object_path)
+
+	-- TODO: Replace 42 with a calculated value
+	local need_scroll_bar = object_tree_line_count > 42
+	if need_scroll_bar then
+		-- TODO: Draw scrollbar on the right of the object tree
+	end
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 	local cursor_center_pos = world_pos + self.cursor_size / 2
@@ -181,8 +204,8 @@ function ModMod:get_object_tree_width(object_tree, depth)
 	return width
 end
 
-function ModMod:get_object_tree_height(object_tree)
-	return ui.text_top_padding + 1 + ui.text_vertical_stride * self:get_object_tree_line_count(object_tree)
+function ModMod:get_object_tree_height(object_tree, object_tree_line_count)
+	return ui.text_top_padding + 1 + ui.text_vertical_stride * object_tree_line_count
 end
 
 function ModMod:get_object_tree_line_count(object_tree)
