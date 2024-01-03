@@ -46,7 +46,6 @@ ui.button_height = ui.text_top_padding + ui.font_height + text_bottom_padding
 function ui:update()
 	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 	self.mouse_pos = UInputMan:GetMousePos() / self.screen_scale
-	self.id = 0
 end
 
 function ui:filled_box_with_border(pos, size, filled_color, border_color)
@@ -57,28 +56,26 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
-function ui:object_tree_button(text, pos, width, text_x)
+function ui:object_tree_button(id, text, pos, width, text_x)
 	local clicked = false
 
-	self.id = self.id + 1
-
-	if self.active == self.id then
+	if self.active == id then
 		if self:_left_mouse_went_up() then
-			if self.hot == self.id then
+			if self.hot == id then
 				clicked = true
 			end
 
 			self.active = nil
 		end
-	elseif self.hot == self.id then
+	elseif self.hot == id then
 		if self:_left_mouse_went_down() then
-			self.active = self.id
+			self.active = id
 		end
 	end
 
 	local size = Vector(width, self.button_height)
 
-	local is_active = self.active == self.id
+	local is_active = self.active == id
 	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
 
 	-- TODO: Change the color of the button based on whether it's a file/directory/subobject
@@ -92,13 +89,13 @@ function ui:object_tree_button(text, pos, width, text_x)
 		local button_color_hot = ui.light_green
 		self:_filled_box(pos, size, button_color_hot)
 
-		self.hot = self.id
+		self.hot = id
 	else
 		-- local button_color_normal = 13 -- Red
 		local button_color_normal = ui.light_green
 		self:_filled_box(pos, size, button_color_normal)
 
-		if self.hot == self.id then
+		if self.hot == id then
 			self.hot = nil
 		end
 	end
@@ -113,6 +110,40 @@ function ui:object_tree_button(text, pos, width, text_x)
 	end
 
 	return clicked
+end
+
+function ui:handle(id, pos, size)
+	if self.active == id then
+		if self:_left_mouse_went_up() then
+			self.active = nil
+		end
+	elseif self.hot == id then
+		if self:_left_mouse_went_down() then
+			self.active = id
+		end
+	end
+
+	local is_active = self.active == id
+	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
+
+	if is_active then
+		local button_color_active = 151 -- Green
+		self:_filled_box(pos, size, button_color_active)
+
+		return UInputMan:GetMouseMovement(Activity.PLAYER_1)
+	elseif is_hot then
+		local button_color_hot = ui.yellow
+		self:_filled_box(pos, size, button_color_hot)
+
+		self.hot = id
+	else
+		local button_color_normal = 13 -- Red
+		self:_filled_box(pos, size, button_color_normal)
+
+		if self.hot == id then
+			self.hot = nil
+		end
+	end
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------

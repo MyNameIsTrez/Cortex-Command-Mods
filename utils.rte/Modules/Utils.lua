@@ -276,6 +276,10 @@ function M.print(str, recursive)
 	M.flush_log()
 end
 
+function M.clamp(v, min, max)
+	return math.max(min, math.min(max, v))
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 ---Prints the content of a table recursively so it can easily be inspected in a console.

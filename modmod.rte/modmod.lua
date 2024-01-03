@@ -20,13 +20,17 @@ function ModMod:StartScript()
 	self.showing_modmod = false
 	self.initialized = false
 
-	-- self.min_object_tree_width = 106 -- TODO: Use
-	-- self.max_object_tree_width = 300 -- TODO: Use
 	self.object_tree_width = 200
+	self.min_object_tree_width = 106
+	self.max_object_tree_width = 300
 
-	-- self.lower_max_visible_object_tree_lines = ? -- TODO: Use
-	-- self.upper_max_visible_object_tree_lines = ? -- TODO: Use
-	self.max_visible_object_tree_lines = 10
+	local max_object_tree_lines = 10
+	local lower_max_object_tree_lines = 5
+	local upper_max_object_tree_lines = 20
+
+	self.max_object_tree_height = self:lines_to_height(max_object_tree_lines)
+	self.lower_max_object_tree_height = self:lines_to_height(lower_max_object_tree_lines)
+	self.upper_max_object_tree_height = self:lines_to_height(upper_max_object_tree_lines)
 
 	self.activity = ActivityMan:GetActivity()
 	self.gameActivity = ToGameActivity(self.activity)
@@ -100,16 +104,14 @@ function ModMod:UpdateScript()
 	end
 
 	local object_tree_line_count = self:get_object_tree_line_count(self.object_tree)
-	-- utils.print{object_tree_line_count=self.object_tree_line_count}
+
+	local max_object_tree_lines = self:height_to_lines(self.max_object_tree_height)
 
 	local mouse_wheel_movement = UInputMan:MouseWheelMoved()
 	if mouse_wheel_movement > 0 then -- if scrolling up
 		ui.object_tree_line_scroll_offset = math.max(0, ui.object_tree_line_scroll_offset - mouse_wheel_movement)
 	elseif mouse_wheel_movement < 0 then -- elseif scrolling down
-		local max_object_tree_line_scroll_offset = math.max(
-			0,
-			object_tree_line_count - self.max_visible_object_tree_lines
-		)
+		local max_object_tree_line_scroll_offset = math.max(0, object_tree_line_count - max_object_tree_lines)
 
 		-- Substracting mouse_wheel_movement is like adding it, since it's a negative value
 		local new_offset = ui.object_tree_line_scroll_offset - mouse_wheel_movement
@@ -118,14 +120,14 @@ function ModMod:UpdateScript()
 		end
 	end
 
-	local need_scrollbar = object_tree_line_count > self.max_visible_object_tree_lines
+	local need_scrollbar = object_tree_line_count > max_object_tree_lines
 	if need_scrollbar then
 		-- TODO: Draw a new ui:scrollbar() to the right of the object tree
 		-- TODO: It's important that it is also clickable
 	end
 
 	local visible_object_tree_line_count = math.min(
-		self.max_visible_object_tree_lines,
+		max_object_tree_lines,
 		object_tree_line_count - ui.object_tree_line_scroll_offset
 	)
 	local object_tree_height = ui.text_top_padding + 1 + visible_object_tree_line_count * ui.button_height
@@ -155,32 +157,45 @@ function ModMod:UpdateScript()
 		self.object_tree_width,
 		height_ptr,
 		ui.object_tree_line_scroll_offset,
-		self.max_visible_object_tree_lines,
+		max_object_tree_lines,
 		depth,
 		selected_object_path
 	)
 
 	-- Draw empty area box below object tree
 	local pos = Vector(0, ui.window_top_padding + object_tree_height - 4)
-	local max_visible_object_tree_height = ui.text_top_padding
-		+ 1
-		+ self.max_visible_object_tree_lines * ui.button_height
-	local size = Vector(self.object_tree_width, max_visible_object_tree_height - object_tree_height + 2)
+	local max_object_tree_height = ui.text_top_padding + 1 + max_object_tree_lines * ui.button_height
+	local empty_below_tree_y = max_object_tree_height - object_tree_height + 2
+	local size = Vector(self.object_tree_width, empty_below_tree_y)
 	if size.Y > 2 then
 		ui:filled_box_with_border(pos, size, ui.dark_green, ui.orange)
 	end
 
 	-- Add a handle to the right of the object tree
-	-- local pos = ?
-	-- local size = ?
-	-- local px_moved = ui:handle(pos, size)
-	-- if px_moved then
-	-- 	-- TODO: min() and max() this
-	-- 	self.object_tree_width = self.object_tree_width + px_moved
-	-- end
-	-- utils.print{object_tree_width = self.object_tree_width}
+	local pos = Vector(self.object_tree_width, 0)
+	local object_tree_bottom_y = ui.window_top_padding + object_tree_height - 4 + empty_below_tree_y
+	local handle_width = 3
+	local size = Vector(handle_width, object_tree_bottom_y)
+	local px_moved = ui:handle("handle right of object tree", pos, size)
+	if px_moved then
+		self.object_tree_width = utils.clamp(
+			self.object_tree_width + px_moved.X,
+			self.min_object_tree_width,
+			self.max_object_tree_width
+		)
+	end
 
-	-- TODO: Add a handle to the bottom of the object tree
+	-- Add a handle to the bottom of the object tree
+	local pos = Vector(0, object_tree_bottom_y)
+	local size = Vector(self.object_tree_width, handle_width)
+	local px_moved = ui:handle("handle below object tree", pos, size)
+	if px_moved then
+		self.max_object_tree_height = utils.clamp(
+			self.max_object_tree_height + px_moved.Y,
+			self.lower_max_object_tree_height,
+			self.upper_max_object_tree_height
+		)
+	end
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 	local cursor_center_pos = world_pos + self.cursor_size / 2
@@ -190,6 +205,14 @@ function ModMod:UpdateScript()
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
+
+function ModMod:lines_to_height(lines)
+	return lines * ui.button_height + ui.text_top_padding + 1
+end
+
+function ModMod:height_to_lines(height)
+	return math.floor((height - ui.text_top_padding - 1) / ui.button_height)
+end
 
 function ModMod:get_object_tree_line_count(object_tree)
 	local count = 0
@@ -210,7 +233,7 @@ function ModMod:object_tree_buttons(
 	object_tree_width,
 	height_ptr,
 	object_tree_line_scroll_offset,
-	max_visible_object_tree_lines,
+	max_object_tree_lines,
 	depth,
 	selected_object_path
 )
@@ -219,17 +242,18 @@ function ModMod:object_tree_buttons(
 	for _, selected_object in ipairs(object_tree.children) do
 		height_ptr[1] = height_ptr[1] + 1
 
-		if height_ptr[1] - object_tree_line_scroll_offset > max_visible_object_tree_lines then
+		if height_ptr[1] - object_tree_line_scroll_offset > max_object_tree_lines then
 			return
 		end
 
 		if height_ptr[1] > ui.object_tree_line_scroll_offset then
+			local id = "object tree button " .. height_ptr[1]
 			local height_index = height_ptr[1] - ui.object_tree_line_scroll_offset
 			local y = ui.window_top_padding + (height_index - 1) * ui.button_height
 			local pos = Vector(2, y)
 			local width = object_tree_width - 4
 
-			if ui:object_tree_button(selected_object.text, pos, width, text_x) then
+			if ui:object_tree_button(id, selected_object.text, pos, width, text_x) then
 				if selected_object.directory_name ~= nil then
 					local path = utils.path_join(selected_object_path, selected_object.directory_name)
 					self:object_tree_directory_pressed(selected_object, path)
@@ -249,7 +273,7 @@ function ModMod:object_tree_buttons(
 				object_tree_width,
 				height_ptr,
 				object_tree_line_scroll_offset,
-				max_visible_object_tree_lines,
+				max_object_tree_lines,
 				depth + 1,
 				path
 			)
