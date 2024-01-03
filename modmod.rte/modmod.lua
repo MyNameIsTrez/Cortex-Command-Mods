@@ -301,31 +301,31 @@ end
 
 function ModMod:update_object_tree_text(object_tree)
 	for _, v in ipairs(object_tree.children) do
-		local str = ""
+		local text = ""
 
 		if v.collapsed then
-			str = str .. "v"
+			text = text .. "v"
 		elseif v.collapsed == false then
-			str = str .. ">"
+			text = text .. ">"
 		else
 			-- TODO: It's jank how this relies on two spaces
 			-- being the same width as a "v" or a ">"
-			str = str .. "  "
+			text = text .. "  "
 		end
 
-		str = str .. " "
+		text = text .. " "
 
 		if v.preset_name_pointer ~= nil then
-			str = string.format("%s%s (%s)", str, v.preset_name_pointer.content, csts.get_property(v))
+			text = string.format("%s%s (%s)", text, v.preset_name_pointer.content, csts.get_property(v))
 		elseif v.file_name ~= nil then
-			str = str .. v.file_name
+			text = text .. v.file_name
 		elseif v.directory_name ~= nil then
-			str = str .. v.directory_name
+			text = text .. v.directory_name
 		else
-			str = str .. csts.get_property(v)
+			text = text .. csts.get_property(v)
 		end
 
-		v.text = str
+		v.text = text
 
 		if v.children ~= nil and not v.collapsed then
 			self:update_object_tree_text(v)
