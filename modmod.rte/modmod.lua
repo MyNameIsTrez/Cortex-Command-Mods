@@ -22,11 +22,11 @@ function ModMod:StartScript()
 	self.showing_modmod = false
 	self.initialized = false
 
-	self.object_tree_width = 200
+	self.object_tree_width = self:get_setting("object_tree_width")
 	self.min_object_tree_width = 106
 	self.max_object_tree_width = 300
 
-	local max_object_tree_lines = 10
+	local max_object_tree_lines = self:get_setting("max_object_tree_lines")
 	local lower_max_object_tree_lines = 5
 	local upper_max_object_tree_lines = 20
 
@@ -62,6 +62,7 @@ function ModMod:StartScript()
 	self.expand = CreateSoundContainer("Item Change", "modmod.rte")
 	self.collapse = CreateSoundContainer("Item Change", "modmod.rte")
 	-- self.switch_window = CreateSoundContainer("Focus Change", "modmod.rte")
+	-- TODO: Play "Selection Change" when the cursor hovers across buttons
 	-- self.up = CreateSoundContainer("Selection Change", "modmod.rte")
 	-- self.down = CreateSoundContainer("Selection Change", "modmod.rte")
 	-- self.up_object_tree_layer = CreateSoundContainer("Selection Change", "modmod.rte")
@@ -190,6 +191,7 @@ function ModMod:UpdateScript()
 				self.min_object_tree_width,
 				self.max_object_tree_width
 			)
+			self:set_setting("object_tree_width", self.object_tree_width)
 		end
 	end
 
@@ -207,6 +209,8 @@ function ModMod:UpdateScript()
 				self.lower_max_object_tree_height,
 				self.upper_max_object_tree_height
 			)
+			local max_object_tree_lines = self:height_to_lines(self.max_object_tree_height)
+			self:set_setting("max_object_tree_lines", max_object_tree_lines)
 		end
 	end
 
@@ -378,16 +382,16 @@ function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
 	print("foo")
 end
 
-function ModMod:invert(settings_key)
+function ModMod:invert_setting(settings_key)
 	local current_value = not self:get(settings_key)
-	self:set(settings_key, current_value)
+	self:set_setting(settings_key, current_value)
 end
 
-function ModMod:get(settings_key)
+function ModMod:get_setting(settings_key)
 	return settings[settings_key]
 end
 
-function ModMod:set(settings_key, value)
+function ModMod:set_setting(settings_key, value)
 	settings[settings_key] = value
 	file_functions.WriteTableToFile("modmod.rte/data/settings.lua", settings)
 end
