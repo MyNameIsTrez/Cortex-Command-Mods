@@ -147,20 +147,6 @@ function ModMod:UpdateScript()
 		ui.orange
 	)
 
-	-- TODO: Draw a little handle button on the bottom-right of the object tree
-	-- for adjusting self.object_tree_width and self.max_visible_object_tree_lines
-	-- utils.print{object_tree_width = self.object_tree_width}
-
-	-- Draw empty area box below object tree
-	local pos = Vector(0, ui.window_top_padding + object_tree_height - 4)
-	local max_visible_object_tree_height = ui.text_top_padding
-		+ 1
-		+ self.max_visible_object_tree_lines * ui.button_height
-	local size = Vector(self.object_tree_width, max_visible_object_tree_height - object_tree_height + 2)
-	if size.Y > 2 then
-		ui:filled_box_with_border(pos, size, ui.dark_green, ui.orange)
-	end
-
 	local height_ptr = { 0 }
 	local depth = 0
 	local selected_object_path = "."
@@ -173,6 +159,28 @@ function ModMod:UpdateScript()
 		depth,
 		selected_object_path
 	)
+
+	-- Draw empty area box below object tree
+	local pos = Vector(0, ui.window_top_padding + object_tree_height - 4)
+	local max_visible_object_tree_height = ui.text_top_padding
+		+ 1
+		+ self.max_visible_object_tree_lines * ui.button_height
+	local size = Vector(self.object_tree_width, max_visible_object_tree_height - object_tree_height + 2)
+	if size.Y > 2 then
+		ui:filled_box_with_border(pos, size, ui.dark_green, ui.orange)
+	end
+
+	-- Add a handle to the right of the object tree
+	-- local pos = ?
+	-- local size = ?
+	-- local px_moved = ui:handle(pos, size)
+	-- if px_moved then
+	-- 	-- TODO: min() and max() this
+	-- 	self.object_tree_width = self.object_tree_width + px_moved
+	-- end
+	-- utils.print{object_tree_width = self.object_tree_width}
+
+	-- TODO: Add a handle to the bottom of the object tree
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 	local cursor_center_pos = world_pos + self.cursor_size / 2

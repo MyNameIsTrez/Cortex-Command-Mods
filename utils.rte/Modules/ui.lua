@@ -46,6 +46,7 @@ ui.button_height = ui.text_top_padding + ui.font_height + text_bottom_padding
 function ui:update()
 	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
 	self.mouse_pos = UInputMan:GetMousePos() / self.screen_scale
+	self.id = 0
 end
 
 function ui:filled_box_with_border(pos, size, filled_color, border_color)
@@ -59,23 +60,25 @@ end
 function ui:object_tree_button(text, pos, width, text_x)
 	local clicked = false
 
-	if self.active == text then
+	self.id = self.id + 1
+
+	if self.active == self.id then
 		if self:_left_mouse_went_up() then
-			if self.hot == text then
+			if self.hot == self.id then
 				clicked = true
 			end
 
 			self.active = nil
 		end
-	elseif self.hot == text then
+	elseif self.hot == self.id then
 		if self:_left_mouse_went_down() then
-			self.active = text
+			self.active = self.id
 		end
 	end
 
 	local size = Vector(width, self.button_height)
 
-	local is_active = self.active == text
+	local is_active = self.active == self.id
 	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
 
 	-- TODO: Change the color of the button based on whether it's a file/directory/subobject
@@ -89,13 +92,13 @@ function ui:object_tree_button(text, pos, width, text_x)
 		local button_color_hot = ui.light_green
 		self:_filled_box(pos, size, button_color_hot)
 
-		self.hot = text
+		self.hot = self.id
 	else
 		-- local button_color_normal = 13 -- Red
 		local button_color_normal = ui.light_green
 		self:_filled_box(pos, size, button_color_normal)
 
-		if self.hot == text then
+		if self.hot == self.id then
 			self.hot = nil
 		end
 	end
