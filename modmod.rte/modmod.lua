@@ -97,23 +97,20 @@ function ModMod:UpdateScript()
 	local max_visible_object_tree_lines = 10
 
 	local mouse_wheel_movement = UInputMan:MouseWheelMoved()
-	-- print(mouse_wheel_movement)
-	-- print(ui.object_tree_line_scroll_offset)
 	if mouse_wheel_movement > 0 then -- if scrolling up
 		ui.object_tree_line_scroll_offset = math.max(0, ui.object_tree_line_scroll_offset - mouse_wheel_movement)
 	elseif mouse_wheel_movement < 0 then -- elseif scrolling down
-		-- TODO: Calculate this the same way the old program did
 		local max_object_tree_line_scroll_offset = math.max(0, object_tree_line_count - max_visible_object_tree_lines)
 
-		-- Substracting mouse_wheel_movement is like adding, since it's a negative value
-		ui.object_tree_line_scroll_offset = math.min(
-			max_object_tree_line_scroll_offset,
-			ui.object_tree_line_scroll_offset - mouse_wheel_movement
-		)
+		-- Substracting mouse_wheel_movement is like adding it, since it's a negative value
+		local new_offset = ui.object_tree_line_scroll_offset - mouse_wheel_movement
+		if new_offset <= max_object_tree_line_scroll_offset then
+			ui.object_tree_line_scroll_offset = new_offset
+		end
 	end
 
-	local need_scroll_bar = object_tree_line_count > max_visible_object_tree_lines
-	if need_scroll_bar then
+	local need_scrollbar = object_tree_line_count > max_visible_object_tree_lines
+	if need_scrollbar then
 		-- TODO: Draw scrollbar on the right of the object tree
 	end
 
