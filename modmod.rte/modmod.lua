@@ -179,7 +179,7 @@ function ModMod:update_object_tree_text(object_tree)
 		elseif v.file_name ~= nil then
 			str = str .. v.file_name
 		elseif v.directory_name ~= nil then
-			str = str .. v.directory_name .. "/"
+			str = str .. v.directory_name
 		else
 			str = str .. csts.get_property(v)
 		end
