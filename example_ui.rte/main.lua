@@ -44,11 +44,12 @@ function ExampleUI:UpdateScript()
 		end
 
 		local world_pos = ui.screen_offset + ui.mouse_pos
-
-		local cursor_center_pos = world_pos + self.cursor_size / 2
-
+		local cursor_pos = world_pos + Vector(5, 5)
 		local rotation_angle = 0
 		local frame_index = 0
-		PrimitiveMan:DrawBitmapPrimitive(cursor_center_pos, self.cursor_mosparticle, rotation_angle, frame_index)
+		PrimitiveMan:DrawBitmapPrimitive(cursor_pos, self.cursor_mosparticle, rotation_angle, frame_index)
+
+		local color = 13 -- Red
+		PrimitiveMan:DrawTriangleFillPrimitive(world_pos, world_pos, world_pos, color)
 	end
 end

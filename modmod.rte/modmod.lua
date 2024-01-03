@@ -181,7 +181,7 @@ function ModMod:UpdateScript()
 	if px_moved then
 		-- Make sure the cursor is to the right of the handle before shrinking the object tree, and vice versa
 		local mouse_left_of_handle = ui.mouse_pos.X < self.object_tree_width
-		local mouse_right_of_handle = ui.mouse_pos.X + handle_radius > self.object_tree_width
+		local mouse_right_of_handle = ui.mouse_pos.X > self.object_tree_width + handle_radius
 		if (px_moved.X < 0 and mouse_left_of_handle) or (px_moved.X > 0 and mouse_right_of_handle) then
 			self.object_tree_width = utils.clamp(
 				self.object_tree_width + px_moved.X,
@@ -197,9 +197,8 @@ function ModMod:UpdateScript()
 	local px_moved = ui:handle("handle below object tree", pos, size)
 	if px_moved then
 		-- Make sure the cursor is above the handle before shrinking the object tree, and vice versa
-		local handle_bottom_y = pos.Y + size.Y
-		local mouse_below_handle = ui.mouse_pos.Y < handle_bottom_y
-		local mouse_above_handle = ui.mouse_pos.Y + handle_radius > handle_bottom_y
+		local mouse_below_handle = ui.mouse_pos.Y < pos.Y
+		local mouse_above_handle = ui.mouse_pos.Y > pos.Y + handle_radius
 		if (px_moved.Y < 0 and mouse_below_handle) or (px_moved.Y > 0 and mouse_above_handle) then
 			self.max_object_tree_height = utils.clamp(
 				self.max_object_tree_height + px_moved.Y,

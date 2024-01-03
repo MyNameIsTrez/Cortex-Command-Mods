@@ -137,7 +137,7 @@ function ui:handle(id, pos, size)
 
 		self.hot = id
 	else
-		local button_color_normal = 13 -- Red
+		local button_color_normal = ui.light_green
 		self:_filled_box(pos, size, button_color_normal)
 
 		if self.hot == id then
