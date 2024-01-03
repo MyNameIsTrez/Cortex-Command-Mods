@@ -123,9 +123,7 @@ function ModMod:UpdateScript()
 	self:object_tree_buttons(self.object_tree, object_tree_width, height_ptr, depth, selected_object_path)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
-
 	local cursor_center_pos = world_pos + self.cursor_size / 2
-
 	local rotation_angle = 0
 	local frame_index = 0
 	PrimitiveMan:DrawBitmapPrimitive(cursor_center_pos, self.cursor_mosparticle, rotation_angle, frame_index)
@@ -214,14 +212,15 @@ function ModMod:object_tree_buttons(object_tree, object_tree_width, height_ptr, 
 			local y = ui.window_top_padding + text_vertical_stride
 			local pos = Vector(2, y)
 			local width = object_tree_width - 4
+			local is_directory = selected_object.directory_name ~= nil
 
-			if ui:object_tree_button(selected_object.text, pos, width, text_x) then
-				if selected_object.directory_name == nil then
-					local path = utils.path_join(selected_object_path, selected_object.file_name)
-					self:object_tree_subobject_pressed(selected_object, path)
-				else
+			if ui:object_tree_button(selected_object.text, pos, width, text_x, is_directory) then
+				if is_directory then
 					local path = utils.path_join(selected_object_path, selected_object.directory_name)
 					self:object_tree_directory_pressed(selected_object, path)
+				else
+					local path = utils.path_join(selected_object_path, selected_object.file_name)
+					self:object_tree_subobject_pressed(selected_object, path)
 				end
 			end
 		end
@@ -233,10 +232,6 @@ function ModMod:object_tree_buttons(object_tree, object_tree_width, height_ptr, 
 			self:object_tree_buttons(selected_object, object_tree_width, height_ptr, depth + 1, path)
 		end
 	end
-end
-
-function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
-	-- TODO: Show object in properties tab
 end
 
 function ModMod:object_tree_directory_pressed(directory, selected_object_path)
@@ -279,4 +274,9 @@ function ModMod:object_tree_directory_pressed(directory, selected_object_path)
 		self:update_object_tree_text(self.object_tree)
 		self.collapse:Play()
 	end
+end
+
+function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
+	-- TODO: Show object in properties tab
+	print("foo")
 end

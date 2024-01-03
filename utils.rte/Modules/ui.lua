@@ -24,7 +24,7 @@ ui.text_is_small = true
 ui.light_green = 146
 ui.dark_green = 144
 ui.orange = 71
--- ui.yellow = 117
+ui.yellow = 117
 -- ui.white = 254
 
 ui.pixels_of_indentation_per_depth = 15
@@ -58,7 +58,7 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
-function ui:object_tree_button(text, pos, width, text_x)
+function ui:object_tree_button(text, pos, width, text_x, is_directory)
 	local clicked = false
 
 	if self.active == text then
@@ -77,20 +77,31 @@ function ui:object_tree_button(text, pos, width, text_x)
 
 	local size = Vector(width, self.text_vertical_stride)
 
-	-- TODO: Use self.light_green and such, instead of these arbitrary, ugly colors!
+	local is_active = self.active == text
+	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
 
-	-- TODO: The game just sets the line above and bellow the button to
-	-- TODO: yellow when it is hovered/clicked, but I should do more!
-	if self.active == text then
-		local button_color_active = 151 -- Green
+	-- TODO: Change the color of the button based on whether it's a file/directory/subobject
+
+	-- TODO: The game doesn't change the color based on active/hot/normal, but I should!
+	if is_active then
+		-- local button_color_active = 151 -- Green
+		local button_color_active = ui.light_green
 		self:_filled_box(pos, size, button_color_active)
-	elseif self:_cursor_inside(pos, size) and self.active == nil then
-		local button_color_hot = 122 -- Yellow
+	elseif is_hot then
+		-- This mimics the build menu
+		local button_color_hot
+		if is_directory then
+			button_color_hot = ui.yellow
+		else
+			button_color_hot = ui.light_green
+		end
+
 		self:_filled_box(pos, size, button_color_hot)
 
 		self.hot = text
 	else
-		local button_color_normal = 13 -- Red
+		-- local button_color_normal = 13 -- Red
+		local button_color_normal = ui.light_green
 		self:_filled_box(pos, size, button_color_normal)
 
 		if self.hot == text then
@@ -102,6 +113,10 @@ function ui:object_tree_button(text, pos, width, text_x)
 	self:_text(text_pos, text, ui.alignments.left)
 
 	self:_selection_lines(pos, width, self.dark_green)
+
+	if not is_directory and not is_active and is_hot then
+		self:_selection_lines(pos, width, self.yellow)
+	end
 
 	return clicked
 end
