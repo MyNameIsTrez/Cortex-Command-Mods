@@ -155,7 +155,7 @@ function ui:_cursor_inside(el_pos, size)
 	local mouse_x = self.mouse_pos.X
 	local mouse_y = self.mouse_pos.Y
 
-	return (mouse_x > el_x) and (mouse_x < el_x + el_width) and (mouse_y > el_y) and (mouse_y < el_y + el_height)
+	return (mouse_x >= el_x) and (mouse_x < el_x + el_width) and (mouse_y >= el_y) and (mouse_y < el_y + el_height)
 end
 
 function ui:_text(pos, text, alignment)
