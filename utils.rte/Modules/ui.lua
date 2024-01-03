@@ -56,7 +56,7 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 	self:_box(pos + Vector(1, 1), size - Vector(2, 2), border_color)
 end
 
-function ui:object_tree_button(text, pos, width, text_x, is_directory)
+function ui:object_tree_button(text, pos, width, text_x)
 	local clicked = false
 
 	if self.active == text then
@@ -86,14 +86,7 @@ function ui:object_tree_button(text, pos, width, text_x, is_directory)
 		local button_color_active = ui.light_green
 		self:_filled_box(pos, size, button_color_active)
 	elseif is_hot then
-		-- This mimics the build menu
-		local button_color_hot
-		if is_directory then
-			button_color_hot = ui.yellow
-		else
-			button_color_hot = ui.light_green
-		end
-
+		local button_color_hot = ui.light_green
 		self:_filled_box(pos, size, button_color_hot)
 
 		self.hot = text
@@ -112,7 +105,7 @@ function ui:object_tree_button(text, pos, width, text_x, is_directory)
 
 	self:_selection_lines(pos, width, self.dark_green)
 
-	if not is_directory and not is_active and is_hot then
+	if is_active or is_hot then
 		self:_selection_lines(pos, width, self.yellow)
 	end
 

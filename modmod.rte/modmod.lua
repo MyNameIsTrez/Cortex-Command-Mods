@@ -120,7 +120,8 @@ function ModMod:UpdateScript()
 
 	local need_scrollbar = object_tree_line_count > self.max_visible_object_tree_lines
 	if need_scrollbar then
-		-- TODO: Draw scrollbar on the right of the object tree
+		-- TODO: Draw a new ui:scrollbar() to the right of the object tree
+		-- TODO: It's important that it is also clickable
 	end
 
 	local visible_object_tree_line_count = math.min(
@@ -128,7 +129,7 @@ function ModMod:UpdateScript()
 		object_tree_line_count - ui.object_tree_line_scroll_offset
 	)
 	local object_tree_height = ui.text_top_padding + 1 + visible_object_tree_line_count * ui.button_height
-	utils.print{object_tree_height = object_tree_height}
+	-- utils.print{object_tree_height = object_tree_height}
 
 	-- Draw empty area box above object tree
 	ui:filled_box_with_border(
@@ -219,10 +220,9 @@ function ModMod:object_tree_buttons(
 			local y = ui.window_top_padding + (height_index - 1) * ui.button_height
 			local pos = Vector(2, y)
 			local width = object_tree_width - 4
-			local is_directory = selected_object.directory_name ~= nil
 
-			if ui:object_tree_button(selected_object.text, pos, width, text_x, is_directory) then
-				if is_directory then
+			if ui:object_tree_button(selected_object.text, pos, width, text_x) then
+				if selected_object.directory_name ~= nil then
 					local path = utils.path_join(selected_object_path, selected_object.directory_name)
 					self:object_tree_directory_pressed(selected_object, path)
 				else
