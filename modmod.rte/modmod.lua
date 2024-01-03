@@ -177,12 +177,18 @@ function ModMod:UpdateScript()
 	local handle_width = 3
 	local size = Vector(handle_width, object_tree_bottom_y)
 	local px_moved = ui:handle("handle right of object tree", pos, size)
+	-- utils.print{px_moved = px_moved}
 	if px_moved then
-		self.object_tree_width = utils.clamp(
-			self.object_tree_width + px_moved.X,
-			self.min_object_tree_width,
-			self.max_object_tree_width
-		)
+		-- Make sure the cursor is to the right of the handle before shrinking the object tree, and vice versa
+		local mouse_left_of_handle = ui.mouse_pos.X < self.object_tree_width
+		local mouse_right_of_handle = not mouse_left_of_handle
+		if (px_moved.X < 0 and mouse_left_of_handle) or (px_moved.X > 0 and mouse_right_of_handle) then
+			self.object_tree_width = utils.clamp(
+				self.object_tree_width + px_moved.X,
+				self.min_object_tree_width,
+				self.max_object_tree_width
+			)
+		end
 	end
 
 	-- Add a handle to the bottom of the object tree
@@ -190,11 +196,17 @@ function ModMod:UpdateScript()
 	local size = Vector(self.object_tree_width, handle_width)
 	local px_moved = ui:handle("handle below object tree", pos, size)
 	if px_moved then
-		self.max_object_tree_height = utils.clamp(
-			self.max_object_tree_height + px_moved.Y,
-			self.lower_max_object_tree_height,
-			self.upper_max_object_tree_height
-		)
+		-- Make sure the cursor is above the handle before shrinking the object tree, and vice versa
+		local handle_bottom_y = pos.Y + size.Y
+		local mouse_below_handle = ui.mouse_pos.Y < handle_bottom_y
+		local mouse_above_handle = not mouse_below_handle
+		if (px_moved.Y < 0 and mouse_below_handle) or (px_moved.Y > 0 and mouse_above_handle) then
+			self.max_object_tree_height = utils.clamp(
+				self.max_object_tree_height + px_moved.Y,
+				self.lower_max_object_tree_height,
+				self.upper_max_object_tree_height
+			)
+		end
 	end
 
 	local world_pos = ui.screen_offset + ui.mouse_pos

@@ -127,7 +127,7 @@ function ui:handle(id, pos, size)
 	local is_hot = self:_cursor_inside(pos, size) and self.active == nil
 
 	if is_active then
-		local button_color_active = 151 -- Green
+		local button_color_active = ui.yellow
 		self:_filled_box(pos, size, button_color_active)
 
 		return UInputMan:GetMouseMovement(Activity.PLAYER_1)
