@@ -121,8 +121,11 @@ function ModMod:UpdateScript()
 	local object_tree_width = self:get_object_tree_width(self.object_tree, depth)
 	-- utils.print{object_tree_width = object_tree_width}
 
-	local visible_object_tree_line_count = object_tree_line_count - ui.object_tree_line_scroll_offset
-	local object_tree_height = self:get_object_tree_height(self.object_tree, visible_object_tree_line_count)
+	local visible_object_tree_line_count = math.min(
+		max_visible_object_tree_lines,
+		object_tree_line_count - ui.object_tree_line_scroll_offset
+	)
+	local object_tree_height = ui.text_top_padding + 1 + ui.text_vertical_stride * visible_object_tree_line_count
 	-- utils.print{object_tree_height = object_tree_height}
 
 	-- Draw empty area box above object tree
@@ -147,7 +150,15 @@ function ModMod:UpdateScript()
 	local height_ptr = { 0 }
 	local depth = 0
 	local selected_object_path = "."
-	self:object_tree_buttons(self.object_tree, object_tree_width, height_ptr, depth, selected_object_path)
+	self:object_tree_buttons(
+		self.object_tree,
+		object_tree_width,
+		height_ptr,
+		ui.object_tree_line_scroll_offset,
+		max_visible_object_tree_lines,
+		depth,
+		selected_object_path
+	)
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
 	local cursor_center_pos = world_pos + self.cursor_size / 2
@@ -208,10 +219,6 @@ function ModMod:get_object_tree_width(object_tree, depth)
 	return width
 end
 
-function ModMod:get_object_tree_height(object_tree, object_tree_line_count)
-	return ui.text_top_padding + 1 + ui.text_vertical_stride * object_tree_line_count
-end
-
 function ModMod:get_object_tree_line_count(object_tree)
 	local count = 0
 
@@ -226,13 +233,24 @@ function ModMod:get_object_tree_line_count(object_tree)
 	return count
 end
 
-function ModMod:object_tree_buttons(object_tree, object_tree_width, height_ptr, depth, selected_object_path)
+function ModMod:object_tree_buttons(
+	object_tree,
+	object_tree_width,
+	height_ptr,
+	object_tree_line_scroll_offset,
+	max_visible_object_tree_lines,
+	depth,
+	selected_object_path
+)
 	local text_x = ui.window_left_padding + depth * ui.pixels_of_indentation_per_depth
 
 	for _, selected_object in ipairs(object_tree.children) do
 		height_ptr[1] = height_ptr[1] + 1
 
-		-- TODO: An optional optimization is to return when height goes past the max height
+		if height_ptr[1] - object_tree_line_scroll_offset > max_visible_object_tree_lines then
+			return
+		end
+
 		if height_ptr[1] > ui.object_tree_line_scroll_offset then
 			local height_index = height_ptr[1] - ui.object_tree_line_scroll_offset
 			local text_vertical_stride = (height_index - 1) * ui.text_vertical_stride
@@ -256,7 +274,15 @@ function ModMod:object_tree_buttons(object_tree, object_tree_width, height_ptr, 
 		if selected_object.children ~= nil and not selected_object.collapsed then
 			local path = utils.path_join(selected_object_path, selected_object.directory_name)
 
-			self:object_tree_buttons(selected_object, object_tree_width, height_ptr, depth + 1, path)
+			self:object_tree_buttons(
+				selected_object,
+				object_tree_width,
+				height_ptr,
+				object_tree_line_scroll_offset,
+				max_visible_object_tree_lines,
+				depth + 1,
+				path
+			)
 		end
 	end
 end
