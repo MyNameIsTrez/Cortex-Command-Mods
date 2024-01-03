@@ -3,12 +3,14 @@
 -- TODO: Use require() in all files instead of dofile(),
 -- once the issue of require()d modules not being reloaded on F2 is fixed
 
-local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
 -- TODO: Get rid of loading csts.lua here, since it's an implementation detail?
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
+local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+
+local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
+local settings = dofile("modmod.rte/data/settings.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
-
 local ui = dofile("utils.rte/Modules/ui.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
@@ -374,4 +376,18 @@ end
 function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
 	-- TODO: Show object in properties tab
 	print("foo")
+end
+
+function ModMod:invert(settings_key)
+	local current_value = not self:get(settings_key)
+	self:set(settings_key, current_value)
+end
+
+function ModMod:get(settings_key)
+	return settings[settings_key]
+end
+
+function ModMod:set(settings_key, value)
+	settings[settings_key] = value
+	file_functions.WriteTableToFile("modmod.rte/data/settings.lua", settings)
 end
