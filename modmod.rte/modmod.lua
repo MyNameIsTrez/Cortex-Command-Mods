@@ -174,14 +174,14 @@ function ModMod:UpdateScript()
 	-- Add a handle to the right of the object tree
 	local pos = Vector(self.object_tree_width, 0)
 	local object_tree_bottom_y = ui.window_top_padding + object_tree_height - 4 + empty_below_tree_y
-	local handle_width = 3
-	local size = Vector(handle_width, object_tree_bottom_y)
+	local handle_radius = 3
+	local size = Vector(handle_radius, object_tree_bottom_y)
 	local px_moved = ui:handle("handle right of object tree", pos, size)
 	-- utils.print{px_moved = px_moved}
 	if px_moved then
 		-- Make sure the cursor is to the right of the handle before shrinking the object tree, and vice versa
 		local mouse_left_of_handle = ui.mouse_pos.X < self.object_tree_width
-		local mouse_right_of_handle = not mouse_left_of_handle
+		local mouse_right_of_handle = ui.mouse_pos.X + handle_radius > self.object_tree_width
 		if (px_moved.X < 0 and mouse_left_of_handle) or (px_moved.X > 0 and mouse_right_of_handle) then
 			self.object_tree_width = utils.clamp(
 				self.object_tree_width + px_moved.X,
@@ -193,13 +193,13 @@ function ModMod:UpdateScript()
 
 	-- Add a handle to the bottom of the object tree
 	local pos = Vector(0, object_tree_bottom_y)
-	local size = Vector(self.object_tree_width, handle_width)
+	local size = Vector(self.object_tree_width, handle_radius)
 	local px_moved = ui:handle("handle below object tree", pos, size)
 	if px_moved then
 		-- Make sure the cursor is above the handle before shrinking the object tree, and vice versa
 		local handle_bottom_y = pos.Y + size.Y
 		local mouse_below_handle = ui.mouse_pos.Y < handle_bottom_y
-		local mouse_above_handle = not mouse_below_handle
+		local mouse_above_handle = ui.mouse_pos.Y + handle_radius > handle_bottom_y
 		if (px_moved.Y < 0 and mouse_below_handle) or (px_moved.Y > 0 and mouse_above_handle) then
 			self.max_object_tree_height = utils.clamp(
 				self.max_object_tree_height + px_moved.Y,
@@ -210,10 +210,13 @@ function ModMod:UpdateScript()
 	end
 
 	local world_pos = ui.screen_offset + ui.mouse_pos
-	local cursor_center_pos = world_pos + self.cursor_size / 2
+	local cursor_pos = world_pos + Vector(5, 5)
 	local rotation_angle = 0
 	local frame_index = 0
-	PrimitiveMan:DrawBitmapPrimitive(cursor_center_pos, self.cursor_mosparticle, rotation_angle, frame_index)
+	PrimitiveMan:DrawBitmapPrimitive(cursor_pos, self.cursor_mosparticle, rotation_angle, frame_index)
+
+	-- local color = 13 -- Red
+	-- PrimitiveMan:DrawTriangleFillPrimitive(world_pos, world_pos, world_pos, color)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
