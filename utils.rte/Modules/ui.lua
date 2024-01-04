@@ -9,6 +9,8 @@ local ui = {}
 
 ui.alignments = { left = 0, center = 1, right = 2 }
 
+ui.object_tree_button_event = { clicked = 0, hot = 1 }
+
 -- TODO: Do this instead, once the function works in C++
 -- ui.screen_scale = FrameMan.PlayerScreenScale
 ui.screen_scale = 2
@@ -57,12 +59,12 @@ function ui:filled_box_with_border(pos, size, filled_color, border_color)
 end
 
 function ui:object_tree_button(id, text, pos, width, text_x)
-	local clicked = false
+	local event = nil
 
 	if self.active == id then
 		if self:_left_mouse_went_up() then
 			if self.hot == id then
-				clicked = true
+				event = self.object_tree_button_event.clicked
 			end
 
 			self.active = nil
@@ -89,6 +91,10 @@ function ui:object_tree_button(id, text, pos, width, text_x)
 		local button_color_hot = ui.light_green
 		self:_filled_box(pos, size, button_color_hot)
 
+		if event == nil then
+			event = self.object_tree_button_event.hot
+		end
+
 		self.hot = id
 	else
 		-- local button_color_normal = 13 -- Red
@@ -109,7 +115,7 @@ function ui:object_tree_button(id, text, pos, width, text_x)
 		self:_selection_lines(pos, width, self.yellow)
 	end
 
-	return clicked
+	return event
 end
 
 function ui:handle(id, pos, size)
