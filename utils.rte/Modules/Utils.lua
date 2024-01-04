@@ -266,14 +266,53 @@ function M.flush_log()
 	ConsoleMan:SaveAllText("LogConsole.txt")
 end
 
-function M.print(str, recursive)
-	if type(str) == "table" then
-		RecursivelyPrint(str, recursive)
+function M.print(value, recursive)
+	if type(value) == "table" then
+		print(M.SerializeTable(value))
 	else
-		print(str)
+		print(value)
 	end
 	-- TODO: Try commenting this out
 	M.flush_log()
+end
+
+-- Converts a table to its string representation. Use loadstring() to convert it back to a table later
+-- StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
+function M.SerializeTable(value, separator, skipNewlines, name, depth)
+	separator = separator or "\t"
+	skipNewlines = skipNewlines or false
+	depth = depth or 0
+
+	local serializedTableString = string.rep(separator, depth)
+
+	if name then
+		serializedTableString = serializedTableString .. name .. " = "
+	end
+
+	if type(value) == "table" then
+		local possible_newline = skipNewlines and "" or "\n"
+
+		serializedTableString = serializedTableString .. "{" .. possible_newline
+
+		for k, v in pairs(value) do
+			serializedTableString = serializedTableString
+				.. M.SerializeTable(v, separator, skipNewlines, k, depth + 1)
+				.. ","
+				.. possible_newline
+		end
+
+		serializedTableString = serializedTableString .. string.rep(separator, depth) .. "}"
+	elseif type(value) == "number" then
+		serializedTableString = serializedTableString .. tostring(value)
+	elseif type(value) == "string" then
+		serializedTableString = serializedTableString .. string.format("%q", value)
+	elseif type(value) == "boolean" then
+		serializedTableString = serializedTableString .. (value and "true" or "false")
+	else
+		serializedTableString = serializedTableString .. '"[unserializable type: ' .. type(value) .. ']"'
+	end
+
+	return serializedTableString
 end
 
 function M.clamp(v, min, max)
@@ -281,51 +320,6 @@ function M.clamp(v, min, max)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
----Prints the content of a table recursively so it can easily be inspected in a console.
----@param tab table
----@param recursive boolean
----@param depth number
-function RecursivelyPrint(tab, recursive, depth)
-	local recursive = not (recursive == false) -- True by default.
-	local depth = depth or 0 -- The depth starts at 0.
-
-	-- Getting the longest key of this (sub)table, so all printed values will line up.
-	local longestKey = 1
-	for key, _ in pairs(tab) do
-		local keyLength = #tostring(key)
-		if keyLength > longestKey then
-			longestKey = keyLength
-		end
-	end
-
-	if depth == 0 then
-		print("")
-	end
-
-	-- Print the keys and values, with extra spaces so the values line up.
-	for key, value in pairs(tab) do
-		local spacingCount = longestKey - #tostring(key) -- How many spaces are added between the key and value.
-
-		print(
-			string.rep(string.rep(" ", 4), depth) -- Tabulate tables that are deep inside the original table.
-				.. string.rep(" ", spacingCount)
-				.. tostring(key)
-				.. " | "
-				.. GetValueString(value)
-		)
-
-		local isTable = type(value) == "table"
-		local valueIsTable = (value == tab)
-		if recursive and isTable and not valueIsTable then
-			RecursivelyPrint(value, recursive, depth + 1) -- Go into the table.
-		end
-	end
-
-	if depth == 0 then
-		print("")
-	end
-end
 
 ---Used by M.RecursivelyPrint() to turn any type of value into a string.
 ---@param value any

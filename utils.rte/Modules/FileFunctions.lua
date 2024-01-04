@@ -1,49 +1,12 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
+local utils = dofile("utils.rte/Modules/Utils.lua")
+
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
-
--- Converts a table to its string representation. Use loadstring() to convert it back to a table later
--- StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
-function M.SerializeTable(value, separator, skipNewlines, name, depth)
-	separator = separator or "\t"
-	skipNewlines = skipNewlines or false
-	depth = depth or 0
-
-	local serializedTableString = string.rep(separator, depth)
-
-	if name then
-		serializedTableString = serializedTableString .. name .. " = "
-	end
-
-	if type(value) == "table" then
-		local possible_newline = skipNewlines and "" or "\n"
-
-		serializedTableString = serializedTableString .. "{" .. possible_newline
-
-		for k, v in pairs(value) do
-			serializedTableString = serializedTableString
-				.. M.SerializeTable(v, separator, skipNewlines, k, depth + 1)
-				.. ","
-				.. possible_newline
-		end
-
-		serializedTableString = serializedTableString .. string.rep(separator, depth) .. "}"
-	elseif type(value) == "number" then
-		serializedTableString = serializedTableString .. tostring(value)
-	elseif type(value) == "string" then
-		serializedTableString = serializedTableString .. string.format("%q", value)
-	elseif type(value) == "boolean" then
-		serializedTableString = serializedTableString .. (value and "true" or "false")
-	else
-		serializedTableString = serializedTableString .. '"[inserializeable datatype:' .. type(value) .. ']"'
-	end
-
-	return serializedTableString
-end
 
 function M.FileExists(filepath)
 	local fileID = LuaMan:FileOpen(filepath, "r")
@@ -80,7 +43,7 @@ end
 
 -- Beware, this overwrites whatever was already in the file!
 function M.WriteTableToFile(filepath, tab)
-	local tabStr = M.SerializeTable(tab)
+	local tabStr = utils.SerializeTable(tab)
 	M.WriteFile(filepath, "return " .. tabStr .. "\n")
 end
 
