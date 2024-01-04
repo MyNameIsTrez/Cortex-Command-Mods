@@ -320,10 +320,10 @@ function M.clamp(v, min, max)
 end
 
 function M.remove_prefix(str, prefix)
-    if M.starts_with(str, prefix) then
-        return str:sub(#prefix + 1)
+	if M.starts_with(str, prefix) then
+		return str:sub(#prefix + 1)
 	end
-    return str
+	return str
 end
 
 -- From http://lua-users.org/wiki/StringRecipes

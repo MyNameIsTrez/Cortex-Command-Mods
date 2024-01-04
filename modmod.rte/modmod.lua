@@ -278,8 +278,10 @@ function ModMod:object_tree_buttons(
 				if selected_object.directory_name ~= nil then
 					local path = utils.path_join(selected_object_path, selected_object.directory_name)
 					self:object_tree_directory_pressed(selected_object, path)
-				else
+				elseif selected_object.children ~= nil then
 					self:object_tree_file_pressed(selected_object)
+				else
+					self:object_tree_property_pressed(selected_object)
 				end
 			elseif event == ui.object_tree_button_event.hot then
 				if
@@ -373,7 +375,7 @@ function ModMod:update_object_tree_text(object_tree)
 		elseif v.collapsed == false then
 			text = text .. ">"
 		else
-			-- TODO: It's jank how this relies on two spaces
+			-- This jankily relies on two spaces
 			-- being the same width as a "v" or a ">"
 			text = text .. "  "
 		end
@@ -387,6 +389,7 @@ function ModMod:update_object_tree_text(object_tree)
 		elseif v.directory_name ~= nil then
 			text = text .. v.directory_name
 		else
+			-- Else it's a subobject
 			text = text .. csts.get_property(v)
 		end
 
@@ -400,12 +403,6 @@ end
 
 function ModMod:object_tree_file_pressed(file)
 	if file.collapsed then
-		print(type(file))
-		print(file)
-		print(file.collapsed)
-		utils.print(file)
-		assert(file.children ~= nil)
-
 		file.collapsed = false
 		self:update_object_tree_text(self.object_tree)
 		self.expand:Play()
@@ -414,6 +411,10 @@ function ModMod:object_tree_file_pressed(file)
 		self:update_object_tree_text(self.object_tree)
 		self.collapse:Play()
 	end
+end
+
+function ModMod:object_tree_property_pressed(property)
+	-- TODO: Let the property's value be edited
 end
 
 function ModMod:invert_setting(settings_key)
