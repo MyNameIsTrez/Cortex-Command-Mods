@@ -319,6 +319,22 @@ function M.clamp(v, min, max)
 	return math.max(min, math.min(max, v))
 end
 
+function M.remove_prefix(str, prefix)
+    if M.starts_with(str, prefix) then
+        return str:sub(#prefix + 1)
+	end
+    return str
+end
+
+-- From http://lua-users.org/wiki/StringRecipes
+function M.starts_with(str, start)
+	return str:sub(1, #start) == start
+end
+
+function M.ends_with(str, ending)
+	return ending == "" or str:sub(-#ending) == ending
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 ---Used by M.RecursivelyPrint() to turn any type of value into a string.
