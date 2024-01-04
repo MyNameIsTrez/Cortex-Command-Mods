@@ -14,15 +14,12 @@ local M = {}
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 function M.get_file_object_tree(file_path)
-	local parent_directory, file_name = file_path:match("(.*)/(.*%.ini)")
-
-	local file_path = utils.path_join(parent_directory, file_name)
-
 	local cst = cst_generator.get_cst(file_path)
 	local ast = ast_generator.get_ast(cst)
 
 	local inner_file_object_tree = generate_inner_file_object_tree(ast)
 
+	local parent_directory_path, file_name = file_path:match("(.*)/(.*%.ini)")
 	local file_object_tree = { file_name = file_name, cst = cst }
 
 	if ast_is_traditional_ini(ast) then
