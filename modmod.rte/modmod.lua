@@ -273,20 +273,46 @@ function ModMod:object_tree_buttons(
 			local pos = Vector(2, y)
 			local width = object_tree_width - 4
 
-			if ui:object_tree_button(id, selected_object.text, pos, width, text_x) then
+			local event = ui:object_tree_button(id, selected_object.text, pos, width, text_x)
+			if event == ui.object_tree_button_event.clicked then
 				if selected_object.directory_name ~= nil then
 					local path = utils.path_join(selected_object_path, selected_object.directory_name)
 					self:object_tree_directory_pressed(selected_object, path)
 				else
+					self:object_tree_file_pressed(selected_object)
+				end
+			elseif event == ui.object_tree_button_event.hot then
+				if
+					selected_object.file_name ~= nil
+					and selected_object.children == nil
+					and selected_object.properties == nil
+				then
 					local path = utils.path_join(selected_object_path, selected_object.file_name)
-					self:object_tree_subobject_pressed(selected_object, path)
+					path = utils.remove_prefix(path, "./Data/")
+					path = utils.remove_prefix(path, "./Mods/")
+
+					local file_object = object_tree_generator.get_file_object_tree(path)
+					selected_object.cst = file_object.cst
+					selected_object.children = file_object.children
+					selected_object.collapsed = file_object.collapsed
+					selected_object.properties = file_object.properties
+					-- utils.print(selected_object)
+					-- print("loaded file")
+
+					self:update_object_tree_text(self.object_tree)
 				end
 			end
 		end
 
 		-- If this is an expanded directory, recurse
 		if selected_object.children ~= nil and not selected_object.collapsed then
-			local path = utils.path_join(selected_object_path, selected_object.directory_name)
+			local path
+			if selected_object.directory_name ~= nil then
+				path = utils.path_join(selected_object_path, selected_object.directory_name)
+			else
+				-- Let subobjects use their filename as their path
+				path = selected_object_path
+			end
 
 			self:object_tree_buttons(
 				selected_object,
@@ -301,25 +327,20 @@ function ModMod:object_tree_buttons(
 	end
 end
 
-function ModMod:object_tree_directory_pressed(directory, selected_object_path)
+function ModMod:object_tree_directory_pressed(directory, path)
 	if directory.collapsed then
 		if directory.children == nil then
 			local children = {}
 
-			for directory_name in LuaMan:GetDirectoryList(selected_object_path) do
+			for directory_name in LuaMan:GetDirectoryList(path) do
 				table.insert(children, {
 					directory_name = directory_name,
 					collapsed = true,
 				})
 			end
 
-			for file_name in LuaMan:GetFileList(selected_object_path) do
+			for file_name in LuaMan:GetFileList(path) do
 				if utils.path_extension(file_name) == ".ini" then
-					-- TODO: Remove?
-					-- local file_path = utils.path_join(selected_object_path, file_name)
-					-- local file_object = object_tree_generator.get_file_object_tree(file_path)
-					-- table.insert(children, file_object)
-
 					table.insert(children, {
 						file_name = file_name,
 					})
@@ -377,9 +398,22 @@ function ModMod:update_object_tree_text(object_tree)
 	end
 end
 
-function ModMod:object_tree_subobject_pressed(subobject, selected_object_path)
-	-- TODO: Show object in properties tab
-	print("foo")
+function ModMod:object_tree_file_pressed(file)
+	if file.collapsed then
+		print(type(file))
+		print(file)
+		print(file.collapsed)
+		utils.print(file)
+		assert(file.children ~= nil)
+
+		file.collapsed = false
+		self:update_object_tree_text(self.object_tree)
+		self.expand:Play()
+	else
+		file.collapsed = true
+		self:update_object_tree_text(self.object_tree)
+		self.collapse:Play()
+	end
 end
 
 function ModMod:invert_setting(settings_key)
