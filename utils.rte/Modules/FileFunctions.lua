@@ -47,6 +47,35 @@ function M.WriteTableToFile(filepath, tab)
 	M.WriteFile(filepath, "return " .. tabStr .. "\n")
 end
 
+-- Source: http://lua-users.org/wiki/DirTreeIterator
+function M.Walk(dir)
+	assert(dir and dir ~= "", "directory parameter is missing or empty")
+
+	-- Remove any trailing slash,
+	-- so that when we do `.. "/"` later, we don't end up with two slashes
+	if string.sub(dir, -1) == "/" then
+		dir = string.sub(dir, 1, -2)
+	end
+
+	local function yieldtree(dir)
+		for entry in LuaMan:GetDirectoryList(dir) do
+			if entry ~= "." and entry ~= ".." then
+				entry = dir .. "/" .. entry
+				coroutine.yield(entry .. "/", "directory")
+				yieldtree(entry)
+			end
+		end
+		for entry in LuaMan:GetFileList(dir) do
+			entry = dir .. "/" .. entry
+			coroutine.yield(entry, "file")
+		end
+	end
+
+	return coroutine.wrap(function()
+		yieldtree(dir)
+	end)
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 -- MODULE END ------------------------------------------------------------------
