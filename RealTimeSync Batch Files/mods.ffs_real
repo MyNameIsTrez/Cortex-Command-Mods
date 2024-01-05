@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FreeFileSync XmlType="REAL" XmlFormat="2">
     <Directories>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\bone.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\example_ui.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\modmod.rte</Item>
-        <Item>I:\Programming\Cortex-Command-Community-Project-Data\Mods\utils.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project\Mods\bone.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project\Mods\example_ui.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project\Mods\modmod.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project\Mods\utils.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\bone.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\example_ui.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\modmod.rte</Item>
