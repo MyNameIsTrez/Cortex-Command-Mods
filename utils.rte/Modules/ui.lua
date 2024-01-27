@@ -11,10 +11,6 @@ ui.alignments = { left = 0, center = 1, right = 2 }
 
 ui.object_tree_button_event = { clicked = 0, hot = 1 }
 
--- TODO: Do this instead, once the function works in C++
--- ui.screen_scale = FrameMan.PlayerScreenScale
-ui.screen_scale = 2
-
 ui.object_tree_line_scroll_offset = 0
 
 ui.text_is_small = true
@@ -47,7 +43,7 @@ ui.button_height = ui.text_top_padding + ui.font_height + text_bottom_padding
 
 function ui:update()
 	self.screen_offset = CameraMan:GetOffset(Activity.PLAYER_1)
-	self.mouse_pos = UInputMan:GetMousePos() / self.screen_scale
+	self.mouse_pos = UInputMan:GetMousePos() / FrameMan.ResolutionMultiplier
 end
 
 function ui:filled_box_with_border(pos, size, filled_color, border_color)
