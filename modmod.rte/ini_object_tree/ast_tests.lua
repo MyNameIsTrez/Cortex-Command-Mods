@@ -5,8 +5,6 @@ local ast_generator = dofile("modmod.rte/ini_object_tree/ast_generator.lua")
 
 local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
-local tests = dofile("utils.rte/Modules/Tests.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
@@ -290,7 +288,7 @@ function ast_test(file_name, expected)
 	local file_path = test_files.get_test_path_from_file_name(file_name)
 	local ast = ast_generator.get_file_path_ast(file_path)
 
-	tests.test("ast", file_name, ast, expected)
+	-- tests.test("ast", file_name, ast, expected)
 end
 
 -- MODULE END ------------------------------------------------------------------

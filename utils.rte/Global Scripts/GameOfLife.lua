@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local DrawOptimizer = dofile("utils.rte/Modules/DrawOptimizer.lua")
+local draw_optimizer = dofile("utils.rte/Modules/draw_optimizer.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 
@@ -57,10 +57,10 @@ function GameOfLife:UpdateScript()
 	if self.frame == 1 or self.frame % (self.framesBetweenUpdates + 1) == 0 then
 		GameOfLife:Update()
 		GameOfLife:QueueDraw()
-		DrawOptimizer.Update()
+		draw_optimizer.Update()
 	end
 
-	DrawOptimizer.Draw()
+	draw_optimizer.Draw()
 end
 
 -- METHODS ---------------------------------------------------------------------
@@ -162,5 +162,5 @@ function GameOfLife:QueueDrawCell(row, column)
 
 	local color = self.state[row][column] and self.aliveColor or self.deadColor
 
-	DrawOptimizer.Add(cellTopLeft, cellBottomRight, color)
+	draw_optimizer.Add(cellTopLeft, cellBottomRight, color)
 end

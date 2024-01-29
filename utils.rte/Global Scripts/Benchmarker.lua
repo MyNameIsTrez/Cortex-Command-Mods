@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 -- GLOBAL SCRIPT START ---------------------------------------------------------
 
@@ -53,7 +53,7 @@ function Benchmarker:AdvanceFrame()
 	self.frame = self.frame + 1
 
 	if self.frame == 1 then
-		utils.Printf("Waiting for %d frames before starting the benchmark...", self.frameDelayBeforeBenchmarking)
+		utils.printf("Waiting for %d frames before starting the benchmark...", self.frameDelayBeforeBenchmarking)
 	end
 
 	-- If no tests have been added, abort benchmarking.
@@ -71,9 +71,9 @@ function Benchmarker:AdvanceFrame()
 		else
 			local iterations, funName = unpack(table.remove(self.tests))
 
-			local formattediterations = utils.AddThousandsSeparator(iterations)
-			local formattedMilliseconds = utils.AddThousandsSeparator(self.timer.ElapsedRealTimeMS)
-			utils.Printf(
+			local formattediterations = utils.add_thousands_separator(iterations)
+			local formattedMilliseconds = utils.add_thousands_separator(self.timer.ElapsedRealTimeMS)
+			utils.printf(
 				"iterations: %s, function name: %s, elapsed time: %s milliseconds",
 				formattediterations,
 				funName,
@@ -103,12 +103,12 @@ function Benchmarker:AddTests(timer)
 	-- local outputStart = 2;
 	-- local outputEnd = 3;
 
-	-- local slope = utils.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd);
+	-- local slope = utils.get_map_slope(inputStart, inputEnd, outputStart, outputEnd);
 
 	-- Comment out any benchmarks you don't want to run!
 
-	-- Benchmarker:AddTest(1e8, "utils.Map", utils.Map, { input, inputStart, inputEnd, outputStart, outputEnd });
-	-- Benchmarker:AddTest(1e8, "utils.MapUsingSlope", utils.MapUsingSlope, { input, slope, outputStart, outputEnd });
+	-- Benchmarker:AddTest(1e8, "utils.map", utils.map, { input, inputStart, inputEnd, outputStart, outputEnd });
+	-- Benchmarker:AddTest(1e8, "utils.map_using_slope", utils.map_using_slope, { input, slope, outputStart, outputEnd });
 
 	-- Website with interesting tests to add: https://springrts.com/wiki/Lua_Performance
 
@@ -280,7 +280,7 @@ function Benchmarker:AddTests(timer)
 	-- 			t[i][j] = true;
 	-- 		end
 	-- 	end,
-	-- 	{ utils.GetEmptyTableNDim({1000, 2000}) }
+	-- 	{ utils.get_empty_table_n_dim({1000, 2000}) }
 	-- );
 end
 

@@ -1,7 +1,5 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local l = dofile("utils.rte/Modules/lulpeg.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
@@ -13,17 +11,17 @@ local M = {}
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 ---Prints all MOs.
-function M.PrintMOs()
-	for mo in M.MOIterator() do
+function M.print_mos()
+	for mo in M.mo_iterator() do
 		print(mo)
 	end
 end
 
----Use like "for mo in utils.MOIterator() do".
+---Use like "for mo in utils.mo_iterator() do".
 ---This is a replacement of this code which is found in almost every mod:
 ---"for i = 1, MovableMan:GetMOIDCount() - 1 do local mo = MovableMan:GetMOFromID(i); <code that uses mo> end"
 ---@return function
-function M.MOIterator()
+function M.mo_iterator()
 	local mos = {}
 	for i = 1, MovableMan:GetMOIDCount() - 1 do
 		local mo = MovableMan:GetMOFromID(i)
@@ -40,7 +38,7 @@ end
 
 ---Re-maps a number from one range to another.
 ---
----If you are mapping a lot with the same slope you should use MapUsingSlope() with GetMapSlope() instead to save performance.
+---If you are mapping a lot with the same slope you should use map_using_slope() with get_map_slope() instead to save performance.
 ---
 ---Code explanations:
 ---[Stack Overflow](https://stackoverflow.com/a/5732390/13279557),
@@ -51,39 +49,39 @@ end
 ---@param outputStart number
 ---@param outputEnd number
 ---@return number mapped
-function M.Map(input, inputStart, inputEnd, outputStart, outputEnd)
+function M.map(input, inputStart, inputEnd, outputStart, outputEnd)
 	local slope = (outputEnd - outputStart) / (inputEnd - inputStart)
 	return outputStart + slope * (input - inputStart)
 end
 
----If you are mapping a lot with the same slope you should use this function to save performance, otherwise use Map().
+---If you are mapping a lot with the same slope you should use this function to save performance, otherwise use map().
 ---
----The slope should be calculated only once using GetMapSlope().
+---The slope should be calculated only once using get_map_slope().
 ---@param input number
 ---@param slope number
 ---@param outputStart number
 ---@param inputStart number
 ---@return number mapped
-function M.MapUsingSlope(input, slope, outputStart, inputStart)
+function M.map_using_slope(input, slope, outputStart, inputStart)
 	return outputStart + slope * (input - inputStart)
 end
 
----Gets the slope for MapUsingSlope().
+---Gets the slope for map_using_slope().
 ---
----You're supposed to store the result of this function to save performance, otherwise use Map().
+---You're supposed to store the result of this function to save performance, otherwise use map().
 ---@param inputStart number
 ---@param inputEnd number
 ---@param outputStart number
 ---@param outputEnd number
 ---@return number slope
-function M.GetMapSlope(inputStart, inputEnd, outputStart, outputEnd)
+function M.get_map_slope(inputStart, inputEnd, outputStart, outputEnd)
 	return (outputEnd - outputStart) / (inputEnd - inputStart)
 end
 
 ---Prints a formatted string.
 ---@param s string
 ---@param ... any
-function M.Printf(s, ...)
+function M.printf(s, ...)
 	print(string.format(s, ...))
 end
 
@@ -91,7 +89,7 @@ end
 ---@param n number
 ---@return string
 -- Credit: http://richard.warburton.it | http://lua-users.org/wiki/FormattingNumbers
-function M.AddThousandsSeparator(n)
+function M.add_thousands_separatoror(n)
 	local left, num, right = string.match(n, "^([^%d]*%d)(%d*)(.-)$")
 	return left .. (num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) .. right
 end
@@ -100,7 +98,7 @@ end
 ---See http://lua-users.org/wiki/CopyTable for more information on shallow vs deep copies.
 ---@param t table
 ---@return table
-function M.ShallowlyCopy(t)
+function M.shallowly_copy(t)
 	local t2 = {}
 	for k, v in pairs(t) do
 		t2[k] = v
@@ -120,14 +118,14 @@ function M.get_key_count(t)
 	return count
 end
 
--- function M.GetEmptyTableNDim(dimensionsTable, _depth)
+-- function M.get_empty_table_n_dim(dimensionsTable, _depth)
 -- 	local _depth = _depth or 1;
 -- 	if _depth > #dimensionsTable then
 -- 		return {};
 -- 	end
 -- 	local t = {};
 -- 	for i, _ in dimensionsTable[_depth] do
--- 		t[i] = M.GetEmptyTableNDim(dimensionsTable, _depth + 1);
+-- 		t[i] = M.get_empty_table_n_dim(dimensionsTable, _depth + 1);
 -- 	end
 -- 	return t;
 -- end
@@ -268,7 +266,7 @@ end
 
 function M.print(value, recursive)
 	if type(value) == "table" then
-		print(M.SerializeTable(value))
+		print(M.serialize_table(value))
 	else
 		print(value)
 	end
@@ -278,7 +276,7 @@ end
 
 -- Converts a table to its string representation. Use loadstring() to convert it back to a table later
 -- StackOverflow origin: https://stackoverflow.com/a/6081639/13279557
-function M.SerializeTable(value, separator, skipNewlines, name, depth)
+function M.serialize_table(value, separator, skipNewlines, name, depth)
 	separator = separator or "\t"
 	skipNewlines = skipNewlines or false
 	depth = depth or 0
@@ -296,7 +294,7 @@ function M.SerializeTable(value, separator, skipNewlines, name, depth)
 
 		for k, v in pairs(value) do
 			serializedTableString = serializedTableString
-				.. M.SerializeTable(v, separator, skipNewlines, k, depth + 1)
+				.. M.serialize_table(v, separator, skipNewlines, k, depth + 1)
 				.. ","
 				.. possible_newline
 		end
@@ -336,17 +334,6 @@ function M.ends_with(str, ending)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
-
----Used by M.RecursivelyPrint() to turn any type of value into a string.
----@param value any
----@return string
-function GetValueString(value)
-	if pcall(tostring, value) then
-		return tostring(value)
-	else
-		return type(value)
-	end
-end
 
 -- MODULE END ------------------------------------------------------------------
 

@@ -7,12 +7,12 @@
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
 
-local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
+local file_functions = dofile("utils.rte/Modules/file_functions.lua")
 local settings = dofile("modmod.rte/data/settings.lua")
 
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 local ui = dofile("utils.rte/Modules/ui.lua")
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 -- GLOBAL SCRIPT ---------------------------------------------------------------
 
@@ -428,5 +428,5 @@ end
 
 function ModMod:set_setting(settings_key, value)
 	settings[settings_key] = value
-	file_functions.WriteTableToFile("modmod.rte/data/settings.lua", settings)
+	file_functions.write_table_to_file("modmod.rte/data/settings.lua", settings)
 end

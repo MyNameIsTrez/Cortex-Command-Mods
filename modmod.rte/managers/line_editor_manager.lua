@@ -6,7 +6,7 @@ local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 
 local input_handler = dofile("utils.rte/Modules/InputHandler.lua")
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
 

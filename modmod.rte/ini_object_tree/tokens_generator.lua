@@ -1,8 +1,10 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local file_functions = dofile("utils.rte/Modules/file_functions.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
+-- TODO: Rewrite this file to the mod converter engine's implementation in Zig,
+-- so that lulpeg.lua can be removed entirely from utils.rte
 local l = dofile("utils.rte/Modules/lulpeg.lua")
 
 -- MODULE START ----------------------------------------------------------------
@@ -24,7 +26,7 @@ local word = C((1 - delimiter) ^ 1)
 function M.get_tokens(file_path)
 	local tokens = {}
 
-	local text = file_functions.ReadFile(file_path)
+	local text = file_functions.read_file(file_path)
 	text = utils.lstrip(text)
 
 	-- TODO: This is a hotfix for shitty Techion.rte/Devices/Tools/Nanolyzer/Nanolyzer.ini

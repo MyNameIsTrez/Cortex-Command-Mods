@@ -1,4 +1,4 @@
-local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
+local file_functions = dofile("utils.rte/Modules/file_functions.lua")
 
 local M = {}
 

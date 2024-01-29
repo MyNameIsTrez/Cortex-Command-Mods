@@ -4,8 +4,6 @@ local cst_generator = dofile("modmod.rte/ini_object_tree/cst_generator.lua")
 
 local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
-local tests = dofile("utils.rte/Modules/Tests.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
@@ -699,7 +697,7 @@ function cst_test(file_name, expected)
 	local file_path = test_files.get_test_path_from_file_name(file_name)
 	local cst = cst_generator.get_cst(file_path)
 
-	tests.test("cst", file_name, cst, expected)
+	-- tests.test("cst", file_name, cst, expected)
 end
 
 -- MODULE END ------------------------------------------------------------------

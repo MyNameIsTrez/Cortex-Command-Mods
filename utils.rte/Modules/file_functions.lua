@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -8,15 +8,9 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.FileExists(filepath)
-	local fd = LuaMan:FileOpen(filepath, "r")
-	LuaMan:FileClose(fd)
-	return fd ~= -1
-end
-
 -- Returns the contents of a file as a string
-function M.ReadFile(filepath)
-	if not M.FileExists(filepath) then
+function M.read_file(filepath)
+	if not LuaMan:FileExists(filepath) then
 		return false
 	end
 
@@ -35,20 +29,20 @@ function M.ReadFile(filepath)
 end
 
 -- Beware, this overwrites whatever was already in the file!
-function M.WriteFile(filepath, str)
+function M.write_file(filepath, str)
 	local fd = LuaMan:FileOpen(filepath, "w")
 	LuaMan:FileWriteLine(fd, str) -- If you want to write across multiple lines, use the newline character \n in str
 	LuaMan:FileClose(fd)
 end
 
 -- Beware, this overwrites whatever was already in the file!
-function M.WriteTableToFile(filepath, tab)
-	local tabStr = utils.SerializeTable(tab)
-	M.WriteFile(filepath, "return " .. tabStr .. "\n")
+function M.write_table_to_file(filepath, tab)
+	local tabStr = utils.serialize_table(tab)
+	M.write_file(filepath, "return " .. tabStr .. "\n")
 end
 
 -- Source: http://lua-users.org/wiki/DirTreeIterator
-function M.Walk(dir)
+function M.walk(dir)
 	assert(dir and dir ~= "", "directory parameter is missing or empty")
 
 	-- Remove any trailing slash,

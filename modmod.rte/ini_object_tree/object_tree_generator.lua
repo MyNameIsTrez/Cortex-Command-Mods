@@ -5,7 +5,7 @@ local ast_generator = dofile("modmod.rte/ini_object_tree/ast_generator.lua")
 
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 -- MODULE START ----------------------------------------------------------------
 

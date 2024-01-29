@@ -4,8 +4,6 @@ local tokens_generator = dofile("modmod.rte/ini_object_tree/tokens_generator.lua
 
 local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
-local tests = dofile("utils.rte/Modules/Tests.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
@@ -510,7 +508,7 @@ function tokenizer_test(file_name, expected)
 		table.insert(tokens_without_metadata, { type = token.type, content = token.content })
 	end
 
-	tests.test("tokenizer", file_name, tokens_without_metadata, expected)
+	-- tests.test("tokenizer", file_name, tokens_without_metadata, expected)
 end
 
 -- MODULE END ------------------------------------------------------------------

@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
+local file_functions = dofile("utils.rte/Modules/file_functions.lua")
 
 -- MODULE START ----------------------------------------------------------------
 
@@ -16,7 +16,7 @@ function M.write_ini_file_cst(file_cst, file_path)
 	end
 
 	local str = table.concat(lines)
-	file_functions.WriteFile(file_path, str)
+	file_functions.write_file(file_path, str)
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------

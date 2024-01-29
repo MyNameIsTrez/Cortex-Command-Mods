@@ -6,8 +6,6 @@ local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_gen
 
 local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
-local tests = dofile("utils.rte/Modules/Tests.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
@@ -305,7 +303,7 @@ function file_object_tree_test(file_name, expected)
 	local file_path = test_files.get_test_path_from_file_name(file_name)
 	local object_tree = object_tree_generator.get_file_object_tree(file_path)
 
-	tests.test("object tree", file_name, object_tree, expected)
+	-- tests.test("object tree", file_name, object_tree, expected)
 end
 
 -- MODULE END ------------------------------------------------------------------

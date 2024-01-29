@@ -8,7 +8,7 @@ local parent_classes = dofile("modmod.rte/data/properties/parent_classes.lua")
 local properties = dofile("modmod.rte/data/properties/properties.lua")
 local property_value_types = dofile("modmod.rte/data/properties/property_value_types.lua")
 
-local utils = dofile("utils.rte/Modules/Utils.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
