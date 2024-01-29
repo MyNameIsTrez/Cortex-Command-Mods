@@ -10,7 +10,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.tokenizer_tests()
+function M.run_tests()
 	tokenizer_test("comment_before_tabs", {
 		{ type = "WORD", content = "A1" },
 		{ type = "EXTRA", content = " " },

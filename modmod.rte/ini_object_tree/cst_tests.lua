@@ -10,7 +10,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.cst_tests()
+function M.run_tests()
 	cst_test("comment_before_tabs", {
 		{
 			{ type = "property", content = "A1" },

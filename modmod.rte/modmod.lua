@@ -5,7 +5,7 @@
 
 -- TODO: Get rid of loading csts.lua here, since it's an implementation detail?
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
-local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+local file_object_generator = dofile("modmod.rte/ini_object_tree/file_object_generator.lua")
 
 local file_functions = dofile("utils.rte/Modules/file_functions.lua")
 local settings = dofile("modmod.rte/data/settings.lua")
@@ -293,7 +293,7 @@ function ModMod:object_tree_buttons(
 					path = utils.remove_prefix(path, "./Data/")
 					path = utils.remove_prefix(path, "./Mods/")
 
-					local file_object = object_tree_generator.get_file_object_tree(path)
+					local file_object = file_object_generator.get_file_object(path)
 					selected_object.cst = file_object.cst
 					selected_object.children = file_object.children
 					selected_object.collapsed = file_object.collapsed

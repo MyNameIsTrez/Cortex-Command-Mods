@@ -2,7 +2,7 @@
 
 local cst_generator = dofile("modmod.rte/ini_object_tree/cst_generator.lua")
 local ast_generator = dofile("modmod.rte/ini_object_tree/ast_generator.lua")
-local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+local file_object_generator = dofile("modmod.rte/ini_object_tree/file_object_generator.lua")
 
 local test_files = dofile("modmod.rte/ini_object_tree/test_files.lua")
 
@@ -12,7 +12,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.file_object_tree_tests()
+function M.run_tests()
 	local ast, cst
 
 	cst = get_cst("comment_before_tabs")
@@ -301,9 +301,9 @@ end
 
 function file_object_tree_test(file_name, expected)
 	local file_path = test_files.get_test_path_from_file_name(file_name)
-	local object_tree = object_tree_generator.get_file_object_tree(file_path)
+	local file_object = file_object_generator.get_file_object(file_path)
 
-	-- tests.test("object tree", file_name, object_tree, expected)
+	-- tests.test("object tree", file_name, file_object, expected)
 end
 
 -- MODULE END ------------------------------------------------------------------

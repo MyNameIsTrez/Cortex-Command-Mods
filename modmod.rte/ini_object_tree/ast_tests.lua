@@ -11,7 +11,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.ast_tests()
+function M.run_tests()
 	local cst
 
 	cst = get_cst("comment_before_tabs")

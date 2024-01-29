@@ -85,7 +85,7 @@ function Filesystem:StartScript()
 		entered = true
 	end
 	assert(entered)
-	
+
 	local entered = false
 	for entry_file_name in LuaMan:GetFileList(dir .. "/foo") do
 		assert(entry_file_name == "foo.txt")

@@ -13,7 +13,7 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.get_file_object_tree(file_path)
+function M.get_file_object(file_path)
 	local cst = cst_generator.get_cst(file_path)
 	local ast = ast_generator.get_ast(cst)
 

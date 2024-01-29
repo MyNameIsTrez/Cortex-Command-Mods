@@ -1,6 +1,6 @@
 -- REQUIREMENTS ----------------------------------------------------------------
 
-local object_tree_generator = dofile("modmod.rte/ini_object_tree/object_tree_generator.lua")
+local file_object_generator = dofile("modmod.rte/ini_object_tree/file_object_generator.lua")
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 
 local writer = dofile("modmod.rte/ini_object_tree/writer.lua")
@@ -24,7 +24,7 @@ function M:init(modmod)
 	self.window_left_padding = 15
 	self.window_right_padding = 40
 
-	self.object_tree = object_tree_generator.get_starting_object_tree()
+	self.object_tree = file_object_generator.get_starting_object_tree()
 
 	self:_update_object_tree_strings()
 
@@ -329,7 +329,7 @@ function M:_potentially_load_file()
 		local file_path = self:_get_selected_object_path()
 
 		-- TODO: Do this in a nicer way somehow?
-		local file_object = object_tree_generator.get_file_object_tree(file_path)
+		local file_object = file_object_generator.get_file_object(file_path)
 		selected_object.cst = file_object.cst
 		selected_object.children = file_object.children
 		selected_object.collapsed = file_object.collapsed
