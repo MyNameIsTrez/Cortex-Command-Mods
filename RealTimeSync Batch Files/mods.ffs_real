@@ -3,10 +3,12 @@
     <Directories>
         <Item>I:\Programming\Cortex-Command-Community-Project\Mods\bone.rte</Item>
         <Item>I:\Programming\Cortex-Command-Community-Project\Mods\example_ui.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Community-Project\Mods\filesystem.rte</Item>
         <Item>I:\Programming\Cortex-Command-Community-Project\Mods\modmod.rte</Item>
         <Item>I:\Programming\Cortex-Command-Community-Project\Mods\utils.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\bone.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\example_ui.rte</Item>
+        <Item>I:\Programming\Cortex-Command-Mods\filesystem.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\modmod.rte</Item>
         <Item>I:\Programming\Cortex-Command-Mods\utils.rte</Item>
     </Directories>
