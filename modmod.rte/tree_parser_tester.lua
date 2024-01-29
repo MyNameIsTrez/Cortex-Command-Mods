@@ -1,5 +1,5 @@
 local tree_parser = dofile("modmod.rte/tree_parser.lua")
-local tree_writer = dofile("modmod.rte/tree_writer.lua")
+local ini_writer = dofile("modmod.rte/ini_writer.lua")
 
 local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
@@ -23,22 +23,44 @@ function test_directory(directory_name, is_invalid_test)
 	
 	local tmp_result_path = tests_directory_path .. "tmp_result.ini"
 	
-	for path in file_functions.Walk(tests_directory_path .. directory_name) do
-		-- Strip tests_directory_path from the start of path
-		path = path:sub(#tests_directory_path)
+	for full_path in file_functions.Walk(tests_directory_path .. directory_name) do
+		local relative_path = full_path:sub(#tests_directory_path)
 		
-		local is_file = path:sub(-1) ~= "/"
-		local basename = path:match("^.+/(.*)$")
+		local is_file = relative_path:sub(-1) ~= "/"
+		local basename = relative_path:match("^.+/(.*)$")
 
 		if is_file and basename == "input.ini" then
-			print("Test '" .. utils.dirname(path) .. "'")
+			local dirname = relative_path:match("^.-/(.+)/.+$")
+			print("Test '" .. dirname .. "'")
 
-			-- TODO: Use tree_parser.lua and tree_writer.lua to create tmp_result_path
+			-- TODO: Use tree_parser.lua and ini_writer.lua to create tmp_result_path
 
 			-- local diagnostics = {}
 			-- local file_tree = tree_parser.parse(folder_path, diagnostics)
 
-			-- tree_writer.write(file_tree, output_folder_path)
+			ini_writer.write(ast, tmp_result_path)
+			
+			tmp_result_txt = file_functions.ReadFile(tmp_result_path)
+			
+			local dirpath = full_path:match("^(.+/).+$")
+			local expected_path = dirpath .. "expected.ini"
+			expected_txt = file_functions.ReadFile(expected_path)
+			
+			if tmp_result_txt ~= expected_txt then
+				local printed = "\n"
+				
+				printed = printed .. "====== expected this output: =========\n"
+				printed = printed .. expected_txt
+				
+				printed = printed .. "\n======== instead found this: =========\n"
+				printed = printed .. tmp_result_txt
+				
+				printed = printed .. "\n======================================"
+				
+				print(printed)
+				
+				assert(false)
+			end
 		end
 	end
 	
