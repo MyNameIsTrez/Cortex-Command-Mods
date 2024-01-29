@@ -4,8 +4,8 @@ local ini_writer = dofile("modmod.rte/ini_writer.lua")
 local file_functions = dofile("utils.rte/Modules/FileFunctions.lua")
 local utils = dofile("utils.rte/Modules/Utils.lua")
 
-function TreeParserTester:StartScript()
-	print("TreeParserTester:StartScript()")
+function INIParserTester:StartScript()
+	print("INIParserTester:StartScript()")
 
 	test_directory("general", false)
 	-- TODO: Add these back!
@@ -32,8 +32,6 @@ function test_directory(directory_name, is_invalid_test)
 		if is_file and basename == "input.ini" then
 			local dirname = relative_path:match("^.-/(.+)/.+$")
 			print("Test '" .. dirname .. "'")
-
-			-- TODO: Use tree_parser.lua and ini_writer.lua to create tmp_result_path
 
 			-- local diagnostics = {}
 			-- local file_tree = tree_parser.parse(folder_path, diagnostics)
