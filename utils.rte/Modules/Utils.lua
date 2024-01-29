@@ -335,6 +335,10 @@ function M.ends_with(str, ending)
 	return ending == "" or str:sub(-#ending) == ending
 end
 
+function M.dirname(path)
+	return path:match("^.-/(.+)/.+$")
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 ---Used by M.RecursivelyPrint() to turn any type of value into a string.
