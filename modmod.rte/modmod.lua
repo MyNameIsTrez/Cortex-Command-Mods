@@ -1,20 +1,14 @@
--- REQUIREMENTS ----------------------------------------------------------------
-
 -- TODO: Use require() in all files instead of dofile(),
 -- once the issue of require()d modules not being reloaded on F2 is fixed
 
 -- TODO: Get rid of loading csts.lua here, since it's an implementation detail?
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
-local file_object_generator = dofile("modmod.rte/ini_object_tree/file_object_generator.lua")
-
 local file_functions = dofile("utils.rte/Modules/file_functions.lua")
-local settings = dofile("modmod.rte/data/settings.lua")
-
+local ini_file_object_generator = dofile("modmod.rte/ini_object_tree/ini_file_object_generator.lua")
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
+local settings = dofile("modmod.rte/data/settings.lua")
 local ui = dofile("utils.rte/Modules/ui.lua")
 local utils = dofile("utils.rte/Modules/utils.lua")
-
--- GLOBAL SCRIPT ---------------------------------------------------------------
 
 function ModMod:StartScript()
 	print("In ModMod:StartScript()")
@@ -224,8 +218,6 @@ function ModMod:UpdateScript()
 	-- PrimitiveMan:DrawTriangleFillPrimitive(world_pos, world_pos, world_pos, color)
 end
 
--- PRIVATE FUNCTIONS -----------------------------------------------------------
-
 function ModMod:lines_to_height(lines)
 	return lines * ui.button_height + ui.text_top_padding + 1
 end
@@ -293,11 +285,11 @@ function ModMod:object_tree_buttons(
 					path = utils.remove_prefix(path, "./Data/")
 					path = utils.remove_prefix(path, "./Mods/")
 
-					local file_object = file_object_generator.get_file_object(path)
-					selected_object.cst = file_object.cst
-					selected_object.children = file_object.children
-					selected_object.collapsed = file_object.collapsed
-					selected_object.properties = file_object.properties
+					local ini = ini_file_object_generator.get_ini_file_object(path)
+					selected_object.cst = ini.cst
+					selected_object.children = ini.children
+					selected_object.collapsed = ini.collapsed
+					selected_object.properties = ini.properties
 					-- utils.print(selected_object)
 					-- print("loaded file")
 
@@ -383,14 +375,14 @@ function ModMod:update_object_tree_text(object_tree)
 		text = text .. " "
 
 		if v.preset_name_pointer ~= nil then
-			text = string.format("%s%s (%s)", text, v.preset_name_pointer.content, csts.get_property(v))
+			text = string.format("%s%s (%s)", text, v.preset_name_pointer.content, v.property)
 		elseif v.file_name ~= nil then
 			text = text .. v.file_name
 		elseif v.directory_name ~= nil then
 			text = text .. v.directory_name
 		else
 			-- Else it's a subobject
-			text = text .. csts.get_property(v)
+			text = text .. v.property
 		end
 
 		v.text = text

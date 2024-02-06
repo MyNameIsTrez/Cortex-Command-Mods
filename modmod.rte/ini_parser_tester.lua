@@ -1,7 +1,6 @@
-local tree_parser = dofile("modmod.rte/tree_parser.lua")
-local ini_writer = dofile("modmod.rte/ini_writer.lua")
-
 local file_functions = dofile("utils.rte/Modules/file_functions.lua")
+local ini_parser = dofile("modmod.rte/ini_parser.lua")
+local ini_writer = dofile("modmod.rte/ini_writer.lua")
 local utils = dofile("utils.rte/Modules/utils.lua")
 
 function INIParserTester:StartScript()
@@ -33,16 +32,14 @@ function test_directory(directory_name, is_invalid_test)
 			local dirname = relative_path:match("^.-/(.+)/.+$")
 			print("Test '" .. dirname .. "'")
 
-			-- local diagnostics = {}
-			-- local file_tree = tree_parser.parse(full_path, diagnostics)
+			local ini = ini_parser.parse(full_path)
+			ini_writer.write(ini, tmp_result_path)
 
-			ini_writer.write(ast, tmp_result_path)
-
-			tmp_result_txt = file_functions.read_file(tmp_result_path)
+			local tmp_result_txt = file_functions.read_file(tmp_result_path)
 
 			local dirpath = full_path:match("^(.+/).+$")
 			local expected_path = dirpath .. "expected.ini"
-			expected_txt = file_functions.read_file(expected_path)
+			local expected_txt = file_functions.read_file(expected_path)
 
 			if tmp_result_txt ~= expected_txt then
 				local printed = ""

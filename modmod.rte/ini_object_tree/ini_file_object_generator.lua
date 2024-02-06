@@ -13,42 +13,42 @@ local M = {}
 
 -- PUBLIC FUNCTIONS ------------------------------------------------------------
 
-function M.get_file_object(file_path)
+function M.get_ini_file_object(file_path)
 	local cst = cst_generator.get_cst(file_path)
 	local ast = ast_generator.get_ast(cst)
 
-	local inner_file_object_tree = generate_inner_file_object_tree(ast)
+	local inner_ini_file_object = generate_inner_ini_file_object(ast)
 
 	local parent_directory_path, file_name = file_path:match("(.*)/(.*%.ini)")
-	local file_object_tree = { file_name = file_name, cst = cst }
+	local ini = { file_name = file_name, cst = cst }
 
 	if ast_is_traditional_ini(ast) then
-		return file_object_tree
+		return ini
 	end
 
 	if ast_has_children(ast) then
-		file_object_tree.collapsed = true
-		file_object_tree.children = inner_file_object_tree
+		ini.collapsed = true
+		ini.children = inner_ini_file_object
 	end
 
 	local properties = ast_get_properties(ast)
 	if #properties > 0 then
-		file_object_tree.properties = properties
+		ini.properties = properties
 	end
 
-	return file_object_tree
+	return ini
 end
 
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
-function generate_inner_file_object_tree(ast)
-	local file_object_tree = {}
+function generate_inner_ini_file_object(ast)
+	local ini = {}
 
 	for _, a in ipairs(ast) do
 		if a.children ~= nil then
 			local b = {}
 
-			local children = generate_inner_file_object_tree(a.children)
+			local children = generate_inner_ini_file_object(a.children)
 
 			if #children > 0 then
 				b.children = children
@@ -73,11 +73,11 @@ function generate_inner_file_object_tree(ast)
 				b.properties = nil
 			end
 
-			table.insert(file_object_tree, b)
+			table.insert(ini, b)
 		end
 	end
 
-	return file_object_tree
+	return ini
 end
 
 function ast_is_traditional_ini(ast)

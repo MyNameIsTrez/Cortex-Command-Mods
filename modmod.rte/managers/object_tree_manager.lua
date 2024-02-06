@@ -1,19 +1,10 @@
--- REQUIREMENTS ----------------------------------------------------------------
-
-local file_object_generator = dofile("modmod.rte/ini_object_tree/file_object_generator.lua")
 local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
-
+local ini_parser = dofile("modmod.rte/ini_parser.lua")
+local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
+local utils = dofile("utils.rte/Modules/utils.lua")
 local writer = dofile("modmod.rte/ini_object_tree/writer.lua")
 
-local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
-
-local utils = dofile("utils.rte/Modules/utils.lua")
-
--- MODULE START ----------------------------------------------------------------
-
 local M = {}
-
--- PUBLIC FUNCTIONS ------------------------------------------------------------
 
 function M:init(modmod)
 	self.window_manager = modmod.window_manager
@@ -97,8 +88,6 @@ function M:get_selected_object_type()
 		return nil
 	end
 end
-
--- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 function M:_up()
 	if
@@ -329,11 +318,11 @@ function M:_potentially_load_file()
 		local file_path = self:_get_selected_object_path()
 
 		-- TODO: Do this in a nicer way somehow?
-		local file_object = file_object_generator.get_file_object(file_path)
-		selected_object.cst = file_object.cst
-		selected_object.children = file_object.children
-		selected_object.collapsed = file_object.collapsed
-		selected_object.properties = file_object.properties
+		local ini = file_object_generator.get_file_object(file_path)
+		selected_object.cst = ini.cst
+		selected_object.children = ini.children
+		selected_object.collapsed = ini.collapsed
+		selected_object.properties = ini.properties
 
 		self:_update_object_tree_strings()
 	end
@@ -516,7 +505,5 @@ function M:_draw_object_tree_strings(object_tree_strings, height)
 		end
 	end
 end
-
--- MODULE END ------------------------------------------------------------------
 
 return M
