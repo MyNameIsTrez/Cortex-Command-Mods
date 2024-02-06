@@ -3,10 +3,6 @@
 local file_functions = dofile("utils.rte/Modules/file_functions.lua")
 local utils = dofile("utils.rte/Modules/utils.lua")
 
--- TODO: Rewrite this file to the mod converter engine's implementation in Zig,
--- so that lulpeg.lua can be removed entirely from utils.rte
-local l = dofile("utils.rte/Modules/lulpeg.lua")
-
 -- MODULE START ----------------------------------------------------------------
 
 local M = {}
