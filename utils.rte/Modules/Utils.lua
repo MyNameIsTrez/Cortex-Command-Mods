@@ -333,6 +333,10 @@ function M.ends_with(str, ending)
 	return ending == "" or str:sub(-#ending) == ending
 end
 
+function M.trim(str)
+	return str:match("^%s*(.-)%s*$")
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 -- MODULE END ------------------------------------------------------------------

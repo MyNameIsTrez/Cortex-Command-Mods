@@ -26,40 +26,36 @@ function write_recursively(node, output, depth)
 	end
 
 	for i = 1, depth do
-		append(output, "\t")
+		table.insert(output, "\t")
 	end
 
 	if node.property then
-		append(output, node.property)
+		table.insert(output, node.property)
 	end
 
 	if node.value then
-		append(output, " = ")
-		append(output, node.value)
+		table.insert(output, " = ")
+		table.insert(output, node.value)
 	end
 
 	if #node.comments > 0 then
 		if node.property ~= nil then
-			append(output, " ")
+			table.insert(output, " ")
 		end
 
-		append(output, "//")
+		table.insert(output, "//")
 
 		for _, comment in ipairs(node.comments) do
-			append(output, " ")
-			append(output, comment)
+			table.insert(output, " ")
+			table.insert(output, comment)
 		end
 	end
 
-	append(output, "\n")
+	table.insert(output, "\n")
 
 	for _, child in ipairs(node.children) do
 		write_recursively(child, output, depth + 1)
 	end
-end
-
-function append(output, str)
-	output[#output + 1] = str
 end
 
 return M
