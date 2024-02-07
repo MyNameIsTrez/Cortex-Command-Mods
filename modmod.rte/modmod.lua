@@ -1,10 +1,8 @@
 -- TODO: Use require() in all files instead of dofile(),
 -- once the issue of require()d modules not being reloaded on F2 is fixed
 
--- TODO: Get rid of loading csts.lua here, since it's an implementation detail?
-local csts = dofile("modmod.rte/ini_object_tree/csts.lua")
 local file_functions = dofile("utils.rte/Modules/file_functions.lua")
-local ini_file_object_generator = dofile("modmod.rte/ini_object_tree/ini_file_object_generator.lua")
+local ini_parser = dofile("modmod.rte/ini_parser.lua")
 local key_bindings = dofile("modmod.rte/data/key_bindings.lua")
 local settings = dofile("modmod.rte/data/settings.lua")
 local ui = dofile("utils.rte/Modules/ui.lua")
@@ -285,11 +283,12 @@ function ModMod:object_tree_buttons(
 					path = utils.remove_prefix(path, "./Data/")
 					path = utils.remove_prefix(path, "./Mods/")
 
-					local ini = ini_file_object_generator.get_ini_file_object(path)
-					selected_object.cst = ini.cst
-					selected_object.children = ini.children
-					selected_object.collapsed = ini.collapsed
-					selected_object.properties = ini.properties
+					local ast = ini_parser.parse(path)
+					error("This selected_object usage has to be redone, since parse() now returns an AST")
+					selected_object.cst = ast.cst
+					selected_object.children = ast.children
+					selected_object.collapsed = ast.collapsed
+					selected_object.properties = ast.properties
 					-- utils.print(selected_object)
 					-- print("loaded file")
 

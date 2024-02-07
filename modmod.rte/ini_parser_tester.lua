@@ -32,8 +32,8 @@ function test_directory(directory_name, is_invalid_test)
 			local dirname = relative_path:match("^.-/(.+)/.+$")
 			print("Test '" .. dirname .. "'")
 
-			local ini = ini_parser.parse(full_path)
-			ini_writer.write(ini, tmp_result_path)
+			local ast = ini_parser.parse(full_path)
+			ini_writer.write(ast, tmp_result_path)
 
 			local tmp_result_txt = file_functions.read_file(tmp_result_path)
 
@@ -42,17 +42,16 @@ function test_directory(directory_name, is_invalid_test)
 			local expected_txt = file_functions.read_file(expected_path)
 
 			if tmp_result_txt ~= expected_txt then
-				local printed = ""
+				print("====== expected this output: =========")
+				print(expected_txt)
 
-				printed = printed .. "\n====== expected this output: =========\n"
-				printed = printed .. expected_txt
+				print("======== instead found this: =========")
+				print(tmp_result_txt)
 
-				printed = printed .. "\n======== instead found this: =========\n"
-				printed = printed .. tmp_result_txt
-
-				printed = printed .. "\n======================================"
-
-				print(printed)
+				print("======== with this AST: ==============")
+				utils.print(ast)
+				
+				print("======================================")
 
 				assert(false)
 			end

@@ -337,6 +337,10 @@ function M.trim(str)
 	return str:match("^%s*(.-)%s*$")
 end
 
+function M.get(str, i)
+	return str:sub(i, i)
+end
+
 -- PRIVATE FUNCTIONS -----------------------------------------------------------
 
 -- MODULE END ------------------------------------------------------------------
